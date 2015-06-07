@@ -3,7 +3,7 @@ Minds Mobile App
 
 [![Build Status](https://magnum.travis-ci.com/Minds/mobile.svg?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/mobile)
 
-The world's first open-source and encrypted social networking app. We reward you with viral reach just for using the app. (That we know of...)
+The world's first open-source and encrypted social networking app (That we know of...). We reward you with viral reach just for using the app.
 
 ##Platforms
 - Android
