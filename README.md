@@ -91,3 +91,7 @@ Run `cordova build`
 Minds supports multiple environments. See `config/config-example.js` for an example. 
 
 To run a production build run `export config_target=prod; cordova build`
+
+### Connecting with your own Minds site?
+
+Please see https://github.com/Minds/mobile/wiki/Configuring-with-your-Minds-site
