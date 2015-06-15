@@ -3,7 +3,7 @@ Minds Mobile App
 
 [![Build Status](https://magnum.travis-ci.com/Minds/mobile.svg?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/mobile)
 
-The minds mobile apps source code repository.
+The world's first open-source and encrypted social networking app (That we know of...). We reward you with viral reach just for using the app.
 
 ##Platforms
 - Android
@@ -12,13 +12,14 @@ The minds mobile apps source code repository.
 
 ##Features
 
+- Encrypted messenger
+- Capture (Video, Photos, Upload from library)
 - Boost (Exchange your points with Minds or p2p with other users for expanded reach) 
 - Wallet (Earn points just for using the app or purchase them)
-- Encrypted Chat 
 - Newsfeed 
+- Profiles
 - Discovery (Search and swipe to vote on content and connect with channels)
 - Geo-location filter for social discovery and local networking
-- Capture (Video, Photos, Upload from library)
 - Vote, Comment and Remind posts
 - Subscribe to other channels
 - Notifications
@@ -32,7 +33,7 @@ _Cordova (phonegap) is a fantastic tool which lets you run HTML5 in native apps.
 _Ionic is a framework for making ui/ux work well with your app._
 
 #####Angularjs (https://angularjs.org/)
-_Angularjs is a MVC framework which make maintaing and development app easy_
+_Angularjs is a MVC framework which make maintaining and development app easy_
 
 #####Requirejs (http://requirejs.org/)
 _RequireJS is a file and module loader used to improve speed and quality of code and bring sanity to developers_
@@ -90,3 +91,7 @@ Run `cordova build`
 Minds supports multiple environments. See `config/config-example.js` for an example. 
 
 To run a production build run `export config_target=prod; cordova build`
+
+### Connecting with your own Minds site?
+
+Please see https://github.com/Minds/mobile/wiki/Configuring-with-your-Minds-site
