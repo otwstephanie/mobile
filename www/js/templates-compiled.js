@@ -577,11 +577,11 @@ define(['angular'], function(angular){
     "                Your wall is empty! Click to upload content.\n" +
     "             </a>\n" +
     "	        \n" +
-    "	            <!--<ion-refresher\n" +
-    "	                pulling-text=\"Pull to refresh...\"\n" +
-    "	                on-refresh=\"refresh()\">\n" +
-    "	            </ion-refresher>-->\n" +
-    "	\n" +
+    "                <ion-refresher\n" +
+    "                    pulling-text=\"Pull to refresh...\"\n" +
+    "                    on-refresh=\"refresh()\">\n" +
+    "                </ion-refresher>\n" +
+    "    	\n" +
     "	            <activity-view ng-repeat=\"activity in ChannelItems\" class=\"activity-item list card item-text-wrap\">\n" +
     "	            </activity-view>\n" +
     "	\n" +
@@ -663,7 +663,7 @@ define(['angular'], function(angular){
     "			\n" +
     "			<a class=\"item item-input\" ng-click=\"disable()\">\n" +
     "                <span class=\"input-label\"><i class=\"icon ion-alert-circled\"></i></span>\n" +
-    "                Deactive channel\n" +
+    "                Cancel channel\n" +
     "            </a>\n" +
     "			\n" +
     "            <label class=\"item item-input\" ng-click=\"logout()\">\n" +
