@@ -1,7 +1,7 @@
 Minds Mobile App
 ======
 
-[![Build Status](https://magnum.travis-ci.com/Minds/mobile.svg?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/mobile)
+[![Build Status](https://travis-ci.org/Minds/mobile.svg?branch=master)](https://travis-ci.org/Minds/mobile)
 
 The world's first open-source and encrypted social networking app (That we know of...). We reward you with viral reach just for using the app.
 
