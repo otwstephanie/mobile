@@ -5,7 +5,7 @@ Minds Mobile App
 
 The world's first open-source and encrypted social networking app (That we know of...). We reward you with viral reach just for using the app.
 
-The core engine code will be released later in 2015. Don't worry! If you want early access to inspect the core code please contact us at bill@minds.com 
+The core engine code will be released later in 2015. Don't worry! 
 
 ##Platforms
 - Android
