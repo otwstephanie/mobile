@@ -45,8 +45,8 @@ _neo4j is the World’s Leading Graph Database._
 
 ##Creators
 
-- Mark Harding - Engineering & Design 
-- Bill Ottman - Design
+- Mark Harding
+- Bill Ottman
 
 ##License
 
