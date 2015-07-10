@@ -365,9 +365,6 @@
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "cordova-plugin-crosswalk-webview": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
@@ -405,6 +402,9 @@
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
+        "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "com.minds.mobile"
         }
     },
