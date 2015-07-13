@@ -55,6 +55,10 @@ define(function() {
 				return false; //do not close if video..
 			}
 
+			if ($rootScope.inCall) {
+				return false;
+			}
+
 			if ($state.current.name == 'tab.newsfeed' || $state.current.name == 'login') {
 				navigator.app.exitApp();
 			} else {
