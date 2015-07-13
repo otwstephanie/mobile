@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-		id="com.eface2face.iosrtc"
-		version="1.2.4">
+		id="cordova-plugin-iosrtc"
+		version="1.4.1">
 
 	<name>iosrtc</name>
 	<description>Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs</description>
 	<author>Iñaki Baz Castillo at eFace2Face, inc.</author>
 	<license>MIT</license>
-	<keywords>WebRTC, iOS</keywords>
+	<keywords>webrtc, ios</keywords>
+
+	<info>
+		cordova-plugin-iosrtc enables use of the JavaScript WebRTC APIs (as defined by the W3C) in iOS devices.
+		Learn more at: https://github.com/eface2face/cordova-plugin-iosrtc
+	</info>
 
 	<engines>
 		<engine name="cordova-ios" version=">=3.8.0" />
@@ -18,8 +23,6 @@
 	</js-module>
 
 	<platform name="ios">
-		<hook type="after_plugin_install" src="hooks/add_swift_support.js" />
-
 		<config-file target="config.xml" parent="/*">
 			<feature name="iosrtcPlugin">
 				<param name="ios-package" value="iosrtcPlugin" />

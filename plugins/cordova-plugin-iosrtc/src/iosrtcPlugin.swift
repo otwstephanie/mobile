@@ -1,4 +1,5 @@
 import Foundation
+import AVFoundation
 
 
 @objc(iosrtcPlugin)  // This class must be accesible from ObjetiveC.
@@ -16,7 +17,7 @@ class iosrtcPlugin : CDVPlugin {
 	// pluginMediaStreamRenderers' dictionary.
 	var pluginMediaStreamRenderers: [Int : PluginMediaStreamRenderer] = [:]
 	// Dispatch queue for serial operations in all the PluginRTCPeerConnections.
-	let queue = dispatch_queue_create("com.eface2face.iosrtc.rtcpeerconnection", DISPATCH_QUEUE_SERIAL)
+	let queue = dispatch_queue_create("cordova-plugin-iosrtc", DISPATCH_QUEUE_SERIAL)
 
 
 	// This is just called if <param name="onload" value="true" /> in plugin.xml.
@@ -677,14 +678,7 @@ class iosrtcPlugin : CDVPlugin {
 		NSLog("iosrtcPlugin#MediaStreamRenderer_refresh()")
 
 		let id = command.argumentAtIndex(0) as! Int
-		let left = command.argumentAtIndex(1) as! Float
-		let top = command.argumentAtIndex(2) as! Float
-		let width = command.argumentAtIndex(3) as! Float
-		let height = command.argumentAtIndex(4) as! Float
-		let visible = command.argumentAtIndex(5) as! Bool
-		let opacity = command.argumentAtIndex(6) as! Float
-		let zIndex = command.argumentAtIndex(7) as! Float
-		let mirrored = command.argumentAtIndex(8) as! Bool
+		let data = command.argumentAtIndex(1) as! NSDictionary
 		let pluginMediaStreamRenderer = self.pluginMediaStreamRenderers[id]
 
 		if pluginMediaStreamRenderer == nil {
@@ -692,15 +686,7 @@ class iosrtcPlugin : CDVPlugin {
 			return;
 		}
 
-		pluginMediaStreamRenderer!.refresh(left,
-			top: top,
-			width: width,
-			height: height,
-			visible: visible,
-			opacity: opacity,
-			zIndex: zIndex,
-			mirrored: mirrored
-		)
+		pluginMediaStreamRenderer!.refresh(data)
 	}
 
 
@@ -754,6 +740,32 @@ class iosrtcPlugin : CDVPlugin {
 					)
 				}
 			)
+		}
+	}
+
+
+	func selectAudioOutputEarpiece(command: CDVInvokedUrlCommand) {
+		NSLog("iosrtcPlugin#selectAudioOutputEarpiece()")
+
+		var error: NSError?
+
+		AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSessionPortOverride.None, error: &error);
+
+		if error != nil {
+			NSLog("iosrtcPlugin#selectAudioOutputEarpiece() | ERROR: \(error!.localizedDescription)")
+		}
+	}
+
+
+	func selectAudioOutputSpeaker(command: CDVInvokedUrlCommand) {
+		NSLog("iosrtcPlugin#selectAudioOutputSpeaker()")
+
+		var error: NSError?
+
+		AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker, error: &error);
+
+		if error != nil {
+			NSLog("iosrtcPlugin#selectAudioOutputSpeaker() | ERROR: \(error!.localizedDescription)")
 		}
 	}
 

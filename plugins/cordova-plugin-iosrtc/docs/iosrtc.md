@@ -93,6 +93,20 @@ Exposes the `RTCSessionDescription` class as defined by the [spec](http://www.w3
 Exposes the `RTCIceCandidate` class as defined by the [spec](http://www.w3.org/TR/webrtc/#idl-def-RTCIceCandidate).
 
 
+### `iosrtc.MediaStream`
+
+Exposes the  `MediaStream` class as defined in the [spec](http://w3c.github.io/mediacapture-main/#mediastream).
+
+*NOTES:*
+
+* For internal reasons the `MediaStream` class points to the [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) class, so the `MediaStream` class constructor is not implemented (this class is exposed to make some WebRTC polyfill libraries happy).
+* `stop()` method implemented for backwards compatibility (it calls `stop()` on all its `MediaStreamTracks`).
+
+*TODO:*
+
+* `clone()` method.
+
+
 ### `iosrtc.MediaStreamTrack`
 
 Exposes the `MediaStreamTrack` class as defined by the [spec](http://w3c.github.io/mediacapture-main/#mediastreamtrack).
@@ -118,16 +132,27 @@ When calling this method, the height/width, opacity, visibility and z-index of a
 Call this method when the position or size of a video element changes.
 
 
+### `iosrtc.selectAudioOutput(output)`
+
+Select the audio output device. Given `output` argument must be "earpiece" or "speaker".
+
+*NOTE:* "speaker" output can only be set during a WebRTC session.
+
+
 ### `iosrtc.registerGlobals()`
 
 By calling this method the JavaScript global namespace gets "polluted" with the following additions:
 
 * `navigator.getUserMedia`
+* `navigator.webkitGetUserMedia`
 * `navigator.mediaDevices.getUserMedia`
 * `navigator.mediaDevices.enumerateDevices`
 * `window.RTCPeerConnection`
+* `window.webkitRTCPeerConnection`
 * `window.RTCSessionDescription`
 * `window.RTCIceCandidate`
+* `window.MediaStream`
+* `window.webkitMediaStream`
 * `window.MediaStreamTrack`
 
 Useful to avoid iOS specified code in your HTML5 application.
@@ -170,19 +195,6 @@ document.addEventListener('deviceready', function () {
 
 
 ## Others
-
-
-### `MediaStream`
-
-The `MediaStream` class (as defined in the [spec](http://w3c.github.io/mediacapture-main/#mediastream)) is not directly exposed by `iosrtc` via public API. Instead an instance of `MediaStream` is given within `onaddstream` / `onremovestream` events or the success callback of `getUserMedia()`.
-
-*NOTES:*
-
-* `stop()` method implemented for backwards compatibility (it calls `stop()` on all its `MediaStreamTracks`).
-
-*TODO:*
-
-* `clone()` method.
 
 
 ### `RTCDataChannel`

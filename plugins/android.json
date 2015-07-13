@@ -57,6 +57,10 @@
                             "count": 1
                         },
                         {
+                            "xml": "<preference name=\"webView\" value=\"org.crosswalk.engine.XWalkWebViewEngine\" />",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
                             "count": 1
                         },
@@ -65,7 +69,15 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Intents\"><param name=\"android-package\" value=\"org.minds.intents.Intents\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
@@ -97,19 +109,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Intents\"><param name=\"android-package\" value=\"org.minds.intents.Intents\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"Crypt\"><param name=\"android-package\" value=\"org.apache.cordova.crypt.Crypt\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<preference name=\"webView\" value=\"org.crosswalk.engine.XWalkWebViewEngine\" />",
                             "count": 1
                         }
                     ]
@@ -318,13 +318,22 @@
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
+        "cordova-plugin-crosswalk-webview": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
         "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
+        "cordova-plugin-intents": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "cordova-plugin-legacy-whitelist": {
@@ -348,19 +357,10 @@
         "nl.x-services.plugins.socialsharing": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "cordova-plugin-intents": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
         "org.apache.cordova.crypt": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "com.eface2face.iosrtc": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
-        "cordova-plugin-crosswalk-webview": {
+        "cordova-plugin-iosrtc": {
             "PACKAGE_NAME": "com.minds.mobile"
         }
     },

@@ -17,6 +17,7 @@ var
 /**
  * Dependencies.
  */
+	debug = require('debug')('iosrtc'),
 	exec = require('cordova/exec'),
 	domready = require('domready'),
 	videoElementsHandler = require('./videoElementsHandler');
@@ -32,10 +33,14 @@ module.exports = {
 	RTCPeerConnection:     require('./RTCPeerConnection'),
 	RTCSessionDescription: require('./RTCSessionDescription'),
 	RTCIceCandidate:       require('./RTCIceCandidate'),
+	MediaStream:           require('./MediaStream'),
 	MediaStreamTrack:      require('./MediaStreamTrack'),
 
 	// Expose a function to refresh current videos rendering a MediaStream.
 	refreshVideos:         refreshVideos,
+
+	// Select audio output (earpiece or speaker).
+	selectAudioOutput:     selectAudioOutput,
 
 	// Expose a function to pollute window and naigator namespaces.
 	registerGlobals:       registerGlobals,
@@ -64,6 +69,8 @@ function observeVideos() {
 
 
 function refreshVideos() {
+	debug('refreshVideos()');
+
 	var id;
 
 	for (id in mediaStreamRenderers) {
@@ -74,17 +81,41 @@ function refreshVideos() {
 }
 
 
+function selectAudioOutput(output) {
+	debug('selectAudioOutput() | [output:"%s"]', output);
+
+	switch (output) {
+		case 'earpiece':
+			exec(null, null, 'iosrtcPlugin', 'selectAudioOutputEarpiece', []);
+			break;
+		case 'speaker':
+			exec(null, null, 'iosrtcPlugin', 'selectAudioOutputSpeaker', []);
+			break;
+		default:
+			throw new Error('output must be "earpiece" or "speaker"');
+	}
+}
+
+
 function registerGlobals() {
+	if (!global.navigator) {
+		global.navigator = {};
+	}
+
 	if (!navigator.mediaDevices) {
 		navigator.mediaDevices = {};
 	}
 
 	navigator.getUserMedia                  = require('./getUserMedia');
+	navigator.webkitGetUserMedia            = require('./getUserMedia');
 	navigator.mediaDevices.getUserMedia     = require('./getUserMedia');
 	navigator.mediaDevices.enumerateDevices = require('./getMediaDevices');
 	window.RTCPeerConnection                = require('./RTCPeerConnection');
+	window.webkitRTCPeerConnection          = require('./RTCPeerConnection');
 	window.RTCSessionDescription            = require('./RTCSessionDescription');
 	window.RTCIceCandidate                  = require('./RTCIceCandidate');
+	window.MediaStream                      = require('./MediaStream');
+	window.webkitMediaStream                = require('./MediaStream');
 	window.MediaStreamTrack                 = require('./MediaStreamTrack');
 }
 
@@ -92,4 +123,3 @@ function registerGlobals() {
 function dump() {
 	exec(null, null, 'iosrtcPlugin', 'dump', []);
 }
-

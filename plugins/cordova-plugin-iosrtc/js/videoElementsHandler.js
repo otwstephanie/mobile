@@ -18,6 +18,9 @@ var debug = require('debug')('iosrtc:videoElementsHandler'),
 	// RegExp for MediaStream blobId.
 	MEDIASTREAM_ID_REGEXP = new RegExp(/^MediaStream_/),
 
+	// RegExp for Blob URI.
+	BLOB_URI_REGEX = new RegExp(/^blob:/),
+
 	// Dictionary of MediaStreamRenderers (provided via module argument).
 	// - key: MediaStreamRenderer id.
 	// - value: MediaStreamRenderer.
@@ -193,6 +196,15 @@ function observeVideo(video) {
 		// TODO: Add srcObject, mozSrcObject
 		attributeFilter: ['src']
 	});
+
+	// Intercept video 'error' events if it's due to the attached MediaStream.
+	video.addEventListener('error', function (event) {
+		if (video.error.code === global.MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED && BLOB_URI_REGEX.test(video.src)) {
+			debug('stopping "error" event propagation for video element');
+
+			event.stopImmediatePropagation();
+		}
+	});
 }
 
 
@@ -215,7 +227,7 @@ function handleVideo(video) {
 			var mediaStreamBlobId = reader.result;
 
 			// The retrieved URL does not point to a MediaStream.
-			if (!mediaStreamBlobId || typeof mediaStreamBlobId !== 'string' || !mediaStreamBlobId.match(MEDIASTREAM_ID_REGEXP)) {
+			if (!mediaStreamBlobId || typeof mediaStreamBlobId !== 'string' || !MEDIASTREAM_ID_REGEXP.test(mediaStreamBlobId)) {
 				// If this video element was previously handling a MediaStreamRenderer, release it.
 				releaseMediaStreamRenderer(video);
 
@@ -249,16 +261,61 @@ function provideMediaStreamRenderer(video, mediaStreamBlobId) {
 		mediaStreamRenderers[mediaStreamRenderer.id] = mediaStreamRenderer;
 		video._iosrtcMediaStreamRendererId = mediaStreamRenderer.id;
 	}
+
+	// Close the MediaStreamRenderer of this video if it emits "close" event.
+	mediaStreamRenderer.addEventListener('close', function () {
+		if (mediaStreamRenderers[video._iosrtcMediaStreamRendererId] !== mediaStreamRenderer) {
+			return;
+		}
+
+		releaseMediaStreamRenderer(video);
+	});
+
+	// Override some <video> properties.
+	// NOTE: This is a terrible hack but it works.
+	Object.defineProperties(video, {
+		videoWidth: {
+			configurable: true,
+			get: function () {
+				return mediaStreamRenderer.videoWidth || 0;
+			}
+		},
+		videoHeight: {
+			configurable: true,
+			get: function () {
+				return mediaStreamRenderer.videoHeight || 0;
+			}
+		},
+		readyState: {
+			configurable: true,
+			get: function () {
+				if (mediaStreamRenderer && mediaStreamRenderer.stream && mediaStreamRenderer.stream.connected) {
+					return video.HAVE_ENOUGH_DATA;
+				} else {
+					return video.HAVE_NOTHING;
+				}
+			}
+		}
+	});
 }
 
 
 function releaseMediaStreamRenderer(video) {
-	var mediaStreamRenderer = mediaStreamRenderers[video._iosrtcMediaStreamRendererId];
+	if (!video._iosrtcMediaStreamRendererId) {
+		return;
+	}
 
-	delete video._iosrtcMediaStreamRendererId;
+	var mediaStreamRenderer = mediaStreamRenderers[video._iosrtcMediaStreamRendererId];
 
 	if (mediaStreamRenderer) {
 		delete mediaStreamRenderers[video._iosrtcMediaStreamRendererId];
 		mediaStreamRenderer.close();
 	}
+
+	delete video._iosrtcMediaStreamRendererId;
+
+	// Remove overrided <video> properties.
+	delete video.videoWidth;
+	delete video.videoHeight;
+	delete video.readyState;
 }

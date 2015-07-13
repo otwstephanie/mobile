@@ -21,11 +21,11 @@
                     ],
                     "CoreMedia.framework": [
                         {
-                            "xml": false,
+                            "xml": true,
                             "count": 1
                         },
                         {
-                            "xml": true,
+                            "xml": false,
                             "count": 1
                         }
                     ],
@@ -193,10 +193,6 @@
                 "parents": {
                     "/*": [
                         {
-                            "xml": "<feature name=\"iosrtcPlugin\"><param name=\"ios-package\" value=\"iosrtcPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"Keyboard\"><param name=\"ios-package\" onload=\"true\" value=\"IonicKeyboard\" /></feature>",
                             "count": 1
                         },
@@ -303,6 +299,10 @@
                         {
                             "xml": "<feature name=\"FileTransfer\"><param name=\"ios-package\" value=\"CDVFileTransfer\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"iosrtcPlugin\"><param name=\"ios-package\" value=\"iosrtcPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -338,9 +338,6 @@
         }
     },
     "installed_plugins": {
-        "com.eface2face.iosrtc": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
         "com.ionic.keyboard": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
@@ -407,6 +404,9 @@
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
+        "cordova-plugin-iosrtc": {
             "PACKAGE_NAME": "com.minds.mobile"
         }
     },

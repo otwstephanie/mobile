@@ -1,5 +1,5 @@
 /*
- * cordova-plugin-iosrtc v1.2.4
+ * cordova-plugin-iosrtc v1.4.1
  * Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs
  * Copyright 2015 Iñaki Baz Castillo at eFace2Face, inc. (https://eface2face.com)
  * License MIT
@@ -128,16 +128,27 @@ function EventTarget() {
 			throw new Error('first argument must be an instance of Event');
 		}
 
-		type = event.type;
+		if (event._dispatched) {
+			throw new Error('Event already dispatched');
+		}
+		event._dispatched = true;
 
+		// Force the event to be cancelable.
+		event.cancelable = true;
+		event.target = this;
+
+		// Override stopImmediatePropagation() function.
+		event.stopImmediatePropagation = function () {
+			stopImmediatePropagation = true;
+		};
+
+		type = event.type;
 		listenersType = (listeners[type] || []);
 
 		dummyListener = this['on' + type];
 		if (typeof dummyListener === 'function') {
 			listenersType.push(dummyListener);
 		}
-
-		event.target = this;
 
 		for (i = 0; !!(listener = listenersType[i]); i++) {
 			if (stopImmediatePropagation) {
@@ -255,6 +266,7 @@ MediaStream.create = function (dataFromEvent) {
 	stream.blobId = blobId;
 	stream.audioTracks = {};
 	stream.videoTracks = {};
+	stream.connected = false;
 
 	for (trackId in dataFromEvent.audioTracks) {
 		if (dataFromEvent.audioTracks.hasOwnProperty(trackId)) {
@@ -425,6 +437,22 @@ MediaStream.prototype.stop = function () {
  */
 
 
+MediaStream.prototype.emitConnected = function () {
+	debug('emitConnected()');
+
+	var self = this;
+
+	if (this.connected) {
+		return;
+	}
+	this.connected = true;
+
+	setTimeout(function () {
+		self.dispatchEvent(new Event('connected'));
+	});
+};
+
+
 function addListenerForTrackEnded(track) {
 	var self = this;
 
@@ -512,6 +540,7 @@ function onEvent(data) {
 			event.track = track;
 
 			this.dispatchEvent(event);
+
 			// Also emit 'update' for the MediaStreamRenderer.
 			this.dispatchEvent(new Event('update'));
 			break;
@@ -575,16 +604,11 @@ function MediaStreamRenderer(element) {
 	// Public atributes.
 	this.element = element;
 	this.stream = undefined;
+	this.videoWidth = undefined;
+	this.videoHeight = undefined;
 
 	// Private attributes.
 	this.id = randomNumber();
-	this.videoWidth = undefined;
-	this.videoHeight = undefined;
-	this.element_added_style_width = undefined;
-	this.element_added_style_height = undefined;
-
-	// Set black background.
-	this.element.style.backgroundColor = '#000';
 
 	function onResultOK(data) {
 		onEvent.call(self, data);
@@ -610,72 +634,102 @@ MediaStreamRenderer.prototype.render = function (stream) {
 	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_render', [this.id, stream.id]);
 
 	// Subscribe to 'update' event so we call native mediaStreamChangedrefresh() on it.
-	this.stream.addEventListener('update', function () {
+	stream.addEventListener('update', function () {
+		if (self.stream !== stream) {
+			return;
+		}
+
 		debug('MediaStream emits "update", calling native mediaStreamChanged()');
 
 		exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_mediaStreamChanged', [self.id]);
 	});
+
+	// Subscribe to 'inactive' event and emit "close" so the video element can react.
+	stream.addEventListener('inactive', function () {
+		if (self.stream !== stream) {
+			return;
+		}
+
+		debug('MediaStream emits "inactive", emiting "close" and closing this MediaStreamRenderer');
+
+		self.dispatchEvent(new Event('close'));
+		self.close();
+	});
+
+	if (stream.connected) {
+		connected();
+	// Otherwise subscribe to 'connected' event to emulate video elements events.
+	} else {
+		stream.addEventListener('connected', function () {
+			if (self.stream !== stream) {
+				return;
+			}
+
+			connected();
+		});
+	}
+
+	function connected() {
+		// Emit video events.
+		self.element.dispatchEvent(new Event('loadedmetadata'));
+		self.element.dispatchEvent(new Event('loadeddata'));
+		self.element.dispatchEvent(new Event('canplay'));
+		self.element.dispatchEvent(new Event('canplaythrough'));
+	}
 };
 
 
 MediaStreamRenderer.prototype.refresh = function () {
 	debug('refresh()');
 
-	/**
-	 * First remove "width" and "height" from the inline style in the element if
-	 * previously added by this function.
-	 */
-
-	if (this.element_added_style_width && this.element.style.width) {
-		debug('refresh() | removing element style width previously added by this function');
-
-		this.element.style.width = '';
-		this.element_added_style_width = undefined;
-	}
-	if (this.element_added_style_height && this.element.style.height) {
-		debug('refresh() | removing element style height previously added by this function');
-
-		this.element.style.height = '';
-		this.element_added_style_height = undefined;
-	}
-
 	var elementPositionAndSize = getElementPositionAndSize.call(this),
+		computedStyle,
 		videoRatio,
 		elementRatio,
 		elementLeft = elementPositionAndSize.left,
 		elementTop = elementPositionAndSize.top,
 		elementWidth = elementPositionAndSize.width,
 		elementHeight = elementPositionAndSize.height,
-		videoViewLeft = elementLeft,
-		videoViewTop = elementTop,
 		videoViewWidth = elementWidth,
 		videoViewHeight = elementHeight,
 		visible,
 		opacity,
 		zIndex,
-		mirrored = false;
+		mirrored,
+		objectFit,
+		clip;
+
+	computedStyle = window.getComputedStyle(this.element);
 
 	// visible
-	if (window.getComputedStyle(this.element).visibility === 'hidden') {
+	if (computedStyle.visibility === 'hidden') {
 		visible = false;
 	} else {
 		visible = !!this.element.offsetHeight;  // Returns 0 if element or any parent is hidden.
 	}
 
 	// opacity
-	opacity = parseFloat(window.getComputedStyle(this.element).opacity);
+	opacity = parseFloat(computedStyle.opacity);
 
 	// zIndex
-	zIndex = parseFloat(window.getComputedStyle(this.element).zIndex) || parseFloat(this.element.style.zIndex) || 0;
+	zIndex = parseFloat(computedStyle.zIndex) || parseFloat(this.element.style.zIndex) || 0;
 
-	debug('refresh() | video element: [left:%s, top:%s, width:%s, height:%s]',
-		elementLeft, elementTop, elementWidth, elementHeight
-	);
-
-	// mirrored
-	if (window.getComputedStyle(this.element).transform === 'matrix(-1, 0, 0, 1, 0, 0)' ||
-		window.getComputedStyle(this.element)['-webkit-transform'] === 'matrix(-1, 0, 0, 1, 0, 0)') {
+	// mirrored (detect "-webkit-transform: scaleX(-1);" or equivalent)
+	if (computedStyle.transform === 'matrix(-1, 0, 0, 1, 0, 0)' ||
+		computedStyle['-webkit-transform'] === 'matrix(-1, 0, 0, 1, 0, 0)') {
 		mirrored = true;
+	} else {
+		mirrored = false;
+	}
+
+	// objectFit ('contain' is set as default value)
+	objectFit = computedStyle.objectFit || 'contain';
+
+	// clip
+	if (objectFit === 'none') {
+		clip = false;
+	} else {
+		clip = true;
 	}
 
 	/**
@@ -695,44 +749,11 @@ MediaStreamRenderer.prototype.refresh = function () {
 	 * Element has no width and/or no height.
 	 */
 
-	if (!elementWidth && !elementHeight) {
-		debug('refresh() | video element has 0 width and 0 height');
+	if (!elementWidth || !elementHeight) {
+		debug('refresh() | video element has 0 width and/or 0 height');
 
-		if (!this.element.style.width) {
-			elementWidth = this.videoWidth;
-			this.element.style.width = elementWidth + 'px';
-			this.element_added_style_width = this.element.style.width;
-		} else {
-			elementWidth = parseInt(this.element.style.width);
-		}
-
-		if (!this.element.style.height) {
-			elementHeight = this.videoHeight;
-			this.element.style.height = elementHeight + 'px';
-			this.element_added_style_height = this.element.style.height;
-		} else {
-			elementHeight = parseInt(this.element.style.height);
-		}
-	} else if (!elementWidth) {
-		debug('refresh() | video element has 0 width');
-
-		if (!this.element.style.width) {
-			elementWidth = elementHeight * videoRatio;
-			this.element.style.width = elementWidth + 'px';
-			this.element_added_style_width = this.element.style.width;
-		} else {
-			elementWidth = parseInt(this.element.style.width);
-		}
-	} else if (!elementHeight) {
-		debug('refresh() | video element has 0 height');
-
-		if (!this.element.style.height) {
-			elementHeight = elementWidth / videoRatio;
-			this.element.style.height = elementHeight + 'px';
-			this.element_added_style_height = this.element.style.height;
-		} else {
-			elementHeight = parseInt(this.element.style.height);
-		}
+		nativeRefresh.call(this);
+		return;
 	}
 
 	/**
@@ -741,27 +762,84 @@ MediaStreamRenderer.prototype.refresh = function () {
 
 	elementRatio = elementWidth / elementHeight;
 
-	// The element has higher or equal width/height ratio than the video.
-	if (elementRatio >= videoRatio) {
-		videoViewHeight = elementHeight;
-		videoViewWidth = videoViewHeight * videoRatio;
-		videoViewLeft = elementLeft + ((elementWidth - videoViewWidth) / 2);
-	// The element has lower width/height ratio than the video.
-	} else if (elementRatio < videoRatio) {
-		videoViewWidth = elementWidth;
-		videoViewHeight = videoViewWidth / videoRatio;
-		videoViewTop = elementTop + ((elementHeight - videoViewHeight) / 2);
+	switch (objectFit) {
+		case 'cover':
+			// The element has higher or equal width/height ratio than the video.
+			if (elementRatio >= videoRatio) {
+				videoViewWidth = elementWidth;
+				videoViewHeight = videoViewWidth / videoRatio;
+			// The element has lower width/height ratio than the video.
+			} else if (elementRatio < videoRatio) {
+				videoViewHeight = elementHeight;
+				videoViewWidth = videoViewHeight * videoRatio;
+			}
+			break;
+
+		case 'fill':
+			videoViewHeight = elementHeight;
+			videoViewWidth = elementWidth;
+			break;
+
+		case 'none':
+			videoViewHeight = this.videoHeight;
+			videoViewWidth = this.videoWidth;
+			break;
+
+		case 'scale-down':
+			// Same as 'none'.
+			if (this.videoWidth <= elementWidth && this.videoHeight <= elementHeight) {
+				videoViewHeight = this.videoHeight;
+				videoViewWidth = this.videoWidth;
+			// Same as 'contain'.
+			} else {
+				// The element has higher or equal width/height ratio than the video.
+				if (elementRatio >= videoRatio) {
+					videoViewHeight = elementHeight;
+					videoViewWidth = videoViewHeight * videoRatio;
+				// The element has lower width/height ratio than the video.
+				} else if (elementRatio < videoRatio) {
+					videoViewWidth = elementWidth;
+					videoViewHeight = videoViewWidth / videoRatio;
+				}
+			}
+			break;
+
+		// 'contain'.
+		default:
+			objectFit = 'contain';
+			// The element has higher or equal width/height ratio than the video.
+			if (elementRatio >= videoRatio) {
+				videoViewHeight = elementHeight;
+				videoViewWidth = videoViewHeight * videoRatio;
+			// The element has lower width/height ratio than the video.
+			} else if (elementRatio < videoRatio) {
+				videoViewWidth = elementWidth;
+				videoViewHeight = videoViewWidth / videoRatio;
+			}
+			break;
 	}
 
 	nativeRefresh.call(this);
 
 	function nativeRefresh() {
-		debug('refresh() | videoView: [left:%s, top:%s, width:%s, height:%s, visible:%s, opacity:%s, zIndex:%s, mirrored:%s]',
-			videoViewLeft, videoViewTop, videoViewWidth, videoViewHeight, visible, opacity, zIndex, mirrored);
+		var data = {
+			elementLeft: elementLeft,
+			elementTop: elementTop,
+			elementWidth: elementWidth,
+			elementHeight: elementHeight,
+			videoViewWidth: videoViewWidth,
+			videoViewHeight: videoViewHeight,
+			visible: visible,
+			opacity: opacity,
+			zIndex: zIndex,
+			mirrored: mirrored,
+			objectFit: objectFit,
+			clip: clip
+		};
 
-		exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_refresh', [
-			this.id, videoViewLeft, videoViewTop, videoViewWidth, videoViewHeight, visible, opacity, zIndex, mirrored
-		]);
+		debug('refresh() | [data:%o]', data);
+
+		exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_refresh', [this.id, data]);
 	}
 };
 
@@ -769,6 +847,9 @@ MediaStreamRenderer.prototype.refresh = function () {
 MediaStreamRenderer.prototype.close = function () {
 	debug('close()');
 
+	if (!this.stream) {
+		return;
+	}
 	this.stream = undefined;
 
 	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_close', [this.id]);
@@ -854,25 +935,26 @@ function MediaStreamTrack(dataFromEvent) {
 	this._enabled = dataFromEvent.enabled;
 	this._ended = false;
 
-	// Setters.
-	Object.defineProperty(this, 'enabled', {
-		get: function () {
-			return self._enabled;
-		},
-		set: function (value) {
-			debug('enabled = %s', !!value);
-
-			self._enabled = !!value;
-			exec(null, null, 'iosrtcPlugin', 'MediaStreamTrack_setEnabled', [self.id, self._enabled]);
-		}
-	});
-
 	function onResultOK(data) {
 		onEvent.call(self, data);
 	}
 
 	exec(onResultOK, null, 'iosrtcPlugin', 'MediaStreamTrack_setListener', [this.id]);
 }
+
+
+// Setters.
+Object.defineProperty(MediaStreamTrack.prototype, 'enabled', {
+	get: function () {
+		return this._enabled;
+	},
+	set: function (value) {
+		debug('enabled = %s', !!value);
+
+		this._enabled = !!value;
+		exec(null, null, 'iosrtcPlugin', 'MediaStreamTrack_setEnabled', [this.id, this._enabled]);
+	}
+});
 
 
 MediaStreamTrack.prototype.stop = function () {
@@ -959,18 +1041,6 @@ function RTCDataChannel(peerConnection, label, options, dataFromEvent) {
 	// Make this an EventTarget.
 	EventTarget.call(this);
 
-	// Just 'arraybuffer' binaryType is implemented in Chromium.
-	Object.defineProperty(this, 'binaryType', {
-		get: function () {
-			return 'arraybuffer';
-		},
-		set: function (type) {
-			if (type !== 'arraybuffer') {
-				throw new Error('just "arraybuffer" is implemented for binaryType');
-			}
-		}
-	});
-
 	// Created via pc.createDataChannel().
 	if (!dataFromEvent) {
 		debug('new() | [label:%o, options:%o]', label, options);
@@ -1046,6 +1116,19 @@ function RTCDataChannel(peerConnection, label, options, dataFromEvent) {
 		}
 	}
 }
+
+
+// Just 'arraybuffer' binaryType is implemented in Chromium.
+Object.defineProperty(RTCDataChannel.prototype, 'binaryType', {
+	get: function () {
+		return 'arraybuffer';
+	},
+	set: function (type) {
+		if (type !== 'arraybuffer') {
+			throw new Error('just "arraybuffer" is implemented for binaryType');
+		}
+	}
+});
 
 
 RTCDataChannel.prototype.send = function (data) {
@@ -1817,7 +1900,8 @@ function onEvent(data) {
 	var type = data.type,
 		event = new Event(type),
 		stream,
-		dataChannel;
+		dataChannel,
+		id;
 
 	debug('onEvent() | [type:%s, data:%o]', type, data);
 
@@ -1832,6 +1916,15 @@ function onEvent(data) {
 
 		case 'iceconnectionstatechange':
 			this.iceConnectionState = data.iceConnectionState;
+
+			// Emit "connected" on remote streams if ICE connected.
+			if (data.iceConnectionState === 'connected') {
+				for (id in this.remoteStreams) {
+					if (this.remoteStreams.hasOwnProperty(id)) {
+						this.remoteStreams[id].emitConnected();
+					}
+				}
+			}
 			break;
 
 		case 'icecandidate':
@@ -1855,13 +1948,20 @@ function onEvent(data) {
 		case 'addstream':
 			stream = MediaStream.create(data.stream);
 			event.stream = stream;
+
 			// Append to the remote streams.
 			this.remoteStreams[stream.id] = stream;
+
+			// Emit "connected" on the stream if ICE connected.
+			if (this.iceConnectionState === 'connected' || this.iceConnectionState === 'completed') {
+				stream.emitConnected();
+			}
 			break;
 
 		case 'removestream':
 			stream = this.remoteStreams[data.streamId];
 			event.stream = stream;
+
 			// Remove from the remote streams.
 			delete this.remoteStreams[stream.id];
 			break;
@@ -2082,7 +2182,13 @@ function getUserMedia(constraints) {
 
 	function onResultOK(data) {
 		debug('getUserMedia() | success');
-		callback(MediaStream.create(data.stream));
+
+		var stream = MediaStream.create(data.stream);
+
+		callback(stream);
+
+		// Emit "connected" on the stream.
+		stream.emitConnected();
 	}
 
 	function onResultError(error) {
@@ -2097,6 +2203,7 @@ function getUserMedia(constraints) {
 }
 
 },{"./Errors":1,"./MediaStream":4,"cordova/exec":undefined,"debug":16}],13:[function(require,module,exports){
+(function (global){
 /**
  * Variables.
  */
@@ -2116,6 +2223,7 @@ var
 /**
  * Dependencies.
  */
+	debug = require('debug')('iosrtc'),
 	exec = require('cordova/exec'),
 	domready = require('domready'),
 	videoElementsHandler = require('./videoElementsHandler');
@@ -2131,10 +2239,14 @@ module.exports = {
 	RTCPeerConnection:     require('./RTCPeerConnection'),
 	RTCSessionDescription: require('./RTCSessionDescription'),
 	RTCIceCandidate:       require('./RTCIceCandidate'),
+	MediaStream:           require('./MediaStream'),
 	MediaStreamTrack:      require('./MediaStreamTrack'),
 
 	// Expose a function to refresh current videos rendering a MediaStream.
 	refreshVideos:         refreshVideos,
+
+	// Select audio output (earpiece or speaker).
+	selectAudioOutput:     selectAudioOutput,
 
 	// Expose a function to pollute window and naigator namespaces.
 	registerGlobals:       registerGlobals,
@@ -2163,6 +2275,8 @@ function observeVideos() {
 
 
 function refreshVideos() {
+	debug('refreshVideos()');
+
 	var id;
 
 	for (id in mediaStreamRenderers) {
@@ -2173,17 +2287,41 @@ function refreshVideos() {
 }
 
 
+function selectAudioOutput(output) {
+	debug('selectAudioOutput() | [output:"%s"]', output);
+
+	switch (output) {
+		case 'earpiece':
+			exec(null, null, 'iosrtcPlugin', 'selectAudioOutputEarpiece', []);
+			break;
+		case 'speaker':
+			exec(null, null, 'iosrtcPlugin', 'selectAudioOutputSpeaker', []);
+			break;
+		default:
+			throw new Error('output must be "earpiece" or "speaker"');
+	}
+}
+
+
 function registerGlobals() {
+	if (!global.navigator) {
+		global.navigator = {};
+	}
+
 	if (!navigator.mediaDevices) {
 		navigator.mediaDevices = {};
 	}
 
 	navigator.getUserMedia                  = require('./getUserMedia');
+	navigator.webkitGetUserMedia            = require('./getUserMedia');
 	navigator.mediaDevices.getUserMedia     = require('./getUserMedia');
 	navigator.mediaDevices.enumerateDevices = require('./getMediaDevices');
 	window.RTCPeerConnection                = require('./RTCPeerConnection');
+	window.webkitRTCPeerConnection          = require('./RTCPeerConnection');
 	window.RTCSessionDescription            = require('./RTCSessionDescription');
 	window.RTCIceCandidate                  = require('./RTCIceCandidate');
+	window.MediaStream                      = require('./MediaStream');
+	window.webkitMediaStream                = require('./MediaStream');
 	window.MediaStreamTrack                 = require('./MediaStreamTrack');
 }
 
@@ -2192,7 +2330,7 @@ function dump() {
 	exec(null, null, 'iosrtcPlugin', 'dump', []);
 }
 
-
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MediaStream":4,"./MediaStreamTrack":6,"./RTCIceCandidate":8,"./RTCPeerConnection":9,"./RTCSessionDescription":10,"./getMediaDevices":11,"./getUserMedia":12,"./rtcninjaPlugin":14,"./videoElementsHandler":15,"cordova/exec":undefined,"debug":16,"domready":19}],14:[function(require,module,exports){
 /**
  * Expose the rtcninjaPlugin object.
@@ -2225,6 +2363,7 @@ function attachMediaStream(element, stream) {
 }
 
 },{"./MediaStreamTrack":6,"./RTCIceCandidate":8,"./RTCPeerConnection":9,"./RTCSessionDescription":10,"./getMediaDevices":11,"./getUserMedia":12}],15:[function(require,module,exports){
+(function (global){
 /**
  * Expose a function that must be called when the library is loaded.
  */
@@ -2244,6 +2383,9 @@ var debug = require('debug')('iosrtc:videoElementsHandler'),
 
 	// RegExp for MediaStream blobId.
 	MEDIASTREAM_ID_REGEXP = new RegExp(/^MediaStream_/),
+
+	// RegExp for Blob URI.
+	BLOB_URI_REGEX = new RegExp(/^blob:/),
 
 	// Dictionary of MediaStreamRenderers (provided via module argument).
 	// - key: MediaStreamRenderer id.
@@ -2420,6 +2562,15 @@ function observeVideo(video) {
 		// TODO: Add srcObject, mozSrcObject
 		attributeFilter: ['src']
 	});
+
+	// Intercept video 'error' events if it's due to the attached MediaStream.
+	video.addEventListener('error', function (event) {
+		if (video.error.code === global.MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED && BLOB_URI_REGEX.test(video.src)) {
+			debug('stopping "error" event propagation for video element');
+
+			event.stopImmediatePropagation();
+		}
+	});
 }
 
 
@@ -2442,7 +2593,7 @@ function handleVideo(video) {
 			var mediaStreamBlobId = reader.result;
 
 			// The retrieved URL does not point to a MediaStream.
-			if (!mediaStreamBlobId || typeof mediaStreamBlobId !== 'string' || !mediaStreamBlobId.match(MEDIASTREAM_ID_REGEXP)) {
+			if (!mediaStreamBlobId || typeof mediaStreamBlobId !== 'string' || !MEDIASTREAM_ID_REGEXP.test(mediaStreamBlobId)) {
 				// If this video element was previously handling a MediaStreamRenderer, release it.
 				releaseMediaStreamRenderer(video);
 
@@ -2476,20 +2627,66 @@ function provideMediaStreamRenderer(video, mediaStreamBlobId) {
 		mediaStreamRenderers[mediaStreamRenderer.id] = mediaStreamRenderer;
 		video._iosrtcMediaStreamRendererId = mediaStreamRenderer.id;
 	}
+
+	// Close the MediaStreamRenderer of this video if it emits "close" event.
+	mediaStreamRenderer.addEventListener('close', function () {
+		if (mediaStreamRenderers[video._iosrtcMediaStreamRendererId] !== mediaStreamRenderer) {
+			return;
+		}
+
+		releaseMediaStreamRenderer(video);
+	});
+
+	// Override some <video> properties.
+	// NOTE: This is a terrible hack but it works.
+	Object.defineProperties(video, {
+		videoWidth: {
+			configurable: true,
+			get: function () {
+				return mediaStreamRenderer.videoWidth || 0;
+			}
+		},
+		videoHeight: {
+			configurable: true,
+			get: function () {
+				return mediaStreamRenderer.videoHeight || 0;
+			}
+		},
+		readyState: {
+			configurable: true,
+			get: function () {
+				if (mediaStreamRenderer && mediaStreamRenderer.stream && mediaStreamRenderer.stream.connected) {
+					return video.HAVE_ENOUGH_DATA;
+				} else {
+					return video.HAVE_NOTHING;
+				}
+			}
+		}
+	});
 }
 
 
 function releaseMediaStreamRenderer(video) {
-	var mediaStreamRenderer = mediaStreamRenderers[video._iosrtcMediaStreamRendererId];
+	if (!video._iosrtcMediaStreamRendererId) {
+		return;
+	}
 
-	delete video._iosrtcMediaStreamRendererId;
+	var mediaStreamRenderer = mediaStreamRenderers[video._iosrtcMediaStreamRendererId];
 
 	if (mediaStreamRenderer) {
 		delete mediaStreamRenderers[video._iosrtcMediaStreamRendererId];
 		mediaStreamRenderer.close();
 	}
+
+	delete video._iosrtcMediaStreamRendererId;
+
+	// Remove overrided <video> properties.
+	delete video.videoWidth;
+	delete video.videoHeight;
+	delete video.readyState;
 }
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MediaStreamRenderer":5,"debug":16}],16:[function(require,module,exports){
 
 /**
