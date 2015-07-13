@@ -1178,8 +1178,8 @@ define(['angular'], function(angular){
     " \n" +
     "    	   <div class=\"incoming\" ng-if=\"callConfig.initiator == false && !status\">\n" +
     "    	       <h1>Incoming Call</h1>\n" +
-    "    	       <button class=\"answer\" ng-click=\"answer()\">Answer</button>\n" +
-    "    	       <button class=\"reject\" ng-click=\"reject()\">Reject</button>\n" +
+    "    	       <button class=\"answer\" ng-click=\"answer()\"><i class=\"icon ion-ios-telephone\"></i></button>\n" +
+    "    	       <button class=\"reject\" ng-click=\"reject()\"><i class=\"icon ion-close\"></i></button>\n" +
     "    	   </div>\n" +
     "\n" +
     "            <div class=\"outgoing\" ng-if=\"callConfig.initiator == true && !status\">\n" +
@@ -1215,6 +1215,10 @@ define(['angular'], function(angular){
     "           \n" +
     "           <div class=\"outgoing\" ng-if=\"status == 'engaged'\">\n" +
     "               <h1>Engaged</h1>\n" +
+    "           </div>\n" +
+    "           \n" +
+    "           <div class=\"outgoing\" ng-if=\"status == 'no-answer'\">\n" +
+    "               <h1>No Answer</h1>\n" +
     "           </div>\n" +
     "\n" +
     "           <!--<div class=\"outgoing\" ng-if=\"status == 'answered'\">\n" +

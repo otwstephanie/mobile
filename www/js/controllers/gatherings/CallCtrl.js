@@ -91,6 +91,8 @@ define(['adapter'], function() {
 		 */
 		$scope.call = function(guid) {
 
+			document.getElementById('dialing').play();
+
 			$scope.status = "pinging";
 			$scope.$apply();
 
@@ -101,12 +103,22 @@ define(['adapter'], function() {
 
 			//in 3 seconds if we don't get a response, send a push notification
 			$timeout(function() {
-				console.log("did they answer");
+				console.log("could we ping them?");
 				if ($scope.status == "pinging") {
-					console.log("no..");
+					console.log("no... queueing");
 					socket.emit("queue", guid);
 				}
-			}, 3000);
+			}, 3 * 1000);
+			
+			//call for 30 seconds, then cancel
+			$timeout(function() {
+				if ($scope.status != "answered") {
+					$scope.status = "no-answer";
+					$timeout(function(){
+						$scope.end();
+					}, 3 * 1000);
+				}
+			}, 30 * 1000);
 
 		};
 
@@ -187,6 +199,7 @@ define(['adapter'], function() {
 		};
 
 		$scope.end = function() {
+			document.getElementById('dialing').pause();
 			$scope.modal.remove();
 			socket.emit('sendMessage', $scope.callConfig.guid, {type: 'end'});
 		};
@@ -242,6 +255,7 @@ define(['adapter'], function() {
 		var socketListener = function(guid, message) {
 			switch (message.type){
 				case 'answer':
+					document.getElementById('dialing').pause();
 					//send offer to receiver
 					$scope.OfferOffer(guid);
 					break;
@@ -275,6 +289,7 @@ define(['adapter'], function() {
 					$scope.$apply();
 					break;
 				case 'reject':
+					document.getElementById('dialing').pause();
 					$scope.status = "rejected";
 					$scope.$digest();
 					//something went wrong..
@@ -283,6 +298,7 @@ define(['adapter'], function() {
 					}, 3000);
 					break;
 				case 'engaged':
+					document.getElementById('dialing').pause();
 					$scope.status = "engaged";
 					$scope.$digest();
 					//something went wrong..

@@ -17,6 +17,7 @@
     <preference name="auto-hide-splash-screen" value="false" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <access launch-external="yes" origin="mailto:*" />
+    <preference name="deployment-target" value="7.0"/>
     <platform name="ios">
         <icon height="180" src="res/ios/appicon-60@3x.png" width="180" />
         <icon height="60" src="res/ios/appicon-60.png" width="60" />

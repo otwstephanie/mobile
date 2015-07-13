@@ -153,6 +153,7 @@
 	vertical-align:middle;
 	height:100%;
 	width:100%;
+	background:#333;
 	z-index:99999999;
 	position:absolute;
 	top:0;
@@ -167,17 +168,37 @@
 	border-radius:2px;
 	border:0;
 	background:0;
+	color:#FFF;
 }	
+.call-display-wrapper h1{
+	color:#FFF;
+	font-weight:200;
+}
+.call-display-wrapper p{
+	color:#FFF;
+}
 	
 .incoming button{
-	padding:24px;
+	padding:0;
 	border:0;
+	border-radius:50%;
+	width:80px;
+	height:80px;
+	
 	background:transparent;
 	font-size:18px;
+	margin:50px 16px;
+	line-height:80px;
+}
+.incoming button > i.icon{
+	font-size:34px;
+	vertical-align: middle;
 }
 .incoming button.answer{
-	color:#008000;
+	background:#008000;
+	color:#FFF;
 }
 .incoming button.reject{
-	color:#FF0000;
+	background:#FF0000;
+	color:#FFF;
 }

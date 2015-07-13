@@ -25,8 +25,8 @@
  
     	   <div class="incoming" ng-if="callConfig.initiator == false && !status">
     	       <h1>Incoming Call</h1>
-    	       <button class="answer" ng-click="answer()">Answer</button>
-    	       <button class="reject" ng-click="reject()">Reject</button>
+    	       <button class="answer" ng-click="answer()"><i class="icon ion-ios-telephone"></i></button>
+    	       <button class="reject" ng-click="reject()"><i class="icon ion-close"></i></button>
     	   </div>
 
             <div class="outgoing" ng-if="callConfig.initiator == true && !status">
@@ -62,6 +62,10 @@
            
            <div class="outgoing" ng-if="status == 'engaged'">
                <h1>Engaged</h1>
+           </div>
+           
+           <div class="outgoing" ng-if="status == 'no-answer'">
+               <h1>No Answer</h1>
            </div>
 
            <!--<div class="outgoing" ng-if="status == 'answered'">
