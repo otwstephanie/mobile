@@ -117,6 +117,9 @@ define(['adapter'], function() {
 					$timeout(function(){
 						$scope.end();
 					}, 3 * 1000);
+					/**
+					 * @todo send a notification to the user that we tried to call them
+					 */
 				}
 			}, 30 * 1000);
 
@@ -190,18 +193,27 @@ define(['adapter'], function() {
 		$scope.answer = function() {
 			$scope.status = "answering";
 			socket.emit('sendMessage', $scope.callConfig.guid, {type:'answer'});
+			/**
+			 * If no confirmation our answer was received in 15 seconds, cancel
+			 */
+			$timeout(function(){
+				if($scope.status != "answered"){
+					$scope.modal.remove();
+				}
+			}, 15 * 1000);
 		};
 
 		$scope.reject = function() {
 			document.getElementById('ringing').pause();
+			document.getElementById('dialing').pause();
 			socket.emit('sendMessage', $scope.callConfig.guid, {type: 'reject'});
 			$scope.modal.remove();
 		};
 
 		$scope.end = function() {
 			document.getElementById('dialing').pause();
-			$scope.modal.remove();
 			socket.emit('sendMessage', $scope.callConfig.guid, {type: 'end'});
+			$scope.modal.remove();
 		};
 
 		$scope.onIceCandidate = function(event) {
@@ -223,9 +235,10 @@ define(['adapter'], function() {
 			video.play();
 			console.log("New Stream");
 			console.log(event.stream);
-			//if (window.device.platform === 'iOS')
-			//cordova.plugins.iosrtc.refreshVideos();
-			//		}
+			if (window.device.platform === 'iOS'){
+				//cordova.plugins.iosrtc.refreshVideos();
+				cordova.plugins.iosrtc.selectAudioOutput('speaker');
+			}
 			//	}
 			//);
 		};
@@ -242,11 +255,13 @@ define(['adapter'], function() {
 				$timeout(function() {
 					//wait 5 seconds to see if we are connected again
 					if (peer.iceConnectionState == "disconnected") {
+						console.log("peer was disconnected ans we waited 5 seconds");
 						$scope.modal.remove();
 					}
 				}, 5000);
 			}
 			if (peer.iceConnectionState == "closed") {
+				console.log("peer was closed. we didn't wait");
 				$scope.modal.remove();
 			}
 		};
@@ -283,6 +298,7 @@ define(['adapter'], function() {
 
 					if (window.device.platform === 'iOS') {
 						cordova.plugins.iosrtc.refreshVideos();
+						cordova.plugins.iosrtc.selectAudioOutput('speaker');
 					}
 
 					$scope.status = "answered";
@@ -362,12 +378,21 @@ define(['adapter'], function() {
 		);
 
 		$scope.$on('modal.removed', function() {
-			document.getElementById('ringing').pause(); //in case canceled.
 			$rootScope.inCall = false;
+			$scope.$destroy();
+		});
+		
+		
+		$scope.$on('$destroy', function(){
+			document.getElementById('ringing').pause();
 			socket.removeListener('messageReceived', socketListener);
+
 			if (turnTokenListener)
 				socket.removeListener('turnToken', turnTokenListener);
-			localStream.stop();
+
+			if(localStream)
+				localStream.stop();
+
 			if (peer) {
 				peer.close();
 			}

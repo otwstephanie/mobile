@@ -24,7 +24,8 @@
         <div class="call-display-wrapper" ng-if="status != 'answered'">
  
     	   <div class="incoming" ng-if="callConfig.initiator == false && !status">
-    	       <h1>Incoming Call</h1>
+    	       <img src="{{$root.node_url}}icon/{{callConfig.guid}}/medium"/>
+    	       <h1 ng-bind-html="callConfig.name"></h1>
     	       <button class="answer" ng-click="answer()"><i class="icon ion-ios-telephone"></i></button>
     	       <button class="reject" ng-click="reject()"><i class="icon ion-close"></i></button>
     	   </div>
@@ -32,7 +33,7 @@
             <div class="outgoing" ng-if="callConfig.initiator == true && !status">
                <h1>Calling</h1>
                <p>Trying to connect.</p>
-               <button class="reject" ng-click="reject()">Cancel</button>
+               <button class="reject" ng-click="reject()"><i class="icon ion-close"></i></button>
            </div>
            
             <div class="outgoing" ng-if="callConfig.initiator == true && status == 'failed_signal'">
@@ -43,12 +44,12 @@
             <div class="outgoing" ng-if="callConfig.initiator == true && status == 'pinging'">
                <h1>Calling</h1>
                <p>Waiting for availability..</p>
-               <button class="reject" ng-click="reject()">Cancel</button>
+               <button class="reject" ng-click="reject()"><i class="icon ion-close"></i></button>
            </div>
 
     	   <div class="outgoing" ng-if="callConfig.initiator == true && status == 'calling'">
                <h1>Calling</h1>
-               <button class="reject" ng-click="reject()">Cancel</button>
+               <button class="reject" ng-click="reject()"><i class="icon ion-close"></i></button>
            </div>
 
            <div class="outgoing" ng-if="status == 'answering'">

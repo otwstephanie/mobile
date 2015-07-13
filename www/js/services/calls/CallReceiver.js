@@ -8,7 +8,7 @@
 define(['angular', 'socketio'], function(angular) {
     "use strict";
 
-	var factory = function($rootScope, $timeout, $interval, $ionicModal, socket, push) {
+	var factory = function($rootScope, $timeout, $interval, $ionicModal, socket, push, Client) {
 
 		//the modal will inherit this scope
 		var $scope = $rootScope.$new();
@@ -17,7 +17,7 @@ define(['angular', 'socketio'], function(angular) {
 			switch (message.type){
 				case 'call':
 					if (!$rootScope.inCall) {
-						incomingCall(guid, {name: "UNKOWN"});
+						incomingCall(guid, {name: "..."});
 					} else {
 						socket.emit('sendMessage', guid, {type:'engaged'});
 					}
@@ -30,7 +30,7 @@ define(['angular', 'socketio'], function(angular) {
 					console.log(message);
 
 					if (!$rootScope.inCall)
-						incomingCall( message.queue.caller, {name: "UNKOWN"});
+						incomingCall( message.queue.caller, {name: "..."});
 					break;
 			}
 		});
@@ -43,6 +43,8 @@ define(['angular', 'socketio'], function(angular) {
 			if ($rootScope.inCall)
 				return false;
 
+			$rootScope.inCall = true;
+
 			document.getElementById('ringing').play();
 
 			$scope.callConfig = {
@@ -50,6 +52,15 @@ define(['angular', 'socketio'], function(angular) {
 				guid: guid,
 				name: user.name
 			};
+			
+			//get the profile of who is calling
+			Client.get('api/v1/channel/' + guid, {}, 
+				function(success){
+					$scope.callConfig.name = success.channel.name;
+				}, 
+				function(error){
+				});
+
 			$timeout(function() {
 				$ionicModal.fromTemplateUrl('templates/gatherings/chat/call.html', {
 					scope: $scope,
@@ -65,6 +76,6 @@ define(['angular', 'socketio'], function(angular) {
 
     };
 
-    factory.$inject = ['$rootScope', '$timeout', '$interval', '$ionicModal', 'socket', 'push'];
+    factory.$inject = ['$rootScope', '$timeout', '$interval', '$ionicModal', 'socket', 'push', 'Client'];
     return factory;
 });

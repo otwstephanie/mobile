@@ -1177,7 +1177,8 @@ define(['angular'], function(angular){
     "        <div class=\"call-display-wrapper\" ng-if=\"status != 'answered'\">\n" +
     " \n" +
     "    	   <div class=\"incoming\" ng-if=\"callConfig.initiator == false && !status\">\n" +
-    "    	       <h1>Incoming Call</h1>\n" +
+    "    	       <img src=\"{{$root.node_url}}icon/{{callConfig.guid}}/medium\"/>\n" +
+    "    	       <h1 ng-bind-html=\"callConfig.name\"></h1>\n" +
     "    	       <button class=\"answer\" ng-click=\"answer()\"><i class=\"icon ion-ios-telephone\"></i></button>\n" +
     "    	       <button class=\"reject\" ng-click=\"reject()\"><i class=\"icon ion-close\"></i></button>\n" +
     "    	   </div>\n" +
@@ -1185,7 +1186,7 @@ define(['angular'], function(angular){
     "            <div class=\"outgoing\" ng-if=\"callConfig.initiator == true && !status\">\n" +
     "               <h1>Calling</h1>\n" +
     "               <p>Trying to connect.</p>\n" +
-    "               <button class=\"reject\" ng-click=\"reject()\">Cancel</button>\n" +
+    "               <button class=\"reject\" ng-click=\"reject()\"><i class=\"icon ion-close\"></i></button>\n" +
     "           </div>\n" +
     "           \n" +
     "            <div class=\"outgoing\" ng-if=\"callConfig.initiator == true && status == 'failed_signal'\">\n" +
@@ -1196,12 +1197,12 @@ define(['angular'], function(angular){
     "            <div class=\"outgoing\" ng-if=\"callConfig.initiator == true && status == 'pinging'\">\n" +
     "               <h1>Calling</h1>\n" +
     "               <p>Waiting for availability..</p>\n" +
-    "               <button class=\"reject\" ng-click=\"reject()\">Cancel</button>\n" +
+    "               <button class=\"reject\" ng-click=\"reject()\"><i class=\"icon ion-close\"></i></button>\n" +
     "           </div>\n" +
     "\n" +
     "    	   <div class=\"outgoing\" ng-if=\"callConfig.initiator == true && status == 'calling'\">\n" +
     "               <h1>Calling</h1>\n" +
-    "               <button class=\"reject\" ng-click=\"reject()\">Cancel</button>\n" +
+    "               <button class=\"reject\" ng-click=\"reject()\"><i class=\"icon ion-close\"></i></button>\n" +
     "           </div>\n" +
     "\n" +
     "           <div class=\"outgoing\" ng-if=\"status == 'answering'\">\n" +
