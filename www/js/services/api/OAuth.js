@@ -10,7 +10,7 @@
 define(['angular'], function(angular) {
 	"use strict";
 
-	var factory = function($rootScope, OAuthConfig, $http, storage) {
+	var factory = function($rootScope, OAuthConfig, $http, storage, socket) {
 
 		var time = Math.round(new Date().getTime() / 1000);
 
@@ -53,6 +53,9 @@ define(['angular'], function(angular) {
 					storage.set('access_token', data.access_token);
 					storage.set('loggedin', true);
 					storage.set('loggedin_', true);
+					
+					//reconnect
+					socket.emit('register', data.user_id, data.access_token);
 
 					callback(true);
 				}).error(function(data, status, headers, config) {
@@ -89,6 +92,6 @@ define(['angular'], function(angular) {
 
 	};
 
-	factory.$inject = ['$rootScope', 'OAuthConfig', '$http', 'storage'];
+	factory.$inject = ['$rootScope', 'OAuthConfig', '$http', 'storage', 'socket'];
 	return factory;
 });

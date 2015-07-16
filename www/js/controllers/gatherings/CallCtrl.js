@@ -16,8 +16,9 @@ define(['adapter'], function() {
 		$scope.camera = true; //show our own camera
 		$scope.muted = false;
 		$rootScope.inCall = true;
+		$scope.pulses = 0;
 
-		var peer, localStream, turnTokenListener;
+		var peer, localStream, turnTokenListener, pulse;
 
 		$scope.iceServers = null;
 
@@ -96,32 +97,40 @@ define(['adapter'], function() {
 			$scope.status = "pinging";
 			$scope.$apply();
 
-			socket.emit('sendMessage', guid, {type: 'call'});
+			//socket.emit('sendMessage', guid, {type: 'call'});
 
 			//also send a push notifiation
 			Client.put('api/v1/gatherings/call/' + guid, {}, function() {}, function() {});
 
-			//in 3 seconds if we don't get a response, send a push notification
-			$timeout(function() {
-				console.log("could we ping them?");
-				if ($scope.status == "pinging") {
-					console.log("no... queueing");
-					socket.emit("queue", guid);
+			//send a pulse every second, until we get a 'reflex'
+			pulse = $interval(function(){
+				if($scope.status != "pinging"){
+					return $interval.cancel(pulse); //don't call if not pinging
 				}
-			}, 3 * 1000);
-			
-			//call for 30 seconds, then cancel
-			$timeout(function() {
-				if ($scope.status != "answered") {
+				if($scope.pulses >= 10) {
+					//give up
 					$scope.status = "no-answer";
 					$timeout(function(){
 						$scope.end();
+						//leave a notification
+						Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
 					}, 3 * 1000);
-					/**
-					 * @todo send a notification to the user that we tried to call them
-					 */
+					$interval.cancel(pulse);
+					return false;
 				}
-			}, 30 * 1000);
+				console.log('sending pulse to ' + guid);
+				socket.emit('sendMessage', guid, {type: 'call'});
+				$scope.pulses++;
+			}, 3 * 1000);
+
+			//if no answer after one minute then we give up
+			$timeout(function(){
+				$scope.status = "no-answer";
+				$timeout(function(){
+					$scope.end();
+					Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
+				}, 1500);
+			}, 60 * 1000);
 
 		};
 
@@ -206,6 +215,8 @@ define(['adapter'], function() {
 		$scope.reject = function() {
 			document.getElementById('ringing').pause();
 			document.getElementById('dialing').pause();
+			if(pulse)
+				$interval.cancel(pulse);
 			socket.emit('sendMessage', $scope.callConfig.guid, {type: 'reject'});
 			$scope.modal.remove();
 		};
@@ -270,7 +281,10 @@ define(['adapter'], function() {
 		var socketListener = function(guid, message) {
 			switch (message.type){
 				case 'answer':
+					//stop dialing
 					document.getElementById('dialing').pause();
+					//stop pulse
+					$interval.cancel(pulse);
 					//send offer to receiver
 					$scope.OfferOffer(guid);
 					break;
@@ -342,9 +356,9 @@ define(['adapter'], function() {
 					//}
 					break;
 				case 'available':
-					//if ($scope.callConfig.initiator && $scope.status == 'pinging') {
-						//$scope.createOffer(guid);
-					//}
+					$scope.status == "calling";
+					$scope.$digest();
+					$interval.cancel(pulse);
 					break;
 				case 'end':
 					$scope.modal.remove();
@@ -381,8 +395,8 @@ define(['adapter'], function() {
 			$rootScope.inCall = false;
 			$scope.$destroy();
 		});
-		
-		
+
+
 		$scope.$on('$destroy', function(){
 			document.getElementById('ringing').pause();
 			socket.removeListener('messageReceived', socketListener);
@@ -396,6 +410,9 @@ define(['adapter'], function() {
 			if (peer) {
 				peer.close();
 			}
+
+			if(pulse)
+				$interval.cancel(pulse);
 		});
 
 		/*$scope.counter = { minutes: 0, seconds: 0, secs: 0 };

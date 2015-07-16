@@ -18,25 +18,17 @@ define(['angular', 'socketio'], function(angular) {
 				case 'call':
 					if (!$rootScope.inCall) {
 						incomingCall(guid, {name: "..."});
+						socket.emit('sendMessage', guid, {type:'available'});
 					} else {
 						socket.emit('sendMessage', guid, {type:'engaged'});
 					}
 					break;
-				//case 'offer':
-				//	incomingCall(guid, JSON.parse(message.user), JSON.parse(message.offer));
-				//	break;
-				case 'queue':
-					console.log('your queue is..');
-					console.log(message);
 
-					if (!$rootScope.inCall)
-						incomingCall( message.queue.caller, {name: "..."});
-					break;
 			}
 		});
 
-		push.listen('call', function() {
-			socket.emit("queue");
+		push.listen('call', function(data) {
+			console.log(data);
 		});
 
 		var incomingCall = function(guid, user, offer) {
