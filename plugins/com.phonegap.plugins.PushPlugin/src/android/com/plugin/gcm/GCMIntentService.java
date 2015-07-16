@@ -9,10 +9,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.os.Build;
+import android.net.Uri;
 
 import java.util.Random;
 import com.google.android.gcm.GCMBaseIntentService;
@@ -110,6 +113,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 				.setTicker(extras.getString("title"))
 				.setContentIntent(contentIntent)
 				.setAutoCancel(true);
+
+		if(extras.getString("uri").equals("call")){
+			Log.d("minds sound?", "should play");
+			Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+			mBuilder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE);
+			mBuilder.setSound(soundUri);
+		}
 
 		String message = extras.getString("message");
 		if (message != null) {

@@ -125,10 +125,12 @@ define(['adapter'], function() {
 
 			//if no answer after one minute then we give up
 			$timeout(function() {
-				$scope.status = "no-answer";
 				$timeout(function() {
-					$scope.end();
-					Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
+					if ($scope.status == "pinging") {
+						$scope.status = "no-answer";
+						$scope.end();
+						Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
+					}
 				}, 1500);
 			}, 60 * 1000);
 
