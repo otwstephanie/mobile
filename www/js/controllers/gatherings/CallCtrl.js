@@ -396,8 +396,7 @@ define(['adapter'], function() {
 				$scope.$destroy();
 		});
 		$scope.$on('modal.hidden', function() {
-				$rootScope.inCall = false;
-				$scope.$destroy();
+				$scope.modal.show();
     });
 
 

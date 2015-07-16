@@ -56,7 +56,9 @@ define(['angular', 'socketio'], function(angular) {
 			$timeout(function() {
 				$ionicModal.fromTemplateUrl('templates/gatherings/chat/call.html', {
 					scope: $scope,
-					animation: 'slide-in-up'
+					animation: 'slide-in-up',
+          backdropClickToClose: false,
+					hardwareBackButtonClose: false
 				}).then(function(modal) {
 					$scope.modal = modal;
 					$scope.modal.show();
