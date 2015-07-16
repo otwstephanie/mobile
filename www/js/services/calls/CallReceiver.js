@@ -44,13 +44,13 @@ define(['angular', 'socketio'], function(angular) {
 				guid: guid,
 				name: user.name
 			};
-			
+
 			//get the profile of who is calling
-			Client.get('api/v1/channel/' + guid, {}, 
-				function(success){
+			Client.get('api/v1/channel/' + guid, {},
+				function(success) {
 					$scope.callConfig.name = success.channel.name;
-				}, 
-				function(error){
+				},
+				function(error) {
 				});
 
 			$timeout(function() {

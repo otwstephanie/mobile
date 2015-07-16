@@ -103,14 +103,14 @@ define(['adapter'], function() {
 			Client.put('api/v1/gatherings/call/' + guid, {}, function() {}, function() {});
 
 			//send a pulse every second, until we get a 'reflex'
-			pulse = $interval(function(){
-				if($scope.status != "pinging"){
+			pulse = $interval(function() {
+				if ($scope.status != "pinging") {
 					return $interval.cancel(pulse); //don't call if not pinging
 				}
-				if($scope.pulses >= 10) {
+				if ($scope.pulses >= 10) {
 					//give up
 					$scope.status = "no-answer";
-					$timeout(function(){
+					$timeout(function() {
 						$scope.end();
 						//leave a notification
 						Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
@@ -124,9 +124,9 @@ define(['adapter'], function() {
 			}, 3 * 1000);
 
 			//if no answer after one minute then we give up
-			$timeout(function(){
+			$timeout(function() {
 				$scope.status = "no-answer";
-				$timeout(function(){
+				$timeout(function() {
 					$scope.end();
 					Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
 				}, 1500);
@@ -205,8 +205,8 @@ define(['adapter'], function() {
 			/**
 			 * If no confirmation our answer was received in 15 seconds, cancel
 			 */
-			$timeout(function(){
-				if($scope.status != "answered"){
+			$timeout(function() {
+				if ($scope.status != "answered") {
 					$scope.modal.remove();
 				}
 			}, 15 * 1000);
@@ -215,7 +215,7 @@ define(['adapter'], function() {
 		$scope.reject = function() {
 			document.getElementById('ringing').pause();
 			document.getElementById('dialing').pause();
-			if(pulse)
+			if (pulse)
 				$interval.cancel(pulse);
 			socket.emit('sendMessage', $scope.callConfig.guid, {type: 'reject'});
 			$scope.modal.remove();
@@ -246,7 +246,7 @@ define(['adapter'], function() {
 			video.play();
 			console.log("New Stream");
 			console.log(event.stream);
-			if (window.device.platform === 'iOS'){
+			if (window.device.platform === 'iOS') {
 				//cordova.plugins.iosrtc.refreshVideos();
 				cordova.plugins.iosrtc.selectAudioOutput('speaker');
 			}
@@ -392,27 +392,33 @@ define(['adapter'], function() {
 		);
 
 		$scope.$on('modal.removed', function() {
-			$rootScope.inCall = false;
-			$scope.$destroy();
+				$rootScope.inCall = false;
+				$scope.$destroy();
 		});
+		$scope.$on('modal.hidden', function() {
+				$rootScope.inCall = false;
+				$scope.$destroy();
+    });
 
 
-		$scope.$on('$destroy', function(){
+		$scope.$on('$destroy', function() {
 			document.getElementById('ringing').pause();
+			document.getElementById('dialing').pause();
 			socket.removeListener('messageReceived', socketListener);
+
+			if (pulse)
+				$interval.cancel(pulse);
 
 			if (turnTokenListener)
 				socket.removeListener('turnToken', turnTokenListener);
 
-			if(localStream)
+			if (localStream)
 				localStream.stop();
 
 			if (peer) {
 				peer.close();
 			}
 
-			if(pulse)
-				$interval.cancel(pulse);
 		});
 
 		/*$scope.counter = { minutes: 0, seconds: 0, secs: 0 };

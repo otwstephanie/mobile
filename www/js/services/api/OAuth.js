@@ -53,7 +53,7 @@ define(['angular'], function(angular) {
 					storage.set('access_token', data.access_token);
 					storage.set('loggedin', true);
 					storage.set('loggedin_', true);
-					
+
 					//reconnect
 					socket.emit('register', data.user_id, data.access_token);
 
