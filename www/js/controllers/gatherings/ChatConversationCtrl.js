@@ -105,7 +105,7 @@ define(function() {
 					$scope.modal = modal;
 					$scope.modal.show();
 					//need to send a signal to our new controller
-					$scope.$emit("call");
+					//$scope.$emit("call");
 				});
 			});
 		};

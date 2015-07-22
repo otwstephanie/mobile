@@ -1152,30 +1152,30 @@ define(['angular'], function(angular){
     "</ion-view>");
   $templateCache.put("templates/gatherings/chat/call.html",
     "<ion-modal-view ng-controller=\"CallCtrl\" class=\"view-bg\">\n" +
-    "	\n" +
+    "\n" +
     "	<ion-pane>\n" +
-    "	\n" +
+    "\n" +
     "	   <div class=\"video-wrappers\" ng-if=\"videoCall && (callConfig.initiator == true || status == 'answered' || status == 'answering')\">\n" +
     "	       <video class=\"remote\" id=\"remote\" autoplay ng-show=\"status == 'answered'\"></video>\n" +
     "	       <video class=\"preview\" id=\"preview\" autoplay ng-show=\"status == 'answered'\"></video>\n" +
     "	    </div>\n" +
-    "	    \n" +
+    "\n" +
     "	    <div class=\"video-wrappers\" ng-if=\"!videoCall && (callConfig.initiator == true || status == 'answered' || status == 'answering')\">\n" +
     "            <audio ng-if=\"!videoCall\" id=\"remote\" autoplay></audio>\n" +
     "        </div>\n" +
-    "	    \n" +
+    "\n" +
     "	    <div class=\"call-actions\" ng-if=\"status == 'answered' || status == 'answering'\">\n" +
     "            <button class=\"video icon ion-ios-videocam\" ng-if=\"camera\" ng-click=\"toggleVideo()\"></button>\n" +
     "	        <button class=\"video icon ion-ios-videocam-outline\" ng-if=\"!camera\" ng-click=\"toggleVideo()\"></button>\n" +
-    "	       \n" +
+    "\n" +
     "	       <button class=\"microphone icon ion-android-microphone-off\" ng-if=\"muted\" ng-click=\"toggleAudio()\"></button>\n" +
     "	       <button class=\"microphone icon ion-android-microphone\" ng-if=\"!muted\" ng-click=\"toggleAudio()\"></button>\n" +
-    "	       \n" +
+    "\n" +
     "	       <button class=\"hangup icon ion-ios-close\" ng-click=\"end();\"></button>\n" +
     "	    </div>\n" +
-    "	    \n" +
+    "\n" +
     "        <div class=\"call-display-wrapper\" ng-if=\"status != 'answered'\">\n" +
-    " \n" +
+    "\n" +
     "    	   <div class=\"incoming\" ng-if=\"callConfig.initiator == false && !status\">\n" +
     "    	       <img src=\"{{$root.node_url}}icon/{{callConfig.guid}}/medium\"/>\n" +
     "    	       <h1 ng-bind-html=\"callConfig.name\"></h1>\n" +
@@ -1188,12 +1188,12 @@ define(['angular'], function(angular){
     "               <p>Trying to connect.</p>\n" +
     "               <button class=\"reject\" ng-click=\"reject()\"><i class=\"icon ion-close\"></i></button>\n" +
     "           </div>\n" +
-    "           \n" +
+    "\n" +
     "            <div class=\"outgoing\" ng-if=\"callConfig.initiator == true && status == 'failed_signal'\">\n" +
     "               <h1>Failed</h1>\n" +
     "               <p>Signal failure.</p>\n" +
     "           </div>\n" +
-    "           \n" +
+    "\n" +
     "            <div class=\"outgoing\" ng-if=\"callConfig.initiator == true && status == 'pinging'\">\n" +
     "               <h1>Calling</h1>\n" +
     "               <p>Waiting for availability..</p>\n" +
@@ -1208,16 +1208,16 @@ define(['angular'], function(angular){
     "           <div class=\"outgoing\" ng-if=\"status == 'answering'\">\n" +
     "               <h1>Connecting</h1>\n" +
     "           </div>\n" +
-    "           \n" +
-    "           \n" +
+    "\n" +
+    "\n" +
     "           <div class=\"outgoing\" ng-if=\"status == 'rejected'\">\n" +
     "               <h1>Rejected</h1>\n" +
     "           </div>\n" +
-    "           \n" +
+    "\n" +
     "           <div class=\"outgoing\" ng-if=\"status == 'engaged'\">\n" +
     "               <h1>Engaged</h1>\n" +
     "           </div>\n" +
-    "           \n" +
+    "\n" +
     "           <div class=\"outgoing\" ng-if=\"status == 'no-answer'\">\n" +
     "               <h1>No Answer</h1>\n" +
     "           </div>\n" +
@@ -1228,7 +1228,8 @@ define(['angular'], function(angular){
     "            </div>-->\n" +
     "       </div>\n" +
     "	</ion-pane>\n" +
-    "</ion-modal-view>");
+    "</ion-modal-view>\n" +
+    "");
   $templateCache.put("templates/gatherings/chat/conversation.html",
     "<ion-view ng-controller=\"ChatConversationCtrl\" class=\"view-bg\">\n" +
     "    \n" +

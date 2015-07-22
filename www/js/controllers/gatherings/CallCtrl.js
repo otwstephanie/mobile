@@ -84,6 +84,9 @@ define(['adapter'], function() {
 				deferred.resolve(true);
 				socket.removeListener('turnToken', turnTokenListener);
 			});
+			$timeout(function() {
+				deferred.reject();
+			},3000);
 			return deferred.promise;
 		};
 
@@ -217,9 +220,10 @@ define(['adapter'], function() {
 		$scope.reject = function() {
 			document.getElementById('ringing').pause();
 			document.getElementById('dialing').pause();
-			if (pulse)
-				$interval.cancel(pulse);
-			socket.emit('sendMessage', $scope.callConfig.guid, {type: 'reject'});
+
+			if (!socket)
+				socket.emit('sendMessage', $scope.callConfig.guid, {type: 'reject'});
+
 			$scope.modal.remove();
 		};
 
@@ -394,8 +398,9 @@ define(['adapter'], function() {
 		);
 
 		$scope.$on('modal.removed', function() {
-				$rootScope.inCall = false;
-				$scope.$destroy();
+				$timeout(function() {
+					$scope.$destroy();
+				});
 		});
 		$scope.$on('modal.hidden', function() {
 				$scope.modal.show();
@@ -403,6 +408,9 @@ define(['adapter'], function() {
 
 
 		$scope.$on('$destroy', function() {
+
+			$rootScope.inCall = false;
+
 			document.getElementById('ringing').pause();
 			document.getElementById('dialing').pause();
 			socket.removeListener('messageReceived', socketListener);
