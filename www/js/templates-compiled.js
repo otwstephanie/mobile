@@ -1232,13 +1232,13 @@ define(['angular'], function(angular){
     "");
   $templateCache.put("templates/gatherings/chat/conversation.html",
     "<ion-view ng-controller=\"ChatConversationCtrl\" class=\"view-bg\">\n" +
-    "    \n" +
+    "\n" +
     "    <ion-nav-buttons side=\"left\">\n" +
     "        <a class=\"button button-clear icon ion-arrow-left-b\" href=\"#/tab/gatherings/conversations\"></a>\n" +
     "    </ion-nav-buttons>\n" +
     "    <ion-nav-title>\n" +
     "    	<a href=\"#/tab/newsfeed/channel/{{guid}}\" style=\"vertical-align:middle; text-decoration: none;\">\n" +
-    "	    	<img ng-src=\"{{node_url}}icon/{{guid}}/small}}\" style=\"margin-bottom:2px; vertical-align:middle; width:28px; border-radius:3px; box-shadow:0 0 3px #888;\"/> \n" +
+    "	    	<img ng-src=\"{{node_url}}icon/{{guid}}/small}}\" style=\"margin-bottom:2px; vertical-align:middle; width:28px; border-radius:3px; box-shadow:0 0 3px #888;\"/>\n" +
     "	    	{{name}}\n" +
     "    	</a>\n" +
     "    </ion-nav-title>\n" +
@@ -1249,38 +1249,46 @@ define(['angular'], function(angular){
     "    <ion-content>\n" +
     "\n" +
     "        <ion-list>\n" +
-    "        \n" +
+    "\n" +
     "            <ion-refresher\n" +
     "                pulling-text=\"Load earlier messages..\"\n" +
     "                on-refresh=\"loadMore()\">\n" +
     "            </ion-refresher>\n" +
     "\n" +
     "            <ion-item ng-repeat=\"message in messages\" class=\"message\" ng-class=\"{'message-right': message.owner_guid == $root.user_guid}\" type=\"item-text-wrap\">\n" +
-    "				 <img ng-src=\"{{$root.node_url}}icon/{{message.ownerObj.guid}}/small\"/>\n" +
-    "                \n" +
-    "                 <div class=\"message-content\">\n" +
-    "                	<decrypt message=\"{{message.message}}\"></decrypt>\n" +
+    "      				 <img ng-src=\"{{$root.node_url}}icon/{{message.ownerObj.guid}}/small\"/>\n" +
+    "\n" +
+    "                 <div class=\"message-content\" ng-if=\"message.subtype != 'message'\">\n" +
+    "                    	<decrypt message=\"{{message.message}}\"></decrypt>\n" +
     "                 </div>\n" +
-    "                 \n" +
+    "                 <div class=\"message-content\" ng-if=\"message.subtype == 'call_missed'\" ng-click=\"startCall()\">\n" +
+    "                   <i class=\"icon ion-ios-telephone\"></i> Missed call.\n" +
+    "                 </div>\n" +
+    "                 <div class=\"message-content\" ng-if=\"message.subtype == 'call_ended'\" ng-click=\"startCall()\">\n" +
+    "                   <i class=\"icon ion-ios-telephone\"></i> {{message.duration}}\n" +
+    "                 </div>\n" +
+    "\n" +
     "                 <span class=\"ts\">{{message.time_created * 1000 | date:'shortTime'}} - {{message.time_created * 1000 | date:'longDate'}}</p>\n" +
     "            </ion-item>\n" +
-    "            \n" +
+    "\n" +
+    "\n" +
     "            <div ng-show=\"messages.length == 0 && inProgress\" style=\"top:100px; left: 50%; margin-left: -40px; position:fixed; text-align:center; font-weight:200; padding-top:50px; z-index:999\">\n" +
-    "				<img src=\"img/logo-transparent.png\" class=\"loading-bulb-glow\"/> <br/>\n" +
-    "				downloading..\n" +
-    "			</div>\n" +
+    "            <img src=\"img/logo-transparent.png\" class=\"loading-bulb-glow\"/> <br/>\n" +
+    "            downloading..\n" +
+    "            </div>\n" +
     "\n" +
     "        </ion-list>\n" +
     "\n" +
     "    </ion-content>\n" +
-    "        \n" +
+    "\n" +
     "    <ion-footer-bar >\n" +
     "        <form ng-submit=\"send()\" class=\"message-input-form\">\n" +
     "         <input type=\"text\" class=\"message-input\" placeholder=\"Send a message...\" ng-model=\"message\" ng-min-length=\"1\" ng-max-length=\"140\" required/> <input type=\"submit\" class=\"button button-clear submit-button minds-yellow\" value=\"send\"/>\n" +
     "        </form>\n" +
     "    </ion-footer-bar>\n" +
-    "    \n" +
-    "</ion-view>");
+    "\n" +
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/gatherings/chat/list.html",
     "<ion-view title=\"Conversations\" ng-controller=\"ChatCtrl\" class=\"view-bg\">\n" +
     "\n" +
