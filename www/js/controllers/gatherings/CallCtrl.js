@@ -230,6 +230,7 @@ define(['adapter'], function() {
 		$scope.end = function() {
 			document.getElementById('dialing').pause();
 			socket.emit('sendMessage', $scope.callConfig.guid, {type: 'end'});
+			Client.put('api/v1/gatherings/ended/' +  $scope.callConfig.guid, {}, function() {}, function() {});
 			$scope.modal.remove();
 		};
 

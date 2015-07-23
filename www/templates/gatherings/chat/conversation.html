@@ -25,7 +25,7 @@
             <ion-item ng-repeat="message in messages" class="message" ng-class="{'message-right': message.owner_guid == $root.user_guid}" type="item-text-wrap">
       				 <img ng-src="{{$root.node_url}}icon/{{message.ownerObj.guid}}/small"/>
 
-                 <div class="message-content" ng-if="message.subtype != 'message'">
+                 <div class="message-content" ng-if="message.subtype == 'message'">
                     	<decrypt message="{{message.message}}"></decrypt>
                  </div>
                  <div class="message-content" ng-if="message.subtype == 'call_missed'" ng-click="startCall()">
