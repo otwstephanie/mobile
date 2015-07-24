@@ -32,7 +32,7 @@
                    <i class="icon ion-ios-telephone"></i> Missed call.
                  </div>
                  <div class="message-content" ng-if="message.subtype == 'call_ended'" ng-click="startCall()">
-                   <i class="icon ion-ios-telephone"></i> {{message.duration}}
+                   <i class="icon ion-ios-telephone"></i> ended
                  </div>
 
                  <span class="ts">{{message.time_created * 1000 | date:'shortTime'}} - {{message.time_created * 1000 | date:'longDate'}}</p>

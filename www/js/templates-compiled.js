@@ -1264,7 +1264,7 @@ define(['angular'], function(angular){
     "                   <i class=\"icon ion-ios-telephone\"></i> Missed call.\n" +
     "                 </div>\n" +
     "                 <div class=\"message-content\" ng-if=\"message.subtype == 'call_ended'\" ng-click=\"startCall()\">\n" +
-    "                   <i class=\"icon ion-ios-telephone\"></i> {{message.duration}}\n" +
+    "                   <i class=\"icon ion-ios-telephone\"></i> ended\n" +
     "                 </div>\n" +
     "\n" +
     "                 <span class=\"ts\">{{message.time_created * 1000 | date:'shortTime'}} - {{message.time_created * 1000 | date:'longDate'}}</p>\n" +

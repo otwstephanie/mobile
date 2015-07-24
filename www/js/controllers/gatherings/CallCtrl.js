@@ -110,7 +110,7 @@ define(['adapter'], function() {
 				if ($scope.status != "pinging") {
 					return $interval.cancel(pulse); //don't call if not pinging
 				}
-				if ($scope.pulses >= 10) {
+				if ($scope.pulses >= 60) {
 					//give up
 					$scope.status = "no-answer";
 					$timeout(function() {
@@ -124,7 +124,7 @@ define(['adapter'], function() {
 				console.log('sending pulse to ' + guid);
 				socket.emit('sendMessage', guid, {type: 'call'});
 				$scope.pulses++;
-			}, 3 * 1000);
+			}, 1000);
 
 			//if no answer after one minute then we give up
 			$timeout(function() {
@@ -399,18 +399,22 @@ define(['adapter'], function() {
 		);
 
 		$scope.$on('modal.removed', function() {
+				$rootScope.inCall = false;
 				$timeout(function() {
 					$scope.$destroy();
 				});
 		});
-		$scope.$on('modal.hidden', function() {
-				$scope.modal.show();
-    });
+
+		var keepOpen = function(){
+			$scope.modal.show();
+		}
+		document.addEventListener('resume', keepOpen);
 
 
 		$scope.$on('$destroy', function() {
 
-			$rootScope.inCall = false;
+			if(keepOpen)
+				document.removeEventListener('resume', keepOpen);
 
 			document.getElementById('ringing').pause();
 			document.getElementById('dialing').pause();
