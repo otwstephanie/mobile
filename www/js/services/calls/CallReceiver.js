@@ -35,10 +35,6 @@ define(['angular', 'socketio'], function(angular) {
 			if ($rootScope.inCall)
 				return false;
 
-			$rootScope.inCall = true;
-
-			document.getElementById('ringing').play();
-
 			$scope.callConfig = {
 				initiator: false,
 				guid: guid,
@@ -62,6 +58,8 @@ define(['angular', 'socketio'], function(angular) {
 				}).then(function(modal) {
 					$scope.modal = modal;
 					$scope.modal.show();
+          document.getElementById('ringing').play();
+          $rootScope.inCall = true;
 				});
 			});
 		};
