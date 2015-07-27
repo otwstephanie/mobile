@@ -221,7 +221,7 @@ define(['adapter'], function() {
 			document.getElementById('ringing').pause();
 			document.getElementById('dialing').pause();
 
-			if (!socket)
+			if (socket)
 				socket.emit('sendMessage', $scope.callConfig.guid, {type: 'reject'});
 
 			$scope.modal.remove();
