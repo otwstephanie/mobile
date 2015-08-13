@@ -254,7 +254,7 @@ define(['adapter'], function() {
 			console.log("New Stream");
 			console.log(event.stream);
 			if (window.device.platform === 'iOS') {
-				//cordova.plugins.iosrtc.refreshVideos();
+				cordova.plugins.iosrtc.refreshVideos();
 				cordova.plugins.iosrtc.selectAudioOutput('speaker');
 			}
 			//	}

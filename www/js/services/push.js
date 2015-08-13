@@ -101,10 +101,10 @@ define(['angular'], function(angular) {
 
 			if (!active) {
 				setTimeout(function() {
-					trigger(e.aps['url-args'][0], {service:'ios', changeState: true});
+					trigger(e.aps['url-args'][0], {service:'ios', changeState: true, json:e.aps['json']});
 				}, 1500);
 			} else {
-				trigger(e.aps['url-args'][0], {service:'ios'});
+				trigger(e.aps['url-args'][0], {service:'ios', json:e.aps['json']});
 			}
 		};
 
@@ -139,10 +139,10 @@ define(['angular'], function(angular) {
 					if (!active) {
 						//allow 1.5 second fpr the app to open and then go to listeners
 						setTimeout(function() {
-							trigger(e.payload.uri, {service:'android', changeState: true});
+							trigger(e.payload.uri, {service:'android', changeState: true, json:e.payload.json});
 						}, 1500);
 					} else {
-						trigger(e.payload.uri, {service:'android'});
+						trigger(e.payload.uri, {service:'android', json:e.payload.json});
 					}
 
 				break;

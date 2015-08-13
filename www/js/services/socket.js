@@ -10,7 +10,7 @@ define(['angular', 'socketio'], function(angular, io) {
 
     var factory = function($rootScope, storage) {
 
-		var socket = io.connect('http://www.minds.io:3000', {
+		var socket = io.connect('https://ha-socket-io-us-east-1.minds.com:3030', {
 						'reconnect': true
 						});
 		socket.on('connect', function() {

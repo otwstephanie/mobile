@@ -20,7 +20,8 @@ define(['angular', 'socketio'], function(angular) {
 						incomingCall(guid, {name: "..."});
 						socket.emit('sendMessage', guid, {type:'available'});
 					} else {
-						socket.emit('sendMessage', guid, {type:'engaged'});
+            console.log('engaged..');
+					//	socket.emit('sendMessage', guid, {type:'engaged'});
 					}
 					break;
 
@@ -28,7 +29,9 @@ define(['angular', 'socketio'], function(angular) {
 		});
 
 		push.listen('call', function(data) {
-			console.log(data);
+      console.log(data, data.json);
+      incomingCall(data.json.from_guid, {name: data.json.from_name});
+		//	console.log(data);
 		});
 
 		var incomingCall = function(guid, user, offer) {
