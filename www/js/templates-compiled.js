@@ -1501,11 +1501,11 @@ define(['angular'], function(angular){
     "</ion-modal-view>");
   $templateCache.put("templates/newsfeed/boost.html",
     "<ion-modal-view ng-controller=\"NewsfeedBoostCtrl\" class=\"view-bg\">\n" +
-    "	\n" +
+    "\n" +
     "\n" +
     "	<ion-header-bar>\n" +
     "		<div class=\"buttons\">\n" +
-    "	    	<button class=\"button button-clear\" ng-click=\"modal.remove()\">Cancel</button>\n" +
+    "	    	<button class=\"button button-clear minds-blue\" ng-click=\"modal.remove()\">Skip</button>\n" +
     "	 	 </div>\n" +
     "	  	<h1 class=\"title\">Boost Post</h1>\n" +
     "	  	<div class=\"buttons\">\n" +
@@ -1514,66 +1514,66 @@ define(['angular'], function(angular){
     "			</a>\n" +
     "	  	</div>\n" +
     "	</ion-header-bar>\n" +
-    "	\n" +
+    "\n" +
     "	<ion-content>\n" +
-    "	\n" +
+    "\n" +
     "	   <div ng-if=\"data.step == 1\">\n" +
-    "	   \n" +
+    "\n" +
     "	       <div class=\"wallet-points-input wallet-destination-select\">\n" +
-    "           \n" +
+    "\n" +
     "               <h3>Channel</h3>\n" +
-    "                <input type=\"text\" ng-model=\"data.destination\" placeholder=\"Tap to search...\" ng-keyup=\"changeDestination($event)\" /> \n" +
+    "                <input type=\"text\" ng-model=\"data.destination\" placeholder=\"Tap to search...\" ng-keyup=\"changeDestination($event)\" />\n" +
     "                <p>Select a channel above to have your post distributed to their subscribers in exchange for points.</p>\n" +
-    "               \n" +
+    "\n" +
     "               <div class=\"wallet-users-list\" ng-show=\"searching\">\n" +
     "                   <div ng-repeat=\"user in results\" ng-click=\"selectDestination(user);\">\n" +
-    "                       \n" +
+    "\n" +
     "                        <img src=\"{{$root.node_url}}icon/{{user.guid}}/small\" />\n" +
     "                         @{{user.username}}\n" +
     "                   </div>\n" +
     "               </div>\n" +
     "           </div>\n" +
-    "	   \n" +
+    "\n" +
     "	        <div class=\"wallet-points-input wallet-destination-select\" ng-click=\"nextStep()\">\n" +
-    "               \n" +
+    "\n" +
     "               <h3>Full Network</h3>\n" +
     "               <p>Your post will appear at the top of everyone's newsfeed until your views are met.</p>\n" +
     "               <a class=\"button button-positive\" ng-click=\"nextStep()\" style=\"width:100%;\">Select</a>\n" +
     "\n" +
     "           </div>\n" +
-    "	       	   \n" +
+    "\n" +
     "	   </div>\n" +
-    "	   \n" +
+    "\n" +
     "	   <div ng-if=\"data.step == 2\">\n" +
-    "	   \n" +
+    "\n" +
     "    		<div class=\"wallet-points-input\">\n" +
     "    			<div class=\"cell\">\n" +
-    "    				<input type=\"number\" ng-model=\"data.points\" placeholder=\"Tap to enter points\"/> \n" +
+    "    				<input type=\"number\" ng-model=\"data.points\" placeholder=\"Tap to enter points\"/>\n" +
     "    			</div>\n" +
     "    			<div class=\"cell\">\n" +
     "    				<label>Points</label>\n" +
     "    			</div>\n" +
     "    		</div>\n" +
-    "    		\n" +
+    "\n" +
     "    		<div class=\"wallet-points-input\" ng-if=\"!data.destination\">\n" +
     "    			<div class=\"cell\">\n" +
-    "    				<input type=\"number\" ng-model=\"data.impressions\" disabled/> \n" +
+    "    				<input type=\"number\" ng-model=\"data.impressions\" disabled/>\n" +
     "    			</div>\n" +
     "    			<div class=\"cell\">\n" +
     "    				<label>Views</label>\n" +
     "    			</div>\n" +
     "    		</div>\n" +
-    "    		\n" +
+    "\n" +
     "    		<div class=\"wallet-points-input\" ng-if=\"!data.destination\">\n" +
     "    		  <p style=\"color:#888;\n" +
     "                        padding:0 16px;\n" +
     "                        font-size:11px;\">\n" +
-    "    		      Transactions are non-refundable. \n" +
-    "    		      You will be notified when your post reaches the requested number of views. \n" +
+    "    		      Transactions are non-refundable.\n" +
+    "    		      You will be notified when your post reaches the requested number of views.\n" +
     "    		      The amount of time this will take depends on site activity, so don't worry if you don't hear from us for a while; we will keep it in circulation until it reaches the goal!\n" +
     "    		  </p>\n" +
     "    		</div>\n" +
-    "    		\n" +
+    "\n" +
     "    		<div class=\"wallet-points-input\" ng-if=\"data.destination\">\n" +
     "              <p style=\"color:#888;\n" +
     "                        padding:0 16px;\n" +
@@ -1581,14 +1581,15 @@ define(['angular'], function(angular){
     "                  You will be notified if you post is accepted or rejected by {{data.destination}}. Once they accept, this post will not be able to be deleted.\n" +
     "              </p>\n" +
     "            </div>\n" +
-    "    		\n" +
+    "\n" +
     "    		<button class=\"button wallet-purchase-button\" ng-click=\"boost()\">Boost!</button>\n" +
-    "		\n" +
+    "\n" +
     "		</div>\n" +
-    "    \n" +
-    "	\n" +
+    "\n" +
+    "\n" +
     "	</ion-content>\n" +
-    "</ion-modal-view>");
+    "</ion-modal-view>\n" +
+    "");
   $templateCache.put("templates/newsfeed/compose.html",
     "<ion-popover-view>\n" +
     "    <ion-header-bar> \n" +
