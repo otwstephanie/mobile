@@ -318,8 +318,8 @@ define(['adapter'], function() {
 					);
 
 					if (window.device.platform === 'iOS') {
-						cordova.plugins.iosrtc.refreshVideos();
 						cordova.plugins.iosrtc.selectAudioOutput('speaker');
+						cordova.plugins.iosrtc.refreshVideos();
 					}
 
 					$scope.status = "answered";
