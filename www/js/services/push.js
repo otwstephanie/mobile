@@ -98,13 +98,16 @@ define(['angular'], function(angular) {
 		 * iOS Specific callback
 		 */
 		window.onNotificationAPN = function(e) {
+      var json = {};
+      if(e.aps['json'])
+        json = JSON.parse(e.aps['json']);
 
 			if (!active) {
 				setTimeout(function() {
-					trigger(e.aps['url-args'][0], {service:'ios', changeState: true, json:e.aps['json']});
+					trigger(e.aps['url-args'][0], {service:'ios', changeState: true, json:json});
 				}, 1500);
 			} else {
-				trigger(e.aps['url-args'][0], {service:'ios', json:e.aps['json']});
+				trigger(e.aps['url-args'][0], {service:'ios', json:json});
 			}
 		};
 
