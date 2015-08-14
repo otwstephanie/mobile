@@ -265,7 +265,8 @@ define(function() {
 		};
 
 		function goToChat() {
-			$state.go('tab.chat');
+			if(!$rootScope.inCall)
+				$state.go('tab.chat');
 		};
 
 		$scope.$on('$destroy', function() {
