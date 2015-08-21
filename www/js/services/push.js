@@ -99,7 +99,7 @@ define(['angular'], function(angular) {
 		 */
 		window.onNotificationAPN = function(e) {
       var json = {};
-      if(e.aps['json'])
+      if (e.aps['json'])
         json = JSON.parse(e.aps['json']);
 
 			if (!active) {

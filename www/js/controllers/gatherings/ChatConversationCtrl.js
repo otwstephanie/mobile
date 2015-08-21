@@ -265,7 +265,7 @@ define(function() {
 		};
 
 		function goToChat() {
-			if(!$rootScope.inCall)
+			if (!$rootScope.inCall)
 				$state.go('tab.chat');
 		};
 

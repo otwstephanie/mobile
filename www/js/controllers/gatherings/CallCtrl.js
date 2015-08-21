@@ -405,15 +405,15 @@ define(['adapter'], function() {
                 });
         });
 
-        var keepOpen = function(){
+        var keepOpen = function() {
             $scope.modal.show();
-        }
+        };
         document.addEventListener('resume', keepOpen);
 
 
         $scope.$on('$destroy', function() {
 
-            if(keepOpen)
+            if (keepOpen)
                 document.removeEventListener('resume', keepOpen);
 
             document.getElementById('ringing').pause();
