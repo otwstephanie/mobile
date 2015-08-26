@@ -75,6 +75,7 @@ define(['adapter'], function() {
             });
             turnTokenListener = socket.on('turnToken', function(token) {
                 peer = new RTCPeerConnection({ iceServers: token.iceServers });
+                console.log('new turn token');
                 console.log(token.iceServers);
                 peer.onicecandidate = $scope.onIceCandidate;
                 peer.onaddstream = $scope.addStream;
@@ -326,6 +327,7 @@ define(['adapter'], function() {
                     $scope.$apply();
                     break;
                 case 'reject':
+                  console.log('rejected call!');
                     document.getElementById('dialing').pause();
                     $scope.status = "rejected";
                     $scope.$digest();
