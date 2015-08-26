@@ -16,11 +16,14 @@ define(['angular', 'socketio'], function(angular) {
         socket.on('messageReceived', function(guid, message) {
             switch (message.type){
                 case 'call':
-                    if (!$rootScope.inCall) {
+                    if (!$rootScope.inCall && $rootScope.user_guid) {
                         incomingCall(guid, {name: "..."});
                         socket.emit('sendMessage', guid, {type:'available'});
+                    } else if(!$rootScope.user_guid) {
+                      //if we're not logged in, reject
+                      socket.emit('sendMessage', guid, {type:'reject'});
                     } else {
-            console.log('engaged..');
+                      console.log('engaged..');
                     //  socket.emit('sendMessage', guid, {type:'engaged'});
                     }
                     break;
@@ -29,14 +32,16 @@ define(['angular', 'socketio'], function(angular) {
         });
 
         push.listen('call', function(data) {
-      console.log(data, data.json);
-      incomingCall(data.json.from_guid, {name: data.json.from_name});
+          console.log(data, data.json);
+          incomingCall(data.json.from_guid, {name: data.json.from_name});
         //  console.log(data);
         });
 
         var incomingCall = function(guid, user, offer) {
-            if ($rootScope.inCall)
+            if ($rootScope.inCall || $scope.modal)
                 return false;
+
+            $rootScope.inCall = true;
 
             $scope.callConfig = {
                 initiator: false,
@@ -56,16 +61,22 @@ define(['angular', 'socketio'], function(angular) {
                 $ionicModal.fromTemplateUrl('templates/gatherings/chat/call.html', {
                     scope: $scope,
                     animation: 'slide-in-up',
-          backdropClickToClose: false,
+                    backdropClickToClose: false,
                     hardwareBackButtonClose: false
                 }).then(function(modal) {
                     $scope.modal = modal;
                     $scope.modal.show();
-          document.getElementById('ringing').play();
-          $rootScope.inCall = true;
+                    document.getElementById('ringing').play();
+                    $rootScope.inCall = true;
                 });
-            });
+           });
         };
+
+        $scope.$on('modal.removed', function(){
+          $scope.modal = null;
+          $rootScope.inCall = false;
+          console.log('caller modal was removed')
+        });
 
         return {};
 
