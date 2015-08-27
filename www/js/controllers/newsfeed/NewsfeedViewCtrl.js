@@ -58,7 +58,7 @@ define(function() {
 				}
 
 				//if 3/5 results not returned, assume no more
-				if(data.comments.length < 3){
+				if (data.comments.length < 3) {
 					$scope.hasMore = false;
 				}
 

@@ -19,7 +19,7 @@ define(['angular', 'socketio'], function(angular) {
                     if (!$rootScope.inCall && $rootScope.user_guid) {
                         incomingCall(guid, {name: "..."});
                         socket.emit('sendMessage', guid, {type:'available'});
-                    } else if(!$rootScope.user_guid) {
+                    } else if (!$rootScope.user_guid) {
                       //if we're not logged in, reject
                       socket.emit('sendMessage', guid, {type:'reject'});
                     } else {
@@ -72,10 +72,10 @@ define(['angular', 'socketio'], function(angular) {
            });
         };
 
-        $scope.$on('modal.removed', function(){
+        $scope.$on('modal.removed', function() {
           $scope.modal = null;
           $rootScope.inCall = false;
-          console.log('caller modal was removed')
+          console.log('caller modal was removed');
         });
 
         return {};
