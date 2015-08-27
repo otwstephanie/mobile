@@ -610,7 +610,7 @@ define(['angular'], function(angular){
     "    </ion-nav-buttons>\n" +
     "\n" +
     "    <ion-content>\n" +
-    "    \n" +
+    "\n" +
     "    	<div class=\"list\">\n" +
     "			<label class=\"item item-input\">\n" +
     "                <span class=\"input-label\">Name</span>\n" +
@@ -624,15 +624,15 @@ define(['angular'], function(angular){
     "                <span class=\"input-label\">City</span>\n" +
     "                <input type=\"text\" ng-model=\"channel.city\" ng-change=\"autoSearchLocation()\">\n" +
     "            </label>\n" +
-    "            \n" +
+    "\n" +
     "            <div class=\"suggested-location-list\">\n" +
     "               <div ng-repeat=\"location in cities\" ng-click=\"selectSuggestedLocation(location)\" ng-if=\"location.address.city || location.address.town\">\n" +
-    "                   \n" +
+    "\n" +
     "                   {{location.address.town}}{{location.address.city}}, {{location.address.state}}\n" +
-    "                    \n" +
+    "\n" +
     "               </div>\n" +
     "           </div>\n" +
-    "            \n" +
+    "\n" +
     "            <label class=\"item item-input\" ng-click=\"changeAvatar()\">\n" +
     "                <span class=\"input-label\">Avatar</span>\n" +
     "                <img id=\"avatar\" ng-src=\"{{channel.avatar_url.large}}/{{cb}}\" style=\"max-width:60%; min-height:100px; max-height:100px; display:block; margin:auto;\"/>\n" +
@@ -654,6 +654,10 @@ define(['angular'], function(angular){
     "            	<span class=\"input-label\"><i class=\"icon ion-ios-paper\"></i></span>\n" +
     "                Terms\n" +
     "			</a>\n" +
+    "			<a class=\"item item-input\" href=\"{{node_url}}p/faq\">\n" +
+    "						 <span class=\"input-label\"><i class=\"icon ion-ios-paper\"></i></span>\n" +
+    "							 FAQ\n" +
+    "		 </a>\n" +
     "			<a class=\"item item-input\" href=\"{{node_url}}p/privacy\">\n" +
     "            	<span class=\"input-label\"><i class=\"icon ion-ios-paper\"></i></span>\n" +
     "                Privacy Policy\n" +
@@ -662,12 +666,12 @@ define(['angular'], function(angular){
     "            	<span class=\"input-label\"><i class=\"icon ion-ios-paper\"></i></span>\n" +
     "                Code\n" +
     "			</a>\n" +
-    "			\n" +
+    "\n" +
     "			<a class=\"item item-input\" ng-click=\"disable()\">\n" +
     "                <span class=\"input-label\"><i class=\"icon ion-alert-circled\"></i></span>\n" +
     "                Cancel channel\n" +
     "            </a>\n" +
-    "			\n" +
+    "\n" +
     "            <label class=\"item item-input\" ng-click=\"logout()\">\n" +
     "            	<span class=\"input-label\"><i class=\"icon ion-power\"></i></span>\n" +
     "                 Logout\n" +
@@ -675,7 +679,8 @@ define(['angular'], function(angular){
     "		</div>\n" +
     "\n" +
     "    </ion-content>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/channels/subscribers.html",
     "<ion-view title=\"Subscribers\" ng-controller=\"ChannelSubscribersCtrl\">\n" +
     "\n" +
