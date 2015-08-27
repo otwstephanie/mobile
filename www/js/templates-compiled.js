@@ -1705,10 +1705,10 @@ define(['angular'], function(angular){
     "	<ion-nav-buttons side=\"left\">\n" +
     "        <a class=\"button button-clear icon ion-arrow-left-b\" href=\"#/tab/notifications\"></a>\n" +
     "    </ion-nav-buttons>\n" +
-    "    \n" +
+    "\n" +
     "	<ion-content>\n" +
     "		<!-- kind of mish-mashy... -->\n" +
-    "		\n" +
+    "\n" +
     "		<div class=\"loading\" ng-if=\"!entity\" style=\"margin:50px;\">\n" +
     "            <ion-spinner></ion-spinner>\n" +
     "        </div>\n" +
@@ -1721,18 +1721,23 @@ define(['angular'], function(angular){
     "				<activity-view class=\"activity-item list card\"></activity-view>\n" +
     "			</div>\n" +
     "		</div>\n" +
-    "		\n" +
+    "\n" +
     "		<!-- show comments here -->\n" +
     "		<ion-list>\n" +
     "			<div class=\"loading\">\n" +
-    "				<ion-spinner ng-if=\"comments.length == 0 && inprogress\"></ion-spinner> \n" +
+    "				<ion-spinner ng-if=\"comments.length == 0 && inprogress\"></ion-spinner>\n" +
     "			</div>\n" +
+    "\n" +
+    "			<div class=\"load-earlier\" ng-click=\"getComments()\" ng-show=\"hasMore\">\n" +
+    "				tap to load earlier\n" +
+    "			</div>\n" +
+    "\n" +
     "			<div ng-repeat=\"comment in comments\" class=\"comment-item\" ng-class-future=\"$even ? 'even' : 'odd'\">\n" +
-    "				\n" +
+    "\n" +
     "				<a href=\"#/tab/newsfeed/channel/{{comment.ownerObj.guid}}\">\n" +
     "					<img ng-src=\"{{$root.node_url}}icon/{{comment.ownerObj.guid}}/small\"/>\n" +
     "				</a>\n" +
-    "				\n" +
+    "\n" +
     "				<div class=\"content item-text-wrap\" ng-bind-html=\"comment.description | linky\" ng-click=\"removeComment(comment)\">\n" +
     "				</div>\n" +
     "			</div>\n" +
@@ -1749,10 +1754,10 @@ define(['angular'], function(angular){
     "				</button>\n" +
     "			</div>\n" +
     "		</div>\n" +
-    "		<ion-infinite-scroll on-infinite=\"getComments()\" distance=\"10%\" ng-if=\"hasMore\"></ion-infinite-scroll>\n" +
     "\n" +
     "	</ion-content>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/notifications/list.html",
     "<ion-view title=\"Notifications\" ng-controller=\"NotificationsCtrl\" class=\"view-bg\">\n" +
     "\n" +

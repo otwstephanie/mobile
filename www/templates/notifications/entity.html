@@ -3,10 +3,10 @@
 	<ion-nav-buttons side="left">
         <a class="button button-clear icon ion-arrow-left-b" href="#/tab/notifications"></a>
     </ion-nav-buttons>
-    
+
 	<ion-content>
 		<!-- kind of mish-mashy... -->
-		
+
 		<div class="loading" ng-if="!entity" style="margin:50px;">
             <ion-spinner></ion-spinner>
         </div>
@@ -19,18 +19,23 @@
 				<activity-view class="activity-item list card"></activity-view>
 			</div>
 		</div>
-		
+
 		<!-- show comments here -->
 		<ion-list>
 			<div class="loading">
-				<ion-spinner ng-if="comments.length == 0 && inprogress"></ion-spinner> 
+				<ion-spinner ng-if="comments.length == 0 && inprogress"></ion-spinner>
 			</div>
+
+			<div class="load-earlier" ng-click="getComments()" ng-show="hasMore">
+				tap to load earlier
+			</div>
+
 			<div ng-repeat="comment in comments" class="comment-item" ng-class-future="$even ? 'even' : 'odd'">
-				
+
 				<a href="#/tab/newsfeed/channel/{{comment.ownerObj.guid}}">
 					<img ng-src="{{$root.node_url}}icon/{{comment.ownerObj.guid}}/small"/>
 				</a>
-				
+
 				<div class="content item-text-wrap" ng-bind-html="comment.description | linky" ng-click="removeComment(comment)">
 				</div>
 			</div>
@@ -47,7 +52,6 @@
 				</button>
 			</div>
 		</div>
-		<ion-infinite-scroll on-infinite="getComments()" distance="10%" ng-if="hasMore"></ion-infinite-scroll>
 
 	</ion-content>
 </ion-view>
