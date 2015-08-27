@@ -510,9 +510,9 @@ define(['angular'], function(angular){
   $templateCache.put("templates/channels/channel.html",
     "<ion-view title=\"Channel\" ng-controller=\"ChannelCtrl\" hide-nav-bar=\"true\">\n" +
     "\n" +
-    "    <div class=\"carousel {{carousel_class}}\">      \n" +
+    "    <div class=\"carousel {{carousel_class}}\">\n" +
     "      <ion-slide-box auto-play=\"true\" does-continue=\"true\" slide-interval=\"3000\" delegate-handle=\"channel-banners\" show-pager=\"false\">\n" +
-    "       \n" +
+    "\n" +
     "          <ion-slide ng-repeat=\"carousel in channel.carousels\">\n" +
     "            <div class=\"box blue\">\n" +
     "                <img image-cache ng-src=\"{{carousel.src}}\"/>\n" +
@@ -522,13 +522,13 @@ define(['angular'], function(angular){
     "    </div>\n" +
     "\n" +
     "    <ion-content class=\"channel-content\">\n" +
-    "        \n" +
+    "\n" +
     "        <a ng-if=\"channel.guid == $root.user_guid && !channel.carousels\"style=\"position: absolute;width: 100%;top: -65px; padding:12px; left: 0;font-weight: bold; color:#333; text-align:center; text-decoration:none; z-index:9999;\" href=\"#/tab/newsfeed/channel/{{channel.guid}}/edit\">Add banner in settings</a>\n" +
-    "    \n" +
+    "\n" +
     "    	<div class=\"loading\">\n" +
     "			<i class=\"icon ion-loading-d\" ng-if=\"!channel.name\"></i>\n" +
     "		</div>\n" +
-    "    \n" +
+    "\n" +
     "        <div class=\"inner\">\n" +
     "\n" +
     "			<div class=\"cell\">\n" +
@@ -536,11 +536,12 @@ define(['angular'], function(angular){
     "            </div>\n" +
     "            <div class=\"cell\">\n" +
     "	            <h1 ng-bind-html=\"channel.name\"></h1>\n" +
-    "	            <p ng-show=\"channel.briefdescription\" class=\"wrap\" style=\"width:85% color:#FFF; font-size:11px;\" ng-bind-html=\"channel.briefdescription\"></p>\n" +
+    "              <p style=\"width:85%; color:#FFF; font-size:11px; margin:0;\">@{{channel.username}}</p>\n" +
+    "	            <p ng-show=\"channel.briefdescription\" class=\"wrap\" style=\"width:85%; color:#FFF; font-size:11px;\" ng-bind-html=\"channel.briefdescription\"></p>\n" +
     "            </div>\n" +
-    "        \n" +
+    "\n" +
     "        </div>\n" +
-    "        \n" +
+    "\n" +
     "        <div class=\"view-bg\" ng-controller=\"NewsfeedCtrl\">\n" +
     "        	<div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"padding:0;background-color:#F7F7F7 !important;\">\n" +
     "		        <a class=\"tab-item small-font \" href=\"#/tab/newsfeed/channel/{{channel.guid}}/subscribers\" >\n" +
@@ -558,47 +559,48 @@ define(['angular'], function(angular){
     "                    <!--<i class=\"icon ion-person-stalker\"></i> -->\n" +
     "                    <b>{{channel.impressions}}</b>\n" +
     "                </a>\n" +
-    "		        \n" +
-    "		      \n" +
+    "\n" +
+    "\n" +
     "		        <a class=\"tab-item small-font\" href=\"#/tab/newsfeed/channel/{{channel.guid}}/edit\" ng-if=\"channel.guid == $root.user_guid\" style=\"min-width:112px\">\n" +
     "		            <i class=\"icon ion-more\"></i> Settings\n" +
     "		        </a>\n" +
-    "		        \n" +
+    "\n" +
     "		        <a class=\"tab-item small-font\" ng-click=\"subscribe(channel)\" ng-if=\"channel.guid != $root.user_guid && channel.subscribed == false\" style=\"min-width:112px\">\n" +
     "		            <i class=\"icon ion-person-add\"></i> Subscribe\n" +
     "		        </a>\n" +
     "		        <a class=\"tab-item small-font minds-blue\" style=\"color:#4690C3 !important; min-width:112px;\" ng-click=\"unSubscribe(channel)\" ng-if=\"channel.guid != $root.user_guid && channel.subscribed == true\">\n" +
     "		            <i class=\"icon ion-person-add\"></i> Subscribed\n" +
     "		        </a>\n" +
-    "		        \n" +
+    "\n" +
     "		    </div>\n" +
     "	        <ion-list style=\"min-height:600px;\">\n" +
-    "	        \n" +
+    "\n" +
     "	           <a style=\"text-align:center; font-weight:200; padding-top:50px; display:block; color:#333; text-decoration: none;\" ng-if=\"channel.guid == $root.user_guid && ChannelItems.length == 0 && loaded == true\" href=\"#/tab/capture\">\n" +
     "                <img src=\"img/logo-transparent.png\" class=\"loading-bulb-glow\"/> <br/>\n" +
     "                Your wall is empty! Click to upload content.\n" +
     "             </a>\n" +
-    "	        \n" +
+    "\n" +
     "                <ion-refresher\n" +
     "                    pulling-text=\"Pull to refresh...\"\n" +
     "                    on-refresh=\"channelRefresh()\">\n" +
     "                </ion-refresher>\n" +
-    "    	\n" +
+    "\n" +
     "	            <activity-view ng-repeat=\"activity in ChannelItems\" class=\"activity-item list card item-text-wrap\">\n" +
     "	            </activity-view>\n" +
-    "	\n" +
+    "\n" +
     "	        </ion-list>\n" +
     "        </div>\n" +
-    "        \n" +
-    "        <ion-infinite-scroll \n" +
-    "            on-infinite=\"loadMore()\" \n" +
-    "            distance=\"5%\" \n" +
+    "\n" +
+    "        <ion-infinite-scroll\n" +
+    "            on-infinite=\"loadMore()\"\n" +
+    "            distance=\"5%\"\n" +
     "            ng-if=\"hasMoreData\">\n" +
     "\n" +
     "        </ion-infinite-scroll>\n" +
-    "       \n" +
+    "\n" +
     "    </ion-content>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/channels/edit.html",
     "<ion-view title=\"Settings\" ng-controller=\"ChannelEditCtrl\">\n" +
     "\n" +
