@@ -766,34 +766,34 @@ define(['angular'], function(angular){
     "</ion-popover-view>");
   $templateCache.put("templates/directives/activity.html",
     "<owner-brief-view owner=\"::activity.ownerObj\" ts=\"::activity.time_created\" show-more-button=\"::(!hideMoreButton)\" open-actions=\"openActions(activity)\"></owner-brief-view>\n" +
-    "    \n" +
+    "\n" +
     "    <div class=\"item item-text-wrap\" ng-if=\"activity.message\">\n" +
     "        <p ng-bind-html=\"::activity.message | linky\" class=\"wrap\" style=\"white-space: pre-line;\"></p>\n" +
     "    </div>\n" +
-    "    \n" +
+    "\n" +
     "    <div class=\"item item-text-wrap\" ng-if=\"(activity.title && !activity.perma_url)\">\n" +
     "        <p ng-bind-html=\"::activity.title | linky\" class=\"wrap\"></p>\n" +
     "    </div>\n" +
-    "    \n" +
+    "\n" +
     "    <!--Rich content -->\n" +
     "\n" +
     "    <div class=\"item item-image allow-select\" ng-if=\"activity.thumbnail_src\" ng-click=\"openUrl(activity.perma_url)\">\n" +
     "        <img ng-src=\"{{::activity.thumbnail_src}}\"  onerror=\"this.src='img/img-placeholder.png'\">\n" +
     "    </div>\n" +
-    "    \n" +
+    "\n" +
     "    <!-- Custom type:: batch -->\n" +
     "    <div class=\"item item-image allow-select\" ng-if=\"activity.custom_type == 'batch'\">\n" +
     "        <img ng-src=\"{{activity.custom_data[0].src}}\" onerror=\"this.src='img/img-placeholder.png'\" style=\"width:100%\">\n" +
     "    </div>\n" +
-    "    \n" +
+    "\n" +
     "    <!-- Custom type:: video -->\n" +
     "    <div class=\"item item-image item-image-video\" ng-if=\"activity.custom_type == 'video'\" play-video playsrc=\"{{node_url}}api/v1/archive/{{activity.custom_data.guid}}/play\">\n" +
-    "              \n" +
+    "\n" +
     "         <img ng-src=\"{{activity.custom_data.thumbnail_src}}\" onerror=\"this.src='img/img-placeholder.png'\">\n" +
     "         <i class=\"icon ion-play\"></i>\n" +
-    "         \n" +
+    "\n" +
     "          <video id=\"video\" ng-show=\"showVideo\" width=\"300px\" height=\"300px;\" style=\"background:#000;\" preload=\"auto\" loop controls></video>\n" +
-    "         \n" +
+    "\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"item item-text-wrap remind\" ng-if=\"activity.remind_object\">\n" +
@@ -806,39 +806,41 @@ define(['angular'], function(angular){
     "        <h3 ng-bind-html=\"::activity.title | linky\"></h3>\n" +
     "        <p ng-if=\"activity.perma_url\">{{::activity.perma_url | domain}}</p>\n" +
     "    </div>\n" +
-    "    \n" +
+    "\n" +
     "    <div class=\"boosted-bar\" ng-if=\"activity.boosted\">\n" +
     "        <i class=\"icon ion-arrow-graph-up-right\"></i> Boosted\n" +
     "    </div>\n" +
-    "    \n" +
+    "\n" +
     "    <div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"padding:0;background-color:#F7F7F7 !important;\" ng-if=\"(!hideTabs)\">\n" +
     "        <a class=\"tab-item small-font thumbs-up\" ng-click=\"thumbsUp(activity.guid)\" thumbs=\"{{activity['thumbs:up:user_guids']}}\">\n" +
     "            <i style=\"padding-left:4px;\" class=\"icon ion-thumbsup\"></i>\n" +
-    "            <b ng-if=\"activity['thumbs:up:count']\" style=\"font-size:14px; padding:2px 0 0\">({{activity['thumbs:up:count']}})</b> \n" +
+    "            <b ng-if=\"activity['thumbs:up:count']\" style=\"font-size:14px; padding:2px 0 0\">({{activity['thumbs:up:count']}})</b>\n" +
     "        </a>\n" +
     "        <a class=\"tab-item small-font thumbs-down\" ng-click=\"thumbsDown(activity.guid)\" thumbs=\"{{activity['thumbs:down:user_guids']}}\">\n" +
     "            <i class=\"icon ion-thumbsdown\"></i>\n" +
-    "            <b ng-if=\"activity['thumbs:down:count']\" style=\"font-size:14px; padding:2px 0 0\">({{activity['thumbs:down:count']}})</b> \n" +
+    "            <b ng-if=\"activity['thumbs:down:count']\" style=\"font-size:14px; padding:2px 0 0\">({{activity['thumbs:down:count']}})</b>\n" +
     "        </a>\n" +
     "        <a class=\"tab-item  small-font\" href=\"#/tab/newsfeed/{{activity.guid}}\">\n" +
-    "            <i class=\"icon ion-chatbox\"></i>\n" +
+    "            <i class=\"icon ion-chatbox\" ng-class=\"{'minds-blue' : activity['comments:count'] > 0}\"></i>\n" +
+    "            <b ng-if=\"activity['comments:count']\" style=\"font-size:14px; padding:2px 0 0\">({{activity['comments:count']}})</b>\n" +
     "        </a>\n" +
-    "        \n" +
+    "\n" +
     "        <a class=\"tab-item small-font\" ng-click=\"remind(activity)\">\n" +
     "            <i class=\"icon icon-remind\"></i>\n" +
-    "            <b ng-show=\"::activity.reminds > 0\" style=\"font-size:14px; padding:2px 0 0\">({{::activity.reminds}})</b> \n" +
+    "            <b ng-show=\"::activity.reminds > 0\" style=\"font-size:14px; padding:2px 0 0\">({{::activity.reminds}})</b>\n" +
     "        </a>\n" +
-    "        \n" +
+    "\n" +
     "        <a class=\"tab-item small-font\" ng-click=\"boost(activity)\" style=\"opacity:1;\" ng-if=\"activity.owner_guid == $root.user_guid\">\n" +
     "           <span style=\"color: #FFF;font-weight: 800;background: #4690C3;padding: 6px 8px;border-radius: 3px;\">Boost</span>\n" +
     "        </a>\n" +
-    "        \n" +
+    "\n" +
     "        <!--<a class=\"tab-item small-font\" ng-click=\"openActions(activity)\">\n" +
     "            <i class=\"icon ion-more\"></i>\n" +
     "        </a>-->\n" +
-    "        \n" +
+    "\n" +
     "        <span class=\"impressions-tag\">{{::activity.impressions}} views</span>\n" +
-    "    </div>");
+    "    </div>\n" +
+    "");
   $templateCache.put("templates/directives/owner-brief.html",
     "<a class=\"item item-avatar\" href=\"#/tab/newsfeed/channel/{{::owner.guid}}\">\n" +
     "    <img image-cache src=\"{{node_url}}icon/{{::owner.guid}}/small\"/>\n" +
