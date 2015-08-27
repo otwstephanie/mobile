@@ -1657,42 +1657,46 @@ define(['angular'], function(angular){
     "    </ion-nav-buttons>\n" +
     "\n" +
     "    <ion-content >\n" +
-    "    	\n" +
-    "    	<div ng-controller=\"NewsfeedCtrl\" style=\"margin-bottom:-42px\">\n" +
-    "    	   <activity-view ng-if=\"::activity.guid\" id=\"{{::activity.guid}}\" class=\"activity-item list card\" ng-controller=\"NewsfeedCtrl\"></activity-view>\n" +
-    "    	</div>\n" +
-    "    	\n" +
-    "    	<!-- show comments here -->\n" +
-    "		<ion-list>\n" +
-    "			<div class=\"loading\">\n" +
-    "				<i class=\"icon ion-loading-d\" ng-if=\"comments.length == 0 && inprogress\"></i>\n" +
+    "\n" +
+    "			<div ng-controller=\"NewsfeedCtrl\" style=\"margin-bottom:-42px\">\n" +
+    "			   <activity-view ng-if=\"::activity.guid\" id=\"{{::activity.guid}}\" class=\"activity-item list card\" ng-controller=\"NewsfeedCtrl\"></activity-view>\n" +
     "			</div>\n" +
-    "			<div ng-repeat=\"comment in comments\" class=\"comment-item\" ng-class-future=\"$even ? 'odd' : 'even'\">\n" +
-    "				\n" +
-    "				<a href=\"#/tab/newsfeed/channel/{{::comment.ownerObj.guid}}\">\n" +
-    "					<img ng-src=\"{{$root.node_url}}icon/{{::comment.ownerObj.guid}}/small\"/>\n" +
-    "				</a>\n" +
-    "				\n" +
-    "				<div class=\"content item-text-wrap\" ng-bind-html=\"::comment.description | linky\" ng-click=\"removeComment(comment)\">\n" +
+    "\n" +
+    "			<!-- show comments here -->\n" +
+    "			<ion-list>\n" +
+    "				<div class=\"loading\">\n" +
+    "					<i class=\"icon ion-loading-d\" ng-if=\"comments.length == 0 && inprogress\"></i>\n" +
     "				</div>\n" +
-    "			</div>	\n" +
-    "		</ion-list>\n" +
-    "		\n" +
-    "		<div class=\"list card\" style=\"clear:both;\" >\n" +
-    "			<div class=\"item item-input-inset\">\n" +
-    "			 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "					<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\">\n" +
-    "					</textarea>\n" +
-    "				</label>\n" +
-    "				<button class=\"button button-clear\" ng-click=\"submit()\">\n" +
-    "					Comment\n" +
-    "				</button>\n" +
+    "\n" +
+    "				<div class=\"load-earlier\" ng-click=\"getComments()\" ng-show=\"hasMore\">\n" +
+    "					tap to load earlier\n" +
+    "				</div>\n" +
+    "				<div ng-repeat=\"comment in comments\" class=\"comment-item\" ng-class-future=\"$even ? 'odd' : 'even'\">\n" +
+    "\n" +
+    "					<a href=\"#/tab/newsfeed/channel/{{::comment.ownerObj.guid}}\">\n" +
+    "						<img ng-src=\"{{$root.node_url}}icon/{{::comment.ownerObj.guid}}/small\"/>\n" +
+    "					</a>\n" +
+    "\n" +
+    "					<div class=\"content item-text-wrap\" ng-bind-html=\"::comment.description | linky\" ng-click=\"removeComment(comment)\">\n" +
+    "					</div>\n" +
+    "				</div>\n" +
+    "			</ion-list>\n" +
+    "\n" +
+    "			<div class=\"list card\" style=\"clear:both;\" >\n" +
+    "				<div class=\"item item-input-inset\">\n" +
+    "				 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
+    "						<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\">\n" +
+    "						</textarea>\n" +
+    "					</label>\n" +
+    "					<button class=\"button button-clear\" ng-click=\"submit()\">\n" +
+    "						Comment\n" +
+    "					</button>\n" +
+    "				</div>\n" +
     "			</div>\n" +
-    "		</div>\n" +
-    "		<ion-infinite-scroll on-infinite=\"getComments()\" distance=\"10%\" ng-if=\"hasMore\"></ion-infinite-scroll>\n" +
     "\n" +
     "    </ion-content>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/notifications/entity.html",
     "<ion-view title=\"\" ng-controller=\"NotificationsEntityCtrl\" class=\"view-bg\">\n" +
     "\n" +

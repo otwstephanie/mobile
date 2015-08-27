@@ -45,8 +45,9 @@ define(function() {
 			 */
 			Client.get('api/v1/comments/' + $scope.guid, {
 				cb: $scope.cb,
-				limit: 12,
-				offset: $scope.offset
+				limit: 5,
+				offset: $scope.offset,
+				reversed: true
 			}, function(data) {
 
 				$scope.inprogress = false;
@@ -56,8 +57,13 @@ define(function() {
 					return false;
 				}
 
-				$scope.comments = $scope.comments.concat(data.comments);
-				$scope.offset = data['load-next'];
+				//if 3/5 results not returned, assume no more
+				if(data.comments.length < 3){
+					$scope.hasMore = false;
+				}
+
+				$scope.comments = data.comments.concat($scope.comments);
+				$scope.offset = data['load-previous'];
 				console.log($scope.offset);
 
 				if ($scope.offset == null) {
