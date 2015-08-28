@@ -115,9 +115,9 @@ define(['adapter'], function() {
                     //give up
                     $scope.status = "no-answer";
                     $timeout(function() {
-                        $scope.end();
-                        //leave a notification
-                        Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
+                      //leave a notification
+                      Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
+                      $scope.end();
                     }, 3 * 1000);
                     $interval.cancel(pulse);
                     return false;
@@ -132,8 +132,8 @@ define(['adapter'], function() {
                 $timeout(function() {
                     if ($scope.status == "pinging") {
                         $scope.status = "no-answer";
-                        $scope.end();
                         Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
+                        $scope.end();
                     }
                 }, 1500);
             }, 60 * 1000);
