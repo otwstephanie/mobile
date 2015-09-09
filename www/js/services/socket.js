@@ -17,6 +17,11 @@ define(['angular', 'socketio'], function(angular, io) {
 			socket.emit('register', $rootScope.user_guid, storage.get('access_token'));
 		});
 
+    socket.on('disconnect', function() {
+      socket.io.reconnect();
+      console.log('trying to reconnect...');
+    });
+
 		return socket;
 
     };

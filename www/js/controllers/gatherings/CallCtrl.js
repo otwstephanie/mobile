@@ -68,6 +68,9 @@ define(['adapter'], function() {
         };
 
         $scope.start = function() {
+            socket.io.reconnect(); //just in case we got disconnected
+            socket.io.connect();
+            console.log(socket);
             var deferred = $q.defer();
             socket.emit('turnToken', function(error, message) {
                 console.log('failed to ask for token');
@@ -115,8 +118,6 @@ define(['adapter'], function() {
                     //give up
                     $scope.status = "no-answer";
                     $timeout(function() {
-                      //leave a notification
-                      Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
                       $scope.end();
                     }, 3 * 1000);
                     $interval.cancel(pulse);
@@ -132,7 +133,6 @@ define(['adapter'], function() {
                 $timeout(function() {
                     if ($scope.status == "pinging") {
                         $scope.status = "no-answer";
-                        Client.put('api/v1/gatherings/no-answer/' + guid, {}, function() {}, function() {});
                         $scope.end();
                     }
                 }, 1500);
@@ -231,7 +231,11 @@ define(['adapter'], function() {
         $scope.end = function() {
             document.getElementById('dialing').pause();
             socket.emit('sendMessage', $scope.callConfig.guid, {type: 'end'});
-            Client.put('api/v1/gatherings/ended/' +  $scope.callConfig.guid, {}, function() {}, function() {});
+            if($scope.status == "no-answer"){
+                Client.put('api/v1/gatherings/no-answer/' +  $scope.callConfig.guid, {}, function() {}, function() {});
+            } else {
+                Client.put('api/v1/gatherings/ended/' +  $scope.callConfig.guid, {}, function() {}, function() {});
+            }
             $scope.modal.remove();
         };
 

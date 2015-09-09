@@ -34,6 +34,7 @@ define(['angular', 'socketio'], function(angular) {
         push.listen('call', function(data) {
           console.log(data, data.json);
           incomingCall(data.json.from_guid, {name: data.json.from_name});
+          socket.io.reconnect(); //just in case.. should check connection state in future
         //  console.log(data);
         });
 
@@ -75,6 +76,7 @@ define(['angular', 'socketio'], function(angular) {
         $scope.$on('modal.removed', function() {
           $scope.modal = null;
           $rootScope.inCall = false;
+          document.getElementById('ringing').pause();
           console.log('caller modal was removed');
         });
 

@@ -110,6 +110,12 @@ define(function() {
 			});
 		};
 
+		$scope.$on('modal.removed', function() {
+			$scope.modal = null;
+			$rootScope.inCall = false;
+			document.getElementById('dialing').pause();
+		});
+
 		/**
 		 * Only do polling if we can't use push notifications
 		 */
