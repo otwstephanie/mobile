@@ -29,6 +29,11 @@ define(['angular'], function() {
 					});
 				});
 			};
+		},
+
+		io: {
+			reconnect: function() {},
+			connect: function() {}
 		}
 	};
 });
