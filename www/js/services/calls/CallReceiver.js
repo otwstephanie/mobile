@@ -14,6 +14,9 @@ define(['angular', 'socketio'], function(angular) {
         var $scope = $rootScope.$new();
 
         socket.on('messageReceived', function(guid, message) {
+            if(!guid){
+              return console.log('bad ' + message + 'socket sent');
+            }
             switch (message.type){
                 case 'call':
                     if (!$rootScope.inCall && $rootScope.user_guid) {
@@ -34,8 +37,6 @@ define(['angular', 'socketio'], function(angular) {
         push.listen('call', function(data) {
           console.log(data, data.json);
           incomingCall(data.json.from_guid, {name: data.json.from_name});
-          socket.io.reconnect(); //just in case.. should check connection state in future
-        //  console.log(data);
         });
 
         var incomingCall = function(guid, user, offer) {
