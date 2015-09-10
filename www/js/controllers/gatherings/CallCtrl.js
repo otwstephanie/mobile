@@ -68,9 +68,6 @@ define(['adapter'], function() {
         };
 
         $scope.start = function() {
-            socket.io.reconnect(); //just in case we got disconnected
-            socket.io.connect();
-            console.log(socket);
             var deferred = $q.defer();
             socket.emit('turnToken', function(error, message) {
                 console.log('failed to ask for token');
@@ -102,7 +99,7 @@ define(['adapter'], function() {
             document.getElementById('dialing').play();
 
             $scope.status = "pinging";
-            $scope.$apply();
+            //$scope.$apply();
 
             //socket.emit('sendMessage', guid, {type: 'call'});
 
@@ -236,7 +233,8 @@ define(['adapter'], function() {
             } else {
                 Client.put('api/v1/gatherings/ended/' +  $scope.callConfig.guid, {}, function() {}, function() {});
             }
-            $scope.modal.remove();
+            if($scope.modal)
+              $scope.modal.remove();
         };
 
         $scope.onIceCandidate = function(event) {
@@ -272,8 +270,7 @@ define(['adapter'], function() {
         };
 
         $scope.onIceConnectionChange = function(event) {
-            console.log("State changed");
-            console.log(peer.iceConnectionState);
+            console.log("State changed: " + peer.iceConnectionState);
             if (peer.iceConnectionState == "disconnected") {
                 $timeout(function() {
                     //wait 5 seconds to see if we are connected again
@@ -285,7 +282,7 @@ define(['adapter'], function() {
             }
             if (peer.iceConnectionState == "closed") {
                 console.log("peer was closed. we didn't wait");
-                $scope.modal.remove();
+                $scope.end();
             }
         };
 
@@ -360,8 +357,8 @@ define(['adapter'], function() {
                         //if(candidate.candidate.indexOf('relay') == -1)
                         //  return;
 
-                        console.log("New Remote Candidate");
-                        console.log(candidate);
+                      //  console.log("New Remote Candidate");
+                        //console.log(candidate);
 
                         peer.addIceCandidate(new RTCIceCandidate(candidate));
                         duplicates.push(message.candidate);
