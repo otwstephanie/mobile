@@ -119,6 +119,10 @@
                         {
                             "xml": "<feature name=\"Crypt\"><param name=\"ios-package\" value=\"CDVCrypt\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"ios-package\" value=\"CDVVibration\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -135,6 +139,10 @@
                         {
                             "xml": false,
                             "count": 2
+                        },
+                        {
+                            "xml": true,
+                            "count": 1
                         }
                     ],
                     "AVFoundation.framework": [
@@ -411,6 +419,9 @@
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "org.apache.cordova.crypt": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
+        "cordova-plugin-vibration": {
             "PACKAGE_NAME": "com.minds.mobile"
         }
     },

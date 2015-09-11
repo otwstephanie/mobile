@@ -69,6 +69,7 @@ define(['angular', 'socketio'], function(angular) {
                     $scope.modal = modal;
                     $scope.modal.show();
                     document.getElementById('ringing').play();
+                    window.navigator.vibrate(200); // vibrate for 200ms
                     $rootScope.inCall = true;
                 });
            });
