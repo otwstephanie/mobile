@@ -74,6 +74,8 @@ define(['adapter'], function() {
                 deferred.reject(message);
             });
             turnTokenListener = socket.on('turnToken', function(token) {
+                if(peer)
+                  return;
                 peer = new RTCPeerConnection({ iceServers: token.iceServers });
                 console.log('new turn token');
                 console.log(token.iceServers);
@@ -423,8 +425,8 @@ define(['adapter'], function() {
         });
 
         $scope.close = function(){
-          $rootScope.inCall = false;
           $timeout(function() {
+              $rootScope.inCall = false;
               $scope.$destroy();
           });
         }

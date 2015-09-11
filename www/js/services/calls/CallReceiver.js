@@ -68,7 +68,7 @@ define(['angular', 'socketio'], function(angular) {
                 }).then(function(modal) {
                     $scope.modal = modal;
                     $scope.modal.show();
-                    document.getElementById('ringing').play();
+                    //document.getElementById('ringing').play();
                     window.navigator.vibrate(200); // vibrate for 200ms
                     $rootScope.inCall = true;
                 });
@@ -77,7 +77,9 @@ define(['angular', 'socketio'], function(angular) {
 
         $scope.$on('modal.removed', function() {
           $scope.modal = null;
-          $rootScope.inCall = false;
+          $timeout(function(){
+            $rootScope.inCall = false;
+          }, 1000);
           document.getElementById('ringing').pause();
           console.log('caller modal was removed');
         });
