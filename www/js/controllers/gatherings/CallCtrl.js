@@ -18,7 +18,7 @@ define(['adapter'], function() {
         $rootScope.inCall = true;
         $scope.pulses = 0;
 
-        var peer, localStream, turnTokenListener, pulse;
+        var peer, localStream, turnTokenListener, pulse, vibrator;
 
         $scope.iceServers = null;
 
@@ -164,6 +164,7 @@ define(['adapter'], function() {
             $scope.status = "answering";
 
             document.getElementById('ringing').pause();
+            if(vibrator) $interval.cancel(vibrator);
 
             $scope.startMedia().then(function() {
 
@@ -197,6 +198,7 @@ define(['adapter'], function() {
                     deferred.resolve(true);
                 } else {
                     console.log("status == " + $scope.status);
+                    $interval.cancel(interval);
                 }
             }, 500);
             return deferred.promise;
@@ -204,13 +206,15 @@ define(['adapter'], function() {
 
         $scope.answer = function() {
             $scope.status = "answering";
+            document.getElementById('ringing').pause();
+            if(vibrator) $interval.cancel(vibrator);
             socket.emit('sendMessage', $scope.callConfig.guid, {type:'answer'});
             /**
              * If no confirmation our answer was received in 15 seconds, cancel
              */
             $timeout(function() {
                 if ($scope.status != "answered") {
-                    $scope.modal.remove();
+                    $scope.close();
                 }
             }, 15 * 1000);
         };
@@ -219,10 +223,12 @@ define(['adapter'], function() {
             document.getElementById('ringing').pause();
             document.getElementById('dialing').pause();
 
+            if(vibrator) $interval.cancel(vibrator);
+
             if (socket)
                 socket.emit('sendMessage', $scope.callConfig.guid, {type: 'reject'});
 
-            $scope.modal.remove();
+            $scope.close();
         };
 
         $scope.end = function() {
@@ -234,7 +240,7 @@ define(['adapter'], function() {
                 Client.put('api/v1/gatherings/ended/' +  $scope.callConfig.guid, {}, function() {}, function() {});
             }
             if($scope.modal)
-              $scope.modal.remove();
+              $scope.close();
         };
 
         $scope.onIceCandidate = function(event) {
@@ -271,18 +277,25 @@ define(['adapter'], function() {
 
         $scope.onIceConnectionChange = function(event) {
             console.log("State changed: " + peer.iceConnectionState);
+
+            if(peer.iceConnectionState == "completed"){
+              document.getElementById('ringing').pause();
+              document.getElementById('dialing').pause();
+              if(vibrator) $interval.cancel(vibrator);
+            }
+
             if (peer.iceConnectionState == "disconnected") {
                 $timeout(function() {
                     //wait 5 seconds to see if we are connected again
                     if (peer.iceConnectionState == "disconnected") {
                         console.log("peer was disconnected ans we waited 5 seconds");
-                        $scope.modal.remove();
+                        $scope.close();
                     }
                 }, 5000);
             }
             if (peer.iceConnectionState == "closed") {
                 console.log("peer was closed. we didn't wait");
-                $scope.end();
+                $scope.close();
             }
         };
 
@@ -307,6 +320,7 @@ define(['adapter'], function() {
                 case 'OfferAnswer':
                     //on answer from our offer
                     console.log('answering from ' + guid);
+                    document.getElementById('dialing').pause();
                     var sdp = JSON.parse(message.answer);
                     peer.setRemoteDescription(
                         new RTCSessionDescription(sdp),
@@ -320,8 +334,8 @@ define(['adapter'], function() {
                     );
 
                     if (window.device.platform === 'iOS') {
-                        cordova.plugins.iosrtc.selectAudioOutput('speaker');
-                        cordova.plugins.iosrtc.refreshVideos();
+                      cordova.plugins.iosrtc.refreshVideos();
+                      cordova.plugins.iosrtc.selectAudioOutput('speaker');
                     }
 
                     $scope.status = "answered";
@@ -334,7 +348,7 @@ define(['adapter'], function() {
                     $scope.$digest();
                     //something went wrong..
                     $timeout(function() {
-                        $scope.modal.remove();
+                        $scope.close();
                     }, 3000);
                     break;
                 case 'engaged':
@@ -343,7 +357,7 @@ define(['adapter'], function() {
                     $scope.$digest();
                     //something went wrong..
                     $timeout(function() {
-                        $scope.modal.remove();
+                        $scope.close();
                     }, 3000);
                     break;
                 case 'candidate':
@@ -371,7 +385,7 @@ define(['adapter'], function() {
                     $interval.cancel(pulse);
                     break;
                 case 'end':
-                    $scope.modal.remove();
+                    $scope.close();
                     break;
             }
         };
@@ -390,23 +404,30 @@ define(['adapter'], function() {
                      * Send available signal to the caller
                      */
                     socket.emit('sendMessage', $scope.callConfig.guid, {type:'available'});
+                    vibrator = $interval(function(){
+                      navigator.vibrate(500);
+                    }, 1500);
                 }
             },
             function() {
                 $scope.status = "failed_signal";
                 //something went wrong..
                 $timeout(function() {
-                    $scope.modal.remove();
+                    $scope.close();
                 }, 3000);
             }
         );
 
         $scope.$on('modal.removed', function() {
-                $rootScope.inCall = false;
-                $timeout(function() {
-                    $scope.$destroy();
-                });
+
         });
+
+        $scope.close = function(){
+          $rootScope.inCall = false;
+          $timeout(function() {
+              $scope.$destroy();
+          });
+        }
 
         var keepOpen = function() {
             $scope.modal.show();
@@ -421,7 +442,11 @@ define(['adapter'], function() {
 
             document.getElementById('ringing').pause();
             document.getElementById('dialing').pause();
-            socket.removeListener('messageReceived', socketListener);
+            if(vibrator)
+              $interval.cancel(vibrator);
+
+            if(socketListener)
+              socket.removeListener('messageReceived', socketListener);
 
             if (pulse)
                 $interval.cancel(pulse);
@@ -435,6 +460,8 @@ define(['adapter'], function() {
             if (peer) {
                 peer.close();
             }
+            console.log('destroyed scope!');
+            $scope.modal.remove();
 
         });
 
