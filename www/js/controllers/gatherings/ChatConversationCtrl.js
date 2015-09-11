@@ -91,10 +91,12 @@ define(function() {
 		$scope.loadMore();
 
 		$scope.startCall = function() {
-			if($rootScope.inCall){
-				alert('you are already in a call..');
-				return true;
-			}
+
+			if($rootScope.inCall  || $scope.modal)
+				return false;
+
+			$rootScope.inCall = true;
+
 			$scope.callConfig = {
 				initiator: true,
 				guid: $scope.guid
