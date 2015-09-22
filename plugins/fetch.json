@@ -140,11 +140,10 @@
         "is_top_level": false,
         "variables": {}
     },
-    "cordova-plugin-iosrtc": {
+    "cordova-plugin-vibration": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/eface2face/cordova-plugin-iosrtc.git",
-            "subdir": "."
+            "type": "registry",
+            "id": "cordova-plugin-vibration"
         },
         "is_top_level": true,
         "variables": {}
@@ -158,10 +157,12 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-vibration": {
+    "cordova-plugin-iosrtc": {
         "source": {
-            "type": "registry",
-            "id": "cordova-plugin-vibration"
+            "type": "git",
+            "url": "https://github.com/saghul/cordova-plugin-iosrtc",
+            "subdir": ".",
+            "ref": "swift-2"
         },
         "is_top_level": true,
         "variables": {}

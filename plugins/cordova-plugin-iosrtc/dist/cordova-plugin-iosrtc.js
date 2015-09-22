@@ -1,5 +1,5 @@
 /*
- * cordova-plugin-iosrtc v1.4.1
+ * cordova-plugin-iosrtc v1.4.5
  * Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs
  * Copyright 2015 Iñaki Baz Castillo at eFace2Face, inc. (https://eface2face.com)
  * License MIT
@@ -51,119 +51,6 @@ function addError(name) {
 
 },{}],2:[function(require,module,exports){
 /**
- * @author mrdoob / http://mrdoob.com
- * @author Jesús Leganés Combarro "Piranna" <piranna@gmail.com>
- */
-
-
-/**
- * Specification: https://dom.spec.whatwg.org
- */
-
-
-/**
- * Expose the EventTarget class.
- */
-module.exports = EventTarget;
-
-
-function EventTarget() {
-	var listeners = {};
-
-	this.addEventListener = function (type, newListener) {
-		var listenersType,
-			i, listener;
-
-		if (!type || !newListener) {
-			return;
-		}
-
-		listenersType = listeners[type];
-		if (listenersType === undefined) {
-			listeners[type] = listenersType = [];
-		}
-
-		for (i = 0; !!(listener = listenersType[i]); i++) {
-			if (listener === newListener) {
-				return;
-			}
-		}
-
-		listenersType.push(newListener);
-	};
-
-	this.removeEventListener = function (type, oldListener) {
-		var listenersType,
-			i, listener;
-
-		if (!type || !oldListener) {
-			return;
-		}
-
-		listenersType = listeners[type];
-		if (listenersType === undefined) {
-			return;
-		}
-
-		for (i = 0; !!(listener = listenersType[i]); i++) {
-			if (listener === oldListener) {
-				listenersType.splice(i, 1);
-				break;
-			}
-		}
-
-		if (listenersType.length === 0) {
-			delete listeners[type];
-		}
-	};
-
-	this.dispatchEvent = function (event) {
-		var type,
-			listenersType,
-			dummyListener,
-			stopImmediatePropagation = false,
-			i, listener;
-
-		if (!(event instanceof Event)) {
-			throw new Error('first argument must be an instance of Event');
-		}
-
-		if (event._dispatched) {
-			throw new Error('Event already dispatched');
-		}
-		event._dispatched = true;
-
-		// Force the event to be cancelable.
-		event.cancelable = true;
-		event.target = this;
-
-		// Override stopImmediatePropagation() function.
-		event.stopImmediatePropagation = function () {
-			stopImmediatePropagation = true;
-		};
-
-		type = event.type;
-		listenersType = (listeners[type] || []);
-
-		dummyListener = this['on' + type];
-		if (typeof dummyListener === 'function') {
-			listenersType.push(dummyListener);
-		}
-
-		for (i = 0; !!(listener = listenersType[i]); i++) {
-			if (stopImmediatePropagation) {
-				break;
-			}
-
-			listener.call(this, event);
-		}
-
-		return !event.defaultPrevented;
-	};
-}
-
-},{}],3:[function(require,module,exports){
-/**
  * Expose the MediaDeviceInfo class.
  */
 module.exports = MediaDeviceInfo;
@@ -196,7 +83,7 @@ function MediaDeviceInfo(data) {
 	});
 }
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /**
  * Expose the MediaStream class.
  * Make MediaStream be a Blob so it can be consumed by URL.createObjectURL().
@@ -214,8 +101,8 @@ var MediaStream = module.exports = window.Blob,
  */
 	debug = require('debug')('iosrtc:MediaStream'),
 	exec = require('cordova/exec'),
+	EventTarget = require('yaeti').EventTarget,
 	MediaStreamTrack = require('./MediaStreamTrack'),
-	EventTarget = require('./EventTarget'),
 
 
 /**
@@ -262,17 +149,19 @@ MediaStream.create = function (dataFromEvent) {
 	stream.label = dataFromEvent.id;  // Backwards compatibility.
 	stream.active = true;
 
-	// Private attributes.
-	stream.blobId = blobId;
-	stream.audioTracks = {};
-	stream.videoTracks = {};
+	// Public but internal attributes.
 	stream.connected = false;
+
+	// Private attributes.
+	stream._blobId = blobId;
+	stream._audioTracks = {};
+	stream._videoTracks = {};
 
 	for (trackId in dataFromEvent.audioTracks) {
 		if (dataFromEvent.audioTracks.hasOwnProperty(trackId)) {
 			track = new MediaStreamTrack(dataFromEvent.audioTracks[trackId]);
 
-			stream.audioTracks[track.id] = track;
+			stream._audioTracks[track.id] = track;
 
 			addListenerForTrackEnded.call(stream, track);
 		}
@@ -282,7 +171,7 @@ MediaStream.create = function (dataFromEvent) {
 		if (dataFromEvent.videoTracks.hasOwnProperty(trackId)) {
 			track = new MediaStreamTrack(dataFromEvent.videoTracks[trackId]);
 
-			stream.videoTracks[track.id] = track;
+			stream._videoTracks[track.id] = track;
 
 			addListenerForTrackEnded.call(stream, track);
 		}
@@ -304,9 +193,9 @@ MediaStream.prototype.getAudioTracks = function () {
 	var tracks = [],
 		id;
 
-	for (id in this.audioTracks) {
-		if (this.audioTracks.hasOwnProperty(id)) {
-			tracks.push(this.audioTracks[id]);
+	for (id in this._audioTracks) {
+		if (this._audioTracks.hasOwnProperty(id)) {
+			tracks.push(this._audioTracks[id]);
 		}
 	}
 
@@ -320,9 +209,9 @@ MediaStream.prototype.getVideoTracks = function () {
 	var tracks = [],
 		id;
 
-	for (id in this.videoTracks) {
-		if (this.videoTracks.hasOwnProperty(id)) {
-			tracks.push(this.videoTracks[id]);
+	for (id in this._videoTracks) {
+		if (this._videoTracks.hasOwnProperty(id)) {
+			tracks.push(this._videoTracks[id]);
 		}
 	}
 
@@ -336,15 +225,15 @@ MediaStream.prototype.getTracks = function () {
 	var tracks = [],
 		id;
 
-	for (id in this.audioTracks) {
-		if (this.audioTracks.hasOwnProperty(id)) {
-			tracks.push(this.audioTracks[id]);
+	for (id in this._audioTracks) {
+		if (this._audioTracks.hasOwnProperty(id)) {
+			tracks.push(this._audioTracks[id]);
 		}
 	}
 
-	for (id in this.videoTracks) {
-		if (this.videoTracks.hasOwnProperty(id)) {
-			tracks.push(this.videoTracks[id]);
+	for (id in this._videoTracks) {
+		if (this._videoTracks.hasOwnProperty(id)) {
+			tracks.push(this._videoTracks[id]);
 		}
 	}
 
@@ -355,7 +244,7 @@ MediaStream.prototype.getTracks = function () {
 MediaStream.prototype.getTrackById = function (id) {
 	debug('getTrackById()');
 
-	return this.audioTracks[id] || this.videoTracks[id] || null;
+	return this._audioTracks[id] || this._videoTracks[id] || null;
 };
 
 
@@ -366,14 +255,14 @@ MediaStream.prototype.addTrack = function (track) {
 		throw new Error('argument must be an instance of MediaStreamTrack');
 	}
 
-	if (this.audioTracks[track.id] || this.videoTracks[track.id]) {
+	if (this._audioTracks[track.id] || this._videoTracks[track.id]) {
 		return;
 	}
 
 	if (track.kind === 'audio') {
-		this.audioTracks[track.id] = track;
+		this._audioTracks[track.id] = track;
 	} else if (track.kind === 'video') {
-		this.videoTracks[track.id] = track;
+		this._videoTracks[track.id] = track;
 	} else {
 		throw new Error('unknown kind attribute: ' + track.kind);
 	}
@@ -391,14 +280,14 @@ MediaStream.prototype.removeTrack = function (track) {
 		throw new Error('argument must be an instance of MediaStreamTrack');
 	}
 
-	if (!this.audioTracks[track.id] && !this.videoTracks[track.id]) {
+	if (!this._audioTracks[track.id] && !this._videoTracks[track.id]) {
 		return;
 	}
 
 	if (track.kind === 'audio') {
-		delete this.audioTracks[track.id];
+		delete this._audioTracks[track.id];
 	} else if (track.kind === 'video') {
-		delete this.videoTracks[track.id];
+		delete this._videoTracks[track.id];
 	} else {
 		throw new Error('unknown kind attribute: ' + track.kind);
 	}
@@ -415,15 +304,15 @@ MediaStream.prototype.stop = function () {
 
 	var trackId;
 
-	for (trackId in this.audioTracks) {
-		if (this.audioTracks.hasOwnProperty(trackId)) {
-			this.audioTracks[trackId].stop();
+	for (trackId in this._audioTracks) {
+		if (this._audioTracks.hasOwnProperty(trackId)) {
+			this._audioTracks[trackId].stop();
 		}
 	}
 
-	for (trackId in this.videoTracks) {
-		if (this.videoTracks.hasOwnProperty(trackId)) {
-			this.videoTracks[trackId].stop();
+	for (trackId in this._videoTracks) {
+		if (this._videoTracks.hasOwnProperty(trackId)) {
+			this._videoTracks[trackId].stop();
 		}
 	}
 };
@@ -457,9 +346,9 @@ function addListenerForTrackEnded(track) {
 	var self = this;
 
 	track.addEventListener('ended', function () {
-		if (track.kind === 'audio' && !self.audioTracks[track.id]) {
+		if (track.kind === 'audio' && !self._audioTracks[track.id]) {
 			return;
-		} else if (track.kind === 'video' && !self.videoTracks[track.id]) {
+		} else if (track.kind === 'video' && !self._videoTracks[track.id]) {
 			return;
 		}
 
@@ -480,24 +369,24 @@ function checkActive() {
 		return;
 	}
 
-	if (Object.keys(this.audioTracks).length === 0 && Object.keys(this.videoTracks).length === 0) {
+	if (Object.keys(this._audioTracks).length === 0 && Object.keys(this._videoTracks).length === 0) {
 		debug('no tracks, releasing MediaStream');
 
 		release();
 		return;
 	}
 
-	for (trackId in this.audioTracks) {
-		if (this.audioTracks.hasOwnProperty(trackId)) {
-			if (this.audioTracks[trackId].readyState !== 'ended') {
+	for (trackId in this._audioTracks) {
+		if (this._audioTracks.hasOwnProperty(trackId)) {
+			if (this._audioTracks[trackId].readyState !== 'ended') {
 				return;
 			}
 		}
 	}
 
-	for (trackId in this.videoTracks) {
-		if (this.videoTracks.hasOwnProperty(trackId)) {
-			if (this.videoTracks[trackId].readyState !== 'ended') {
+	for (trackId in this._videoTracks) {
+		if (this._videoTracks.hasOwnProperty(trackId)) {
+			if (this._videoTracks[trackId].readyState !== 'ended') {
 				return;
 			}
 		}
@@ -511,7 +400,7 @@ function checkActive() {
 		self.dispatchEvent(new Event('inactive'));
 
 		// Remove the stream from the dictionary.
-		delete mediaStreams[self.blobId];
+		delete mediaStreams[self._blobId];
 
 		exec(null, null, 'iosrtcPlugin', 'MediaStream_release', [self.id]);
 	}
@@ -530,9 +419,9 @@ function onEvent(data) {
 			track = new MediaStreamTrack(data.track);
 
 			if (track.kind === 'audio') {
-				this.audioTracks[track.id] = track;
+				this._audioTracks[track.id] = track;
 			} else if (track.kind === 'video') {
-				this.videoTracks[track.id] = track;
+				this._videoTracks[track.id] = track;
 			}
 			addListenerForTrackEnded.call(this, track);
 
@@ -547,11 +436,11 @@ function onEvent(data) {
 
 		case 'removetrack':
 			if (data.track.kind === 'audio') {
-				track = this.audioTracks[data.track.id];
-				delete this.audioTracks[data.track.id];
+				track = this._audioTracks[data.track.id];
+				delete this._audioTracks[data.track.id];
 			} else if (data.track.kind === 'video') {
-				track = this.videoTracks[data.track.id];
-				delete this.videoTracks[data.track.id];
+				track = this._videoTracks[data.track.id];
+				delete this._videoTracks[data.track.id];
 			}
 
 			if (!track) {
@@ -571,7 +460,7 @@ function onEvent(data) {
 	}
 }
 
-},{"./EventTarget":2,"./MediaStreamTrack":6,"cordova/exec":undefined,"debug":16}],5:[function(require,module,exports){
+},{"./MediaStreamTrack":5,"cordova/exec":undefined,"debug":15,"yaeti":20}],4:[function(require,module,exports){
 /**
  * Expose the MediaStreamRenderer class.
  */
@@ -585,7 +474,7 @@ var
 	debug = require('debug')('iosrtc:MediaStreamRenderer'),
 	exec = require('cordova/exec'),
 	randomNumber = require('random-number').generator({min: 10000, max: 99999, integer: true}),
-	EventTarget = require('./EventTarget'),
+	EventTarget = require('yaeti').EventTarget,
 	MediaStream = require('./MediaStream');
 
 
@@ -633,7 +522,7 @@ MediaStreamRenderer.prototype.render = function (stream) {
 
 	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_render', [this.id, stream.id]);
 
-	// Subscribe to 'update' event so we call native mediaStreamChangedrefresh() on it.
+	// Subscribe to 'update' event so we call native mediaStreamChanged() on it.
 	stream.addEventListener('update', function () {
 		if (self.stream !== stream) {
 			return;
@@ -697,7 +586,8 @@ MediaStreamRenderer.prototype.refresh = function () {
 		zIndex,
 		mirrored,
 		objectFit,
-		clip;
+		clip,
+		borderRadius;
 
 	computedStyle = window.getComputedStyle(this.element);
 
@@ -730,6 +620,12 @@ MediaStreamRenderer.prototype.refresh = function () {
 		clip = false;
 	} else {
 		clip = true;
+	}
+
+	// borderRadius
+	borderRadius = parseFloat(computedStyle.borderRadius);
+	if (/%$/.test(borderRadius)) {
+		borderRadius = Math.min(elementHeight, elementWidth) * borderRadius;
 	}
 
 	/**
@@ -834,7 +730,8 @@ MediaStreamRenderer.prototype.refresh = function () {
 			zIndex: zIndex,
 			mirrored: mirrored,
 			objectFit: objectFit,
-			clip: clip
+			clip: clip,
+			borderRadius: borderRadius
 		};
 
 		debug('refresh() | [data:%o]', data);
@@ -894,7 +791,7 @@ function getElementPositionAndSize() {
 	};
 }
 
-},{"./EventTarget":2,"./MediaStream":4,"cordova/exec":undefined,"debug":16,"random-number":20}],6:[function(require,module,exports){
+},{"./MediaStream":3,"cordova/exec":undefined,"debug":15,"random-number":19,"yaeti":20}],5:[function(require,module,exports){
 /**
  * Expose the MediaStreamTrack class.
  */
@@ -913,7 +810,7 @@ var
 	debug = require('debug')('iosrtc:MediaStreamTrack'),
 	exec = require('cordova/exec'),
 	getMediaDevices = require('./getMediaDevices'),
-	EventTarget = require('./EventTarget');
+	EventTarget = require('yaeti').EventTarget;
 
 
 function MediaStreamTrack(dataFromEvent) {
@@ -1014,7 +911,7 @@ function onEvent(data) {
 	}
 }
 
-},{"./EventTarget":2,"./getMediaDevices":11,"cordova/exec":undefined,"debug":16}],7:[function(require,module,exports){
+},{"./getMediaDevices":10,"cordova/exec":undefined,"debug":15,"yaeti":20}],6:[function(require,module,exports){
 /**
  * Expose the RTCDataChannel class.
  */
@@ -1029,7 +926,7 @@ var
 	debugerror = require('debug')('iosrtc:ERROR:RTCDataChannel'),
 	exec = require('cordova/exec'),
 	randomNumber = require('random-number').generator({min: 10000, max: 99999, integer: true}),
-	EventTarget = require('./EventTarget');
+	EventTarget = require('yaeti').EventTarget;
 
 
 debugerror.log = console.warn.bind(console);
@@ -1238,7 +1135,7 @@ function onEvent(data) {
 	}
 }
 
-},{"./EventTarget":2,"cordova/exec":undefined,"debug":16,"random-number":20}],8:[function(require,module,exports){
+},{"cordova/exec":undefined,"debug":15,"random-number":19,"yaeti":20}],7:[function(require,module,exports){
 /**
  * Expose the RTCIceCandidate class.
  */
@@ -1254,7 +1151,7 @@ function RTCIceCandidate(data) {
 	this.candidate = data.candidate;
 }
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 /**
  * Expose the RTCPeerConnection class.
@@ -1270,7 +1167,7 @@ var
 	debugerror = require('debug')('iosrtc:ERROR:RTCPeerConnection'),
 	exec = require('cordova/exec'),
 	randomNumber = require('random-number').generator({min: 10000, max: 99999, integer: true}),
-	EventTarget = require('./EventTarget'),
+	EventTarget = require('yaeti').EventTarget,
 	RTCSessionDescription = require('./RTCSessionDescription'),
 	RTCIceCandidate = require('./RTCIceCandidate'),
 	RTCDataChannel = require('./RTCDataChannel'),
@@ -1976,7 +1873,7 @@ function onEvent(data) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Errors":1,"./EventTarget":2,"./MediaStream":4,"./RTCDataChannel":7,"./RTCIceCandidate":8,"./RTCSessionDescription":10,"cordova/exec":undefined,"debug":16,"random-number":20}],10:[function(require,module,exports){
+},{"./Errors":1,"./MediaStream":3,"./RTCDataChannel":6,"./RTCIceCandidate":7,"./RTCSessionDescription":9,"cordova/exec":undefined,"debug":15,"random-number":19,"yaeti":20}],9:[function(require,module,exports){
 /**
  * Expose the RTCSessionDescription class.
  */
@@ -1991,7 +1888,7 @@ function RTCSessionDescription(data) {
 	this.sdp = data.sdp;
 }
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /**
  * Expose the getMediaDevices function.
  */
@@ -2060,7 +1957,7 @@ function getMediaDeviceInfos(devices) {
 	return mediaDeviceInfos;
 }
 
-},{"./MediaDeviceInfo":3,"cordova/exec":undefined,"debug":16}],12:[function(require,module,exports){
+},{"./MediaDeviceInfo":2,"cordova/exec":undefined,"debug":15}],11:[function(require,module,exports){
 /**
  * Expose the getUserMedia function.
  */
@@ -2202,7 +2099,7 @@ function getUserMedia(constraints) {
 	exec(onResultOK, onResultError, 'iosrtcPlugin', 'getUserMedia', [newConstraints]);
 }
 
-},{"./Errors":1,"./MediaStream":4,"cordova/exec":undefined,"debug":16}],13:[function(require,module,exports){
+},{"./Errors":1,"./MediaStream":3,"cordova/exec":undefined,"debug":15}],12:[function(require,module,exports){
 (function (global){
 /**
  * Variables.
@@ -2223,10 +2120,19 @@ var
 /**
  * Dependencies.
  */
-	debug = require('debug')('iosrtc'),
-	exec = require('cordova/exec'),
-	domready = require('domready'),
-	videoElementsHandler = require('./videoElementsHandler');
+	debug                  = require('debug')('iosrtc'),
+	exec                   = require('cordova/exec'),
+	domready               = require('domready'),
+
+	getUserMedia           = require('./getUserMedia'),
+	getMediaDevices        = require('./getMediaDevices'),
+	RTCPeerConnection      = require('./RTCPeerConnection'),
+	RTCSessionDescription  = require('./RTCSessionDescription'),
+	RTCIceCandidate        = require('./RTCIceCandidate'),
+	MediaStream            = require('./MediaStream'),
+	MediaStreamTrack       = require('./MediaStreamTrack'),
+	videoElementsHandler   = require('./videoElementsHandler'),
+	rtcninjaPlugin         = require('./rtcninjaPlugin');
 
 
 /**
@@ -2234,16 +2140,19 @@ var
  */
 module.exports = {
 	// Expose WebRTC classes and functions.
-	getUserMedia:          require('./getUserMedia'),
-	getMediaDevices:       require('./getMediaDevices'),
-	RTCPeerConnection:     require('./RTCPeerConnection'),
-	RTCSessionDescription: require('./RTCSessionDescription'),
-	RTCIceCandidate:       require('./RTCIceCandidate'),
-	MediaStream:           require('./MediaStream'),
-	MediaStreamTrack:      require('./MediaStreamTrack'),
+	getUserMedia:          getUserMedia,
+	getMediaDevices:       getMediaDevices,
+	RTCPeerConnection:     RTCPeerConnection,
+	RTCSessionDescription: RTCSessionDescription,
+	RTCIceCandidate:       RTCIceCandidate,
+	MediaStream:           MediaStream,
+	MediaStreamTrack:      MediaStreamTrack,
 
 	// Expose a function to refresh current videos rendering a MediaStream.
 	refreshVideos:         refreshVideos,
+
+	// Expose a function to handle a video not yet inserted in the DOM.
+	observeVideo:          videoElementsHandler.observeVideo,
 
 	// Select audio output (earpiece or speaker).
 	selectAudioOutput:     selectAudioOutput,
@@ -2252,7 +2161,7 @@ module.exports = {
 	registerGlobals:       registerGlobals,
 
 	// Expose the rtcninjaPlugin module.
-	rtcninjaPlugin:        require('./rtcninjaPlugin'),
+	rtcninjaPlugin:        rtcninjaPlugin,
 
 	// Expose the debug module.
 	debug:                 require('debug'),
@@ -2263,15 +2172,10 @@ module.exports = {
 
 
 domready(function () {
-	observeVideos();
-});
-
-
-function observeVideos() {
 	// Let the MediaStream class and the videoElementsHandler share same MediaStreams container.
-	require('./MediaStream').setMediaStreams(mediaStreams);
+	MediaStream.setMediaStreams(mediaStreams);
 	videoElementsHandler(mediaStreams, mediaStreamRenderers);
-}
+});
 
 
 function refreshVideos() {
@@ -2312,17 +2216,17 @@ function registerGlobals() {
 		navigator.mediaDevices = {};
 	}
 
-	navigator.getUserMedia                  = require('./getUserMedia');
-	navigator.webkitGetUserMedia            = require('./getUserMedia');
-	navigator.mediaDevices.getUserMedia     = require('./getUserMedia');
-	navigator.mediaDevices.enumerateDevices = require('./getMediaDevices');
-	window.RTCPeerConnection                = require('./RTCPeerConnection');
-	window.webkitRTCPeerConnection          = require('./RTCPeerConnection');
-	window.RTCSessionDescription            = require('./RTCSessionDescription');
-	window.RTCIceCandidate                  = require('./RTCIceCandidate');
-	window.MediaStream                      = require('./MediaStream');
-	window.webkitMediaStream                = require('./MediaStream');
-	window.MediaStreamTrack                 = require('./MediaStreamTrack');
+	navigator.getUserMedia                  = getUserMedia;
+	navigator.webkitGetUserMedia            = getUserMedia;
+	navigator.mediaDevices.getUserMedia     = getUserMedia;
+	navigator.mediaDevices.enumerateDevices = getMediaDevices;
+	window.RTCPeerConnection                = RTCPeerConnection;
+	window.webkitRTCPeerConnection          = RTCPeerConnection;
+	window.RTCSessionDescription            = RTCSessionDescription;
+	window.RTCIceCandidate                  = RTCIceCandidate;
+	window.MediaStream                      = MediaStream;
+	window.webkitMediaStream                = MediaStream;
+	window.MediaStreamTrack                 = MediaStreamTrack;
 }
 
 
@@ -2331,7 +2235,7 @@ function dump() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./MediaStream":4,"./MediaStreamTrack":6,"./RTCIceCandidate":8,"./RTCPeerConnection":9,"./RTCSessionDescription":10,"./getMediaDevices":11,"./getUserMedia":12,"./rtcninjaPlugin":14,"./videoElementsHandler":15,"cordova/exec":undefined,"debug":16,"domready":19}],14:[function(require,module,exports){
+},{"./MediaStream":3,"./MediaStreamTrack":5,"./RTCIceCandidate":7,"./RTCPeerConnection":8,"./RTCSessionDescription":9,"./getMediaDevices":10,"./getUserMedia":11,"./rtcninjaPlugin":13,"./videoElementsHandler":14,"cordova/exec":undefined,"debug":15,"domready":18}],13:[function(require,module,exports){
 /**
  * Expose the rtcninjaPlugin object.
  */
@@ -2362,12 +2266,14 @@ function attachMediaStream(element, stream) {
 	return element;
 }
 
-},{"./MediaStreamTrack":6,"./RTCIceCandidate":8,"./RTCPeerConnection":9,"./RTCSessionDescription":10,"./getMediaDevices":11,"./getUserMedia":12}],15:[function(require,module,exports){
+},{"./MediaStreamTrack":5,"./RTCIceCandidate":7,"./RTCPeerConnection":8,"./RTCSessionDescription":9,"./getMediaDevices":10,"./getUserMedia":11}],14:[function(require,module,exports){
 (function (global){
 /**
  * Expose a function that must be called when the library is loaded.
+ * And also a helper function.
  */
 module.exports = videoElementsHandler;
+module.exports.observeVideo = observeVideo;
 
 
 /**
@@ -2529,14 +2435,12 @@ function videoElementsHandler(_mediaStreams, _mediaStreamRenderers) {
 }
 
 
-/**
- * Private API.
- */
-
 function observeVideo(video) {
-	debug('observeVideo() | [class:"%s", src:%s]', video.className, video.src);
+	debug('observeVideo()');
 
-	if (video.src) {
+	// If the video already has a src property but is not yet handled by the plugin
+	// then handle it now.
+	if (video.src && !video._iosrtcMediaStreamRendererId) {
 		handleVideo(video);
 	}
 
@@ -2573,6 +2477,10 @@ function observeVideo(video) {
 	});
 }
 
+
+/**
+ * Private API.
+ */
 
 function handleVideo(video) {
 	var xhr = new XMLHttpRequest();
@@ -2687,7 +2595,7 @@ function releaseMediaStreamRenderer(video) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./MediaStreamRenderer":5,"debug":16}],16:[function(require,module,exports){
+},{"./MediaStreamRenderer":4,"debug":15}],15:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -2857,7 +2765,7 @@ function localstorage(){
   } catch (e) {}
 }
 
-},{"./debug":17}],17:[function(require,module,exports){
+},{"./debug":16}],16:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -3056,7 +2964,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":18}],18:[function(require,module,exports){
+},{"ms":17}],17:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -3183,7 +3091,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /*!
   * domready (c) Dustin Diaz 2014 - License MIT
   */
@@ -3215,7 +3123,7 @@ function plural(ms, n, name) {
 
 });
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 void function(root){
 
   function defaults(options){
@@ -3261,5 +3169,141 @@ void function(root){
   module.exports.defaults = defaults
 }(this)
 
-},{}]},{},[13])(13)
+},{}],20:[function(require,module,exports){
+module.exports = {
+	EventTarget:  require('./lib/EventTarget'),
+	Event:        require('./lib/Event')
+};
+
+},{"./lib/Event":21,"./lib/EventTarget":22}],21:[function(require,module,exports){
+(function (global){
+/**
+ * In browsers export the native Event interface.
+ */
+
+module.exports = global.Event;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],22:[function(require,module,exports){
+/**
+ * Expose the _EventTarget class.
+ */
+module.exports = _EventTarget;
+
+
+var
+	/**
+	 * Dependencies.
+	 */
+	_Event = require('./Event');
+
+
+function _EventTarget() {
+	// Do nothing if called for a native EventTarget object..
+	if (typeof this.addEventListener === 'function') {
+		return;
+	}
+
+	this._listeners = {};
+
+	this.addEventListener = _addEventListener;
+	this.removeEventListener = _removeEventListener;
+	this.dispatchEvent = _dispatchEvent;
+}
+
+
+function _addEventListener(type, newListener) {
+	var listenersType,
+		i, listener;
+
+	if (!type || !newListener) {
+		return;
+	}
+
+	listenersType = this._listeners[type];
+	if (listenersType === undefined) {
+		this._listeners[type] = listenersType = [];
+	}
+
+	for (i = 0; !!(listener = listenersType[i]); i++) {
+		if (listener === newListener) {
+			return;
+		}
+	}
+
+	listenersType.push(newListener);
+}
+
+
+function _removeEventListener(type, oldListener) {
+	var listenersType,
+		i, listener;
+
+	if (!type || !oldListener) {
+		return;
+	}
+
+	listenersType = this._listeners[type];
+	if (listenersType === undefined) {
+		return;
+	}
+
+	for (i = 0; !!(listener = listenersType[i]); i++) {
+		if (listener === oldListener) {
+			listenersType.splice(i, 1);
+			break;
+		}
+	}
+
+	if (listenersType.length === 0) {
+		delete this._listeners[type];
+	}
+}
+
+
+function _dispatchEvent(event) {
+	var type,
+		listenersType,
+		dummyListener,
+		stopImmediatePropagation = false,
+		i, listener;
+
+	if (!(event instanceof _Event)) {
+		throw new Error('first argument must be an instance of Event');
+	}
+
+	if (event._dispatched) {
+		throw new Error('Event already dispatched');
+	}
+	event._dispatched = true;
+
+	// Force the event to be cancelable.
+	event.cancelable = true;
+	event.target = this;
+
+	// Override stopImmediatePropagation() function.
+	event.stopImmediatePropagation = function () {
+		stopImmediatePropagation = true;
+	};
+
+	type = event.type;
+	listenersType = (this._listeners[type] || []);
+
+	dummyListener = this['on' + type];
+	if (typeof dummyListener === 'function') {
+		listenersType.push(dummyListener);
+	}
+
+	for (i = 0; !!(listener = listenersType[i]); i++) {
+		if (stopImmediatePropagation) {
+			break;
+		}
+
+		listener.call(this, event);
+	}
+
+	return !event.defaultPrevented;
+}
+
+},{"./Event":21}]},{},[12])(12)
 });

@@ -13,7 +13,7 @@ Check the [release announcement](https://eface2face.com/blog/cordova-plugin-iosr
 **Resources:**
 
 * [NPM package](https://www.npmjs.com/package/cordova-plugin-iosrtc).
-* [Public Google Group](https://groups.google.com/forum/?hl=es#!forum/cordova-plugin-iosrtc) for questions and discussions about *cordova-plugin-iosrtc*.
+* [Public Google Group](https://groups.google.com/forum/#!forum/cordova-plugin-iosrtc) for questions and discussions about *cordova-plugin-iosrtc*.
 * [Bug Tracker](https://github.com/eface2face/cordova-plugin-iosrtc/issues) for reporting issues and requesting new features (please don't use the bug tracker for questions or problems, use the Google Group instead).
 
 
@@ -30,9 +30,9 @@ $ cordova plugin add cordova-plugin-iosrtc
 
 ## Building
 
-This plugin needs [Swift](https://developer.apple.com/swift/) support so some steps are needed to get your project working with it. These steps are explained in the [Building](https://github.com/eface2face/cordova-plugin-iosrtc/blob/master/docs/Building.md) documentation, please check it.
+This plugin needs [Swift 2.0](https://developer.apple.com/swift/) support so some steps are needed to get your project working with it. These steps are explained in the [Building](docs/Building.md) documentation, please check it.
 
-**IMPORTANT:** It seems that the incoming [Swift 2.0](https://developer.apple.com/swift/blog/?id=29) (included in the next OS X [El Capitan](https://developer.apple.com/osx/pre-release/)) requires code changes for the plugin to compile. It will be addressed in [issue #28](https://github.com/eface2face/cordova-plugin-iosrtc/issues/28).
+**IMPORTANT:** The currently bundled libWebRTC does not contain bitcode, so you'll need to disable it in your Xcode project settings.
 
 
 ## Usage
@@ -62,7 +62,7 @@ cordova.plugins.iosrtc.getUserMedia(
 
 **Q:** But... wait! Does it mean that there is no `window.RTCPeerConnection` nor `navigator.getUserMedia`?
 
-**R:** A Cordova plugin is supposed to expose its JavaScript stuff in a specific namespace and, personally, I just hate those libraries that pollute the global namespace. Said that, the plugin provides a `registerGlobals()` method, so you just need the following extra-code in your existing WebRTC app (assuming that [Cordova Device Plugin](http://plugins.cordova.io/#/package/org.apache.cordova.device) is installed):
+**R:** A Cordova plugin is supposed to expose its JavaScript stuff in a specific namespace and, personally, I just hate those libraries that pollute the global namespace. Said that, the plugin provides a `registerGlobals()` method, so you just need the following extra-code in your existing WebRTC app (assuming that [cordova-plugin-device](https://www.npmjs.com/package/cordova-plugin-device) is installed):
 
 ```javascript
 // Just for Cordova apps.
@@ -78,11 +78,11 @@ And that's all. Now you have `window.RTCPeerConnection`, `navigator.getUserMedia
 
 **Q:** What about `<video>` elements and `video.src = URL.createObjectURL(stream)`? do I need custom HTML tags or functions to display WebRTC videos?
 
-**R:** No. Just use an HTML video element as usual, really. The plugin will properly place a native *UIView* layer on top of it by respecting its properties such as the CSS `display`, `opacity`, `visibility`, `z-index`, `object-fit` and also horizontal mirror effect with `-webkit-transform: scaleX(-1);` or equivalent.
+**R:** No. Just use an HTML video element as usual, really. The plugin will properly place a native *UIView* layer on top of it by respecting (most of) its [CSS properties](videoCSS.md).
 
 **Q:** Can I place HTML elements (buttons and so on) on top of active `<video>` elements?
 
-**R:** Unfortunately not. The native *UIView* rendering the video stream is placed on top of the HTML view. :(
+**R:** Not yet, but there is ongoing work to enable this feature (see [here](https://github.com/eface2face/cordova-plugin-iosrtc/issues/38)).
 
 **Q:** What about [HTML5 video events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events)? Can I rely on `video.oncanplay`?
 
@@ -103,7 +103,7 @@ Again, there is no real video attached to the `<video>` element so some peropert
 
 ## Documentation
 
-Read the full [documentation](https://github.com/eface2face/cordova-plugin-iosrtc/blob/master/docs/index.md) in the *docs* folder.
+Read the full [documentation](docs/index.md) in the *docs* folder.
 
 
 ## Demo application
@@ -113,9 +113,9 @@ Check our [iOSRTCApp](https://github.com/eface2face/iOSRTCApp) (Google's [AppRTC
 
 ## Who Uses It
 
-[People and companies](https://github.com/eface2face/cordova-plugin-iosrtc/blob/master/WHO_USES_IT.md) using *cordova-plugin-iosrtc*.
+[People and companies](WHO_USES_IT.md) using *cordova-plugin-iosrtc*.
 
-If you are using the plugin we would love to [heard back from you](https://github.com/eface2face/cordova-plugin-iosrtc/blob/master/WHO_USES_IT.md)!
+If you are using the plugin we would love to [heard back from you](WHO_USES_IT.md)!
 
 
 ## Known Issues
@@ -125,7 +125,7 @@ If you are using the plugin we would love to [heard back from you](https://githu
 
 Don't call plugin methods within WebSocket events (`onopen`, `onmessage`, etc). There is an issue in iOS Safari (see [issue #12](https://github.com/eface2face/cordova-plugin-iosrtc/issues/12)). Instead run a `setTimeout()` within the WebSocket event if you need to call plugin methods on it.
 
-Or better, just load the provided [ios-websocket-hack.js](https://github.com/eface2face/cordova-plugin-iosrtc/blob/master/extra/ios-websocket-hack.js) script into your Cordova iOS app and you are done.
+Or better, just load the provided [ios-websocket-hack.js](extra/ios-websocket-hack.js) script into your Cordova iOS app and you are done.
 
 
 #### HTML5 video API
@@ -139,6 +139,22 @@ Methods such as `play()`, `pause()` are not implemented. In order to pause a vid
 
 (since version 1.2.8)
 
+#### Version 1.4.5
+
+* Add `cordova.plugins.iosrtc.observeVideo(video)` API for the plugin to handle `<video>` elements not yet in the DOM ([issue #49](https://github.com/eface2face/cordova-plugin-iosrtc/issues/49)).
+
+#### Version 1.4.4
+
+* Support CSS `border-radius` property in HTML video elements.
+
+#### Version 1.4.3
+
+* Make private properties more private ([issue #34](https://github.com/eface2face/cordova-plugin-iosrtc/issues/34)).
+
+#### Version 1.4.2
+
+* Use [yaeti](https://github.com/ibc/yaeti) module as `EventTarget` shim.
+
 #### Version 1.4.1
 
 * Release `MediaStreamRenderer` and revert `<video>` properties when the attached `MediaStream` emits "inactive" ([issue #27](https://github.com/eface2face/cordova-plugin-iosrtc/issues/27)).
@@ -146,7 +162,7 @@ Methods such as `play()`, `pause()` are not implemented. In order to pause a vid
 #### Version 1.4.0
 
 * Implemented some `<video>` properties such as `readyState`, `videoWidth` and `videoHeight` ([issue #25](https://github.com/eface2face/cordova-plugin-iosrtc/issues/25)).
-* Building simplified for both Cordova CLI and Xcode by providing a single ["hook"]((https://github.com/eface2face/cordova-plugin-iosrtc/blob/master/extra/hooks/iosrtc-swift-support.js) the user must add into his Cordova application (check the [Building](Building.md) documentation for further details).
+* Building simplified for both Cordova CLI and Xcode by providing a single ["hook"](extra/hooks/iosrtc-swift-support.js) the user must add into his Cordova application (check the [Building](docs/Building.md) documentation for further details).
 
 #### Version 1.3.3
 

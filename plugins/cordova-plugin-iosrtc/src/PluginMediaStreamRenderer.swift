@@ -2,8 +2,7 @@ import Foundation
 import AVFoundation
 
 
-@objc(PluginMediaStreamRenderer)
-class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
+class PluginMediaStreamRenderer : NSObject, RTCEAGLVideoViewDelegate {
 	var webView: UIWebView
 	var eventListener: (data: NSDictionary) -> Void
 	var elementView: UIView
@@ -19,9 +18,13 @@ class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
 	) {
 		NSLog("PluginMediaStreamRenderer#init()")
 
+		// The browser HTML view.
 		self.webView = webView
 		self.eventListener = eventListener
-		self.elementView = RTCEAGLVideoView()
+		// The video element view.
+		self.elementView = UIView()
+		// The effective video view in which the the video stream is shown.
+		// It's placed over the elementView.
 		self.videoView = RTCEAGLVideoView()
 
 		self.webView.addSubview(self.elementView)
@@ -31,7 +34,7 @@ class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
 		self.elementView.hidden = true
 		self.elementView.backgroundColor = UIColor.blackColor()
 		self.elementView.addSubview(self.videoView)
-		self.elementView.bringSubviewToFront(self.videoView)
+		self.elementView.layer.masksToBounds = true
 
 		self.videoView.userInteractionEnabled = false
 	}
@@ -54,13 +57,13 @@ class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
 		self.pluginMediaStream = pluginMediaStream
 
 		// Take the first audio track.
-		for (id, track) in pluginMediaStream.audioTracks {
+		for (_, track) in pluginMediaStream.audioTracks {
 			self.rtcAudioTrack = track.rtcMediaStreamTrack as? RTCAudioTrack
 			break
 		}
 
 		// Take the first video track.
-		for (id, track) in pluginMediaStream.videoTracks {
+		for (_, track) in pluginMediaStream.videoTracks {
 			self.rtcVideoTrack = track.rtcMediaStreamTrack as? RTCVideoTrack
 			break
 		}
@@ -78,19 +81,19 @@ class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
 			return
 		}
 
-		var oldRtcVideoTrack: RTCVideoTrack? = self.rtcVideoTrack
+		let oldRtcVideoTrack: RTCVideoTrack? = self.rtcVideoTrack
 
 		self.rtcAudioTrack = nil
 		self.rtcVideoTrack = nil
 
 		// Take the first audio track.
-		for (id, track) in self.pluginMediaStream!.audioTracks {
+		for (_, track) in self.pluginMediaStream!.audioTracks {
 			self.rtcAudioTrack = track.rtcMediaStreamTrack as? RTCAudioTrack
 			break
 		}
 
 		// Take the first video track.
-		for (id, track) in pluginMediaStream!.videoTracks {
+		for (_, track) in pluginMediaStream!.videoTracks {
 			self.rtcVideoTrack = track.rtcMediaStreamTrack as? RTCVideoTrack
 			break
 		}
@@ -138,11 +141,12 @@ class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
 		let zIndex = data.objectForKey("zIndex") as? Float ?? 0
 		let mirrored = data.objectForKey("mirrored") as? Bool ?? false
 		let clip = data.objectForKey("clip") as? Bool ?? true
+		let borderRadius = data.objectForKey("borderRadius") as? Float ?? 0
 
-		NSLog("PluginMediaStreamRenderer#refresh() [elementLeft:\(elementLeft), elementTop:\(elementTop), elementWidth:\(elementWidth), elementHeight:\(elementHeight), videoViewWidth:\(videoViewWidth), videoViewHeight:\(videoViewHeight), visible:\(visible), opacity:\(opacity), zIndex:\(zIndex), mirrored:\(mirrored), clip:\(clip)]")
+		NSLog("PluginMediaStreamRenderer#refresh() [elementLeft:\(elementLeft), elementTop:\(elementTop), elementWidth:\(elementWidth), elementHeight:\(elementHeight), videoViewWidth:\(videoViewWidth), videoViewHeight:\(videoViewHeight), visible:\(visible), opacity:\(opacity), zIndex:\(zIndex), mirrored:\(mirrored), clip:\(clip), borderRadius:\(borderRadius)]")
 
-		var videoViewLeft: Float = (elementWidth - videoViewWidth) / 2
-		var videoViewTop: Float = (elementHeight - videoViewHeight) / 2
+		let videoViewLeft: Float = (elementWidth - videoViewWidth) / 2
+		let videoViewTop: Float = (elementHeight - videoViewHeight) / 2
 
 		self.elementView.frame = CGRectMake(
 			CGFloat(elementLeft),
@@ -152,7 +156,7 @@ class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
 		)
 
 		// NOTE: Avoid a zero-size UIView for the video (the library complains).
-		if (videoViewWidth == 0 || videoViewHeight == 0) {
+		if videoViewWidth == 0 || videoViewHeight == 0 {
 			videoViewWidth = 1
 			videoViewHeight = 1
 			self.videoView.hidden = true
@@ -182,11 +186,13 @@ class PluginMediaStreamRenderer : RTCEAGLVideoViewDelegate {
 			self.elementView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
 		}
 
-		if (clip) {
+		if clip {
 			self.elementView.clipsToBounds = true
 		} else {
 			self.elementView.clipsToBounds = false
 		}
+
+		self.elementView.layer.cornerRadius = CGFloat(borderRadius)
 	}
 
 

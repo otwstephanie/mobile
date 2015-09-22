@@ -113,15 +113,15 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"Vibration\"><param name=\"ios-package\" value=\"CDVVibration\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"SocialSharing\"><param name=\"ios-package\" value=\"SocialSharing\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
                             "xml": "<feature name=\"Crypt\"><param name=\"ios-package\" value=\"CDVCrypt\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"Vibration\"><param name=\"ios-package\" value=\"CDVVibration\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -218,6 +218,12 @@
                         },
                         {
                             "xml": true,
+                            "count": 1
+                        }
+                    ],
+                    "SafariServices.framework": [
+                        {
+                            "xml": false,
                             "count": 1
                         }
                     ],
@@ -412,6 +418,9 @@
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
@@ -419,9 +428,6 @@
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "org.apache.cordova.crypt": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
-        "cordova-plugin-vibration": {
             "PACKAGE_NAME": "com.minds.mobile"
         }
     },

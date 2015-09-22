@@ -19,6 +19,7 @@
     <access launch-external="yes" origin="mailto:*" />
     <preference name="deployment-target" value="7.0"/>
     <platform name="ios">
+       <hook type="after_platform_add" src="hooks/iosrtc-swift-support.js" />
         <icon height="180" src="res/ios/appicon-60@3x.png" width="180" />
         <icon height="60" src="res/ios/appicon-60.png" width="60" />
         <icon height="120" src="res/ios/appicon-60@2x.png" width="120" />

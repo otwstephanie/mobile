@@ -11,7 +11,7 @@ var
 	debug = require('debug')('iosrtc:MediaStreamRenderer'),
 	exec = require('cordova/exec'),
 	randomNumber = require('random-number').generator({min: 10000, max: 99999, integer: true}),
-	EventTarget = require('./EventTarget'),
+	EventTarget = require('yaeti').EventTarget,
 	MediaStream = require('./MediaStream');
 
 
@@ -59,7 +59,7 @@ MediaStreamRenderer.prototype.render = function (stream) {
 
 	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_render', [this.id, stream.id]);
 
-	// Subscribe to 'update' event so we call native mediaStreamChangedrefresh() on it.
+	// Subscribe to 'update' event so we call native mediaStreamChanged() on it.
 	stream.addEventListener('update', function () {
 		if (self.stream !== stream) {
 			return;
@@ -123,7 +123,8 @@ MediaStreamRenderer.prototype.refresh = function () {
 		zIndex,
 		mirrored,
 		objectFit,
-		clip;
+		clip,
+		borderRadius;
 
 	computedStyle = window.getComputedStyle(this.element);
 
@@ -156,6 +157,12 @@ MediaStreamRenderer.prototype.refresh = function () {
 		clip = false;
 	} else {
 		clip = true;
+	}
+
+	// borderRadius
+	borderRadius = parseFloat(computedStyle.borderRadius);
+	if (/%$/.test(borderRadius)) {
+		borderRadius = Math.min(elementHeight, elementWidth) * borderRadius;
 	}
 
 	/**
@@ -260,7 +267,8 @@ MediaStreamRenderer.prototype.refresh = function () {
 			zIndex: zIndex,
 			mirrored: mirrored,
 			objectFit: objectFit,
-			clip: clip
+			clip: clip,
+			borderRadius: borderRadius
 		};
 
 		debug('refresh() | [data:%o]', data);
