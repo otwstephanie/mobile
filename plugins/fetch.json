@@ -148,21 +148,21 @@
         "is_top_level": true,
         "variables": {}
     },
-    "com.paypal.cordova.mobilesdk": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/paypal/PayPal-Cordova-Plugin.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-iosrtc": {
         "source": {
             "type": "git",
             "url": "https://github.com/saghul/cordova-plugin-iosrtc",
             "subdir": ".",
             "ref": "swift-2"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "com.paypal.cordova.mobilesdk": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/paypal/PayPal-Cordova-Plugin.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}

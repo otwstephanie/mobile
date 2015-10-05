@@ -25,10 +25,12 @@
         <icon height="120" src="res/ios/appicon-60@2x.png" width="120" />
         <icon height="76" src="res/ios/appicon-76.png" width="76" />
         <icon height="152" src="res/ios/appicon-76@2x.png" width="152" />
-        <icon height="40" src="res/ios/appicon-40.png" width="40" />
-        <icon height="80" src="res/ios/appicon-40@2x.png" width="80" />
-        <icon height="57" src="res/ios/appicon.png" width="57" />
-        <icon height="114" src="res/ios/appicon@2x.png" width="114" />
+        <icon height="40" src="res/ios/appicon-Small-40.png" width="40" />
+        <icon height="80" src="res/ios/appicon-Small-40@2x.png" width="80" />
+        <icon height="50" src="res/ios/appicon-Small-50.png" width="50" />
+        <icon height="100" src="res/ios/appicon-Small-50@2x.png" width="100" />
+        <icon height="57" src="res/ios/appicon-Small-50.png" width="57" />
+        <icon height="114" src="res/ios/appicon-Small-50@2x.png" width="114" />
         <icon height="72" src="res/ios/appicon-72.png" width="72" />
         <icon height="144" src="res/ios/appicon-72@2x.png" width="144" />
         <icon height="29" src="res/ios/appicon-small.png" width="29" />
@@ -40,7 +42,7 @@
         <splash height="1024" src="res/ios/Default-Portrait.png" width="768" />
         <splash height="2048" src="res/ios/Default-Portrait@2x.png" width="1536" />
         <splash height="1136" src="res/ios/Default-568h@2x.png" width="640" />
-        <splash height="1334" src="res/ios/Default-667h.png" width="750" />
+        <splash height="1334" src="res/ios/Default-667h@2x.png" width="750" />
         <splash height="2208" src="res/ios/Default-Portrait-736h@3x.png" width="1242" />
     </platform>
     <platform name="android">
@@ -52,6 +54,7 @@
         <splash density="port-ldpi" src="res/android/screen-dpi.png" />
         <splash density="port-mdpi" src="res/android/screen-dpi.png" />
         <splash density="port-xhdpi" src="res/android/screen-dpi.png" />
+        <source-file src="www/sounds/ringing-2.mp3" target-dir="res/raw" />
     </platform>
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="2750" />

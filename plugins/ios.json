@@ -13,10 +13,6 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"PayPalMobile\"><param name=\"ios-package\" onload=\"true\" value=\"PayPalMobileCordovaPlugin\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"PushPlugin\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
                             "count": 1
                         },
@@ -123,6 +119,10 @@
                         {
                             "xml": "<feature name=\"Crypt\"><param name=\"ios-package\" value=\"CDVCrypt\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"PayPalMobile\"><param name=\"ios-package\" onload=\"true\" value=\"PayPalMobileCordovaPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -165,21 +165,21 @@
                     ],
                     "CoreLocation.framework": [
                         {
-                            "xml": true,
-                            "count": 1
-                        },
-                        {
                             "xml": false,
                             "count": 2
+                        },
+                        {
+                            "xml": true,
+                            "count": 1
                         }
                     ],
                     "CoreMedia.framework": [
                         {
-                            "xml": true,
+                            "xml": false,
                             "count": 1
                         },
                         {
-                            "xml": false,
+                            "xml": true,
                             "count": 1
                         }
                     ],
@@ -191,11 +191,11 @@
                     ],
                     "MessageUI.framework": [
                         {
-                            "xml": false,
+                            "xml": true,
                             "count": 1
                         },
                         {
-                            "xml": true,
+                            "xml": false,
                             "count": 1
                         }
                     ],
@@ -213,11 +213,11 @@
                     ],
                     "Security.framework": [
                         {
-                            "xml": false,
+                            "xml": true,
                             "count": 1
                         },
                         {
-                            "xml": true,
+                            "xml": false,
                             "count": 1
                         }
                     ],
@@ -359,9 +359,6 @@
         "com.ionic.keyboard": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "com.paypal.cordova.mobilesdk": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
         "com.phonegap.plugins.PushPlugin": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
@@ -428,6 +425,9 @@
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "org.apache.cordova.crypt": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
+        "com.paypal.cordova.mobilesdk": {
             "PACKAGE_NAME": "com.minds.mobile"
         }
     },

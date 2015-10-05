@@ -90,7 +90,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String appName = getAppName(this);
 
 		Intent notificationIntent = new Intent(this, PushHandlerActivity.class);
-		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	 	notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		notificationIntent.putExtra("pushBundle", extras);
 
     int requestCode = new Random().nextInt();
@@ -115,10 +115,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 				.setAutoCancel(true);
 
 		if(extras.getString("uri").equals("call")){
-			Log.d("minds sound?", "should play");
-			Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+		//	Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+			Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/raw/ringing");
 			mBuilder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE);
 			mBuilder.setSound(soundUri);
+			mBuilder.setVibrate(new long[] { 0, 500, 1000, 500, 1000, 500, 1000});
+			mBuilder.setFullScreenIntent(contentIntent, true);
+			mBuilder.setPriority(2);
+		//	mBuilder.setVisibility(1);
 		}
 
 		String message = extras.getString("message");
