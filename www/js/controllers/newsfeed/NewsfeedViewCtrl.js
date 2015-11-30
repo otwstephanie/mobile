@@ -98,13 +98,27 @@ define(function() {
 			$scope.comment.body = '';
 		};
 
-		$scope.removeComment = function(comment) {
+		$scope.edit = function(comment) {
+			if (!comment.description) {
+				return;
+			}
+			comment.editing = false;
+			$scope.editing = false;
+			Client.post('api/v1/comments/update/' + comment.guid, comment, function() {
+
+			}, function(error) {
+			});
+		};
+
+		$scope.openCommentActions = function(comment) {
 			var guid = comment.guid;
 			if (comment.owner_guid != $rootScope.user_guid)
 				return false;
 
 			$ionicActionSheet.show({
-				buttons: [],
+				buttons: [{
+					text: 'Edit'
+				}],
 				destructiveText: 'Delete',
 				destructiveButtonClicked: function() {
 					if (confirm("are you sure?")) {
@@ -124,6 +138,31 @@ define(function() {
 				cancelText: 'Cancel',
 				cancel: function() {
 					// add cancel code..
+				},
+				buttonClicked: function(index) {
+					switch (index) {
+						case 0:
+						if (comment.owner_guid != $rootScope.user_guid) {
+
+							$ionicLoading.show({
+								template: 'Sorry, you can not edit comments that are not yours.'
+							});
+							$timeout(function() {
+								$ionicLoading.hide();
+							}, 1000);
+
+							return false;
+
+						}
+						else {
+							//to hide the create comment section
+							$scope.editing = true;
+							//to make comment editable
+							comment.editing = true;
+						}
+						break;
+					}
+					return true;
 				}
 			});
 		};

@@ -34,36 +34,46 @@
 
         <div class="view-bg" ng-controller="NewsfeedCtrl">
         	<div class="item tabs tabs-secondary tabs-icon-left" style="padding:0;background-color:#F7F7F7 !important;">
-		        <a class="tab-item small-font " href="#/tab/newsfeed/channel/{{channel.guid}}/subscribers" >
+		        <a class="tab-item small-font " href="#/tab/newsfeed/channel/{{channel.guid}}/subscribers" style="flex:2;">
 		        	<span style="width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;">Subscribers</span>
 		        	<!--<i class="icon ion-person-stalker"></i> -->
 		        	<b>{{channel.subscribers_count}}</b>
 		        </a>
-		        <a class="tab-item small-font " href="#/tab/newsfeed/channel/{{channel.guid}}/subscriptions" >
+		        <a class="tab-item small-font " href="#/tab/newsfeed/channel/{{channel.guid}}/subscriptions" style="flex:2;">
 		        	<span style="width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;">Subscriptions</span>
 		        	<!--<i class="icon ion-person-stalker"></i> -->
 		        	<b>{{channel.subscriptions_count}}</b>
 		        </a>
-		         <a class="tab-item small-font " >
-                    <span style="width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;">Views</span>
-                    <!--<i class="icon ion-person-stalker"></i> -->
-                    <b>{{channel.impressions}}</b>
-                </a>
+		        <a class="tab-item small-font" style="flex:2;">
+              <span style="width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;">Views</span>
+              <!--<i class="icon ion-person-stalker"></i> -->
+              <b>{{channel.impressions}}</b>
+            </a>
 
 
-		        <a class="tab-item small-font" href="#/tab/newsfeed/channel/{{channel.guid}}/edit" ng-if="channel.guid == $root.user_guid" style="min-width:112px">
-		            <i class="icon ion-more"></i> Settings
+		        <a class="tab-item small-font" href="#/tab/newsfeed/channel/{{channel.guid}}/edit" ng-if="channel.guid == $root.user_guid">
+		            <i class="icon ion-more"></i>
 		        </a>
 
-		        <a class="tab-item small-font" ng-click="subscribe(channel)" ng-if="channel.guid != $root.user_guid && channel.subscribed == false" style="min-width:112px">
-		            <i class="icon ion-person-add"></i> Subscribe
+		        <a class="tab-item small-font" ng-click="subscribe(channel)" ng-if="channel.guid != $root.user_guid && channel.subscribed == false && channel.blocked == false" style="flex:2">
+		            <i class="icon ion-person-add"></i>
+              <!--  <span class="channel-tab-item-text"> Subscribe </span> -->
 		        </a>
-		        <a class="tab-item small-font minds-blue" style="color:#4690C3 !important; min-width:112px;" ng-click="unSubscribe(channel)" ng-if="channel.guid != $root.user_guid && channel.subscribed == true">
-		            <i class="icon ion-person-add"></i> Subscribed
+		        <a class="tab-item small-font minds-blue" style="flex:2; color:#4690C3 !important;" ng-click="unSubscribe(channel)" ng-if="channel.guid != $root.user_guid && channel.subscribed == true && channel.blocked == false">
+		            <i class="icon ion-person-add"></i>
+                <!--<span class="channel-tab-item-text"> Subscribed </span> -->
+		        </a>
+
+            <a class="tab-item small-font"  ng-click="openMenu(channel)" ng-if="channel.guid != $root.user_guid">
+		            <i class="icon ion-more"></i>
 		        </a>
 
 		    </div>
-	        <ion-list style="min-height:600px;">
+        <div class="channel-blocked" style="min-height:600px;" ng-if="channel && channel.blocked">
+          <h3 >You have blocked @{{channel.username}}</h3>
+        </div>
+
+	        <ion-list style="min-height:600px;" ng-if="channel && !channel.blocked">
 
 	           <a style="text-align:center; font-weight:200; padding-top:50px; display:block; color:#333; text-decoration: none;" ng-if="channel.guid == $root.user_guid && ChannelItems.length == 0 && loaded == true" href="#/tab/capture">
                 <img src="img/logo-transparent.png" class="loading-bulb-glow"/> <br/>

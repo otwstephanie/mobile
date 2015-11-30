@@ -33,3 +33,14 @@
 .comment-item.odd a{
 	float:right;
 }
+
+.comment-edit{
+	  padding: 0px !important;
+		width: 100% !important;
+}
+.comment-item-edit{
+	  padding: 0px;
+}
+.comment-edit-text-area{
+	  width: 100%;
+}

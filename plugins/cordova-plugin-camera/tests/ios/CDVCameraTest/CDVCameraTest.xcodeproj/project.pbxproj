@@ -123,7 +123,7 @@
 				30486FF81A40DCC70065C233 /* UIImage+CropScaleOrientation.m */,
 			);
 			name = CDVCameraLib;
-			path = ../../../src/ios;
+			path = ../../../ios;
 			sourceTree = "<group>";
 		};
 		308F59B01A4227A60031A4D4 /* Frameworks */ = {

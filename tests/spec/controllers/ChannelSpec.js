@@ -137,6 +137,51 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
 			expect(scope.channel.subscribers_count).toEqual(9);
 		});
 
+		it('should block', function() {
+			httpBackend.flush();
+			//set some defaults for our test
+			scope.channel = {
+				blocked: false,
+				guid:"002"
+			};
+
+			//listen for request
+			inject(function($httpBackend) {
+				httpBackend = $httpBackend;
+
+				var result = { "status": "success" };
+
+				httpBackend.when('POST', /.*\/block\.*/).respond(result);
+			});
+
+			scope.block(scope.channel);
+			httpBackend.flush();
+
+			expect(scope.channel.blocked).toEqual(true);
+		});
+
+		it('should un-block', function() {
+			httpBackend.flush();
+			//set some defaults for our test
+			scope.channel = {
+				blocked: false,
+				guid:"002"
+			};
+
+			//listen for request
+			inject(function($httpBackend) {
+				httpBackend = $httpBackend;
+
+				var result = { "status": "success" };
+
+				httpBackend.when('DELETE', /.*\/block\.*/).respond(result);
+			});
+
+			scope.unBlock(scope.channel);
+
+			expect(scope.channel.blocked).toEqual(false);
+		});
+
 	});
 
 	describe('Channel Edit (ChannelEditCtrl)', function() {

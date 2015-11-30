@@ -92,7 +92,7 @@ define(function() {
 
 		$scope.startCall = function() {
 
-			if($rootScope.inCall  || $scope.modal)
+			if ($rootScope.inCall  || $scope.modal)
 				return false;
 
 			$rootScope.inCall = true;

@@ -1,12 +1,26 @@
 
     <owner-brief-view owner="::activity.ownerObj" ts="::activity.time_created" show-more-button="::(!hideMoreButton)" open-actions="openActions(activity)"></owner-brief-view>
 
-    <div class="item item-text-wrap" ng-if="activity.message">
-        <p ng-bind-html="::activity.message | linky" class="wrap" style="white-space: pre-line;"></p>
+    <div class="item item-text-wrap" ng-show="activity.message && !activity.editing">
+        <p ng-bind-html="activity.message | linky" class="wrap" style="white-space: pre-line;"></p>
     </div>
 
-    <div class="item item-text-wrap" ng-if="(activity.title && !activity.perma_url)">
-        <p ng-bind-html="::activity.title | linky" class="wrap"></p>
+    <!-- editing of message -->
+    <div class="item item-text-wrap" ng-show="activity.editing && activity.message">
+        <textarea ng-model="activity.messageEdit" class="activity-edit-mode"></textarea>
+        <button class="button button-clear minds-blue" class="activity-edit-buttons" ng-click="cancel()">Cancel</button>
+        <button class="button button-clear minds-blue" class="activity-edit-buttons" style="color:#4690C3" ng-click="save()">Save</button>
+    </div>
+
+    <div class="item item-text-wrap" ng-if="(activity.title && !activity.perma_url) && !activity.editing">
+        <p ng-bind-html="activity.title | linky" class="wrap"></p>
+    </div>
+
+    <!-- Editing of title -->
+    <div class="item item-text-wrap" ng-show="activity.editing && activity.title">
+        <textarea ng-model="activity.titleEdit" class="activity-edit-mode"></textarea>
+        <button class="button button-clear minds-blue" class="activity-edit-buttons" ng-click="cancel()">Cancel</button>
+        <button class="button button-clear minds-blue" class="activity-edit-buttons" style="color:#4690C3" ng-click="save()">Save</button>
     </div>
 
     <!--Rich content -->

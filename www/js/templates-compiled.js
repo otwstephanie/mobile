@@ -544,36 +544,46 @@ define(['angular'], function(angular){
     "\n" +
     "        <div class=\"view-bg\" ng-controller=\"NewsfeedCtrl\">\n" +
     "        	<div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"padding:0;background-color:#F7F7F7 !important;\">\n" +
-    "		        <a class=\"tab-item small-font \" href=\"#/tab/newsfeed/channel/{{channel.guid}}/subscribers\" >\n" +
+    "		        <a class=\"tab-item small-font \" href=\"#/tab/newsfeed/channel/{{channel.guid}}/subscribers\" style=\"flex:2;\">\n" +
     "		        	<span style=\"width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;\">Subscribers</span>\n" +
     "		        	<!--<i class=\"icon ion-person-stalker\"></i> -->\n" +
     "		        	<b>{{channel.subscribers_count}}</b>\n" +
     "		        </a>\n" +
-    "		        <a class=\"tab-item small-font \" href=\"#/tab/newsfeed/channel/{{channel.guid}}/subscriptions\" >\n" +
+    "		        <a class=\"tab-item small-font \" href=\"#/tab/newsfeed/channel/{{channel.guid}}/subscriptions\" style=\"flex:2;\">\n" +
     "		        	<span style=\"width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;\">Subscriptions</span>\n" +
     "		        	<!--<i class=\"icon ion-person-stalker\"></i> -->\n" +
     "		        	<b>{{channel.subscriptions_count}}</b>\n" +
     "		        </a>\n" +
-    "		         <a class=\"tab-item small-font \" >\n" +
-    "                    <span style=\"width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;\">Views</span>\n" +
-    "                    <!--<i class=\"icon ion-person-stalker\"></i> -->\n" +
-    "                    <b>{{channel.impressions}}</b>\n" +
-    "                </a>\n" +
+    "		        <a class=\"tab-item small-font\" style=\"flex:2;\">\n" +
+    "              <span style=\"width: 100%; display: block; font-size:11px; height: 11px; vertical-align: middle; line-height: 36px;\">Views</span>\n" +
+    "              <!--<i class=\"icon ion-person-stalker\"></i> -->\n" +
+    "              <b>{{channel.impressions}}</b>\n" +
+    "            </a>\n" +
     "\n" +
     "\n" +
-    "		        <a class=\"tab-item small-font\" href=\"#/tab/newsfeed/channel/{{channel.guid}}/edit\" ng-if=\"channel.guid == $root.user_guid\" style=\"min-width:112px\">\n" +
-    "		            <i class=\"icon ion-more\"></i> Settings\n" +
+    "		        <a class=\"tab-item small-font\" href=\"#/tab/newsfeed/channel/{{channel.guid}}/edit\" ng-if=\"channel.guid == $root.user_guid\">\n" +
+    "		            <i class=\"icon ion-more\"></i>\n" +
     "		        </a>\n" +
     "\n" +
-    "		        <a class=\"tab-item small-font\" ng-click=\"subscribe(channel)\" ng-if=\"channel.guid != $root.user_guid && channel.subscribed == false\" style=\"min-width:112px\">\n" +
-    "		            <i class=\"icon ion-person-add\"></i> Subscribe\n" +
+    "		        <a class=\"tab-item small-font\" ng-click=\"subscribe(channel)\" ng-if=\"channel.guid != $root.user_guid && channel.subscribed == false && channel.blocked == false\" style=\"flex:2\">\n" +
+    "		            <i class=\"icon ion-person-add\"></i>\n" +
+    "              <!--  <span class=\"channel-tab-item-text\"> Subscribe </span> -->\n" +
     "		        </a>\n" +
-    "		        <a class=\"tab-item small-font minds-blue\" style=\"color:#4690C3 !important; min-width:112px;\" ng-click=\"unSubscribe(channel)\" ng-if=\"channel.guid != $root.user_guid && channel.subscribed == true\">\n" +
-    "		            <i class=\"icon ion-person-add\"></i> Subscribed\n" +
+    "		        <a class=\"tab-item small-font minds-blue\" style=\"flex:2; color:#4690C3 !important;\" ng-click=\"unSubscribe(channel)\" ng-if=\"channel.guid != $root.user_guid && channel.subscribed == true && channel.blocked == false\">\n" +
+    "		            <i class=\"icon ion-person-add\"></i>\n" +
+    "                <!--<span class=\"channel-tab-item-text\"> Subscribed </span> -->\n" +
+    "		        </a>\n" +
+    "\n" +
+    "            <a class=\"tab-item small-font\"  ng-click=\"openMenu(channel)\" ng-if=\"channel.guid != $root.user_guid\">\n" +
+    "		            <i class=\"icon ion-more\"></i>\n" +
     "		        </a>\n" +
     "\n" +
     "		    </div>\n" +
-    "	        <ion-list style=\"min-height:600px;\">\n" +
+    "        <div class=\"channel-blocked\" style=\"min-height:600px;\" ng-if=\"channel && channel.blocked\">\n" +
+    "          <h3 >You have blocked @{{channel.username}}</h3>\n" +
+    "        </div>\n" +
+    "\n" +
+    "	        <ion-list style=\"min-height:600px;\" ng-if=\"channel && !channel.blocked\">\n" +
     "\n" +
     "	           <a style=\"text-align:center; font-weight:200; padding-top:50px; display:block; color:#333; text-decoration: none;\" ng-if=\"channel.guid == $root.user_guid && ChannelItems.length == 0 && loaded == true\" href=\"#/tab/capture\">\n" +
     "                <img src=\"img/logo-transparent.png\" class=\"loading-bulb-glow\"/> <br/>\n" +
@@ -774,12 +784,26 @@ define(['angular'], function(angular){
   $templateCache.put("templates/directives/activity.html",
     "<owner-brief-view owner=\"::activity.ownerObj\" ts=\"::activity.time_created\" show-more-button=\"::(!hideMoreButton)\" open-actions=\"openActions(activity)\"></owner-brief-view>\n" +
     "\n" +
-    "    <div class=\"item item-text-wrap\" ng-if=\"activity.message\">\n" +
-    "        <p ng-bind-html=\"::activity.message | linky\" class=\"wrap\" style=\"white-space: pre-line;\"></p>\n" +
+    "    <div class=\"item item-text-wrap\" ng-show=\"activity.message && !activity.editing\">\n" +
+    "        <p ng-bind-html=\"activity.message | linky\" class=\"wrap\" style=\"white-space: pre-line;\"></p>\n" +
     "    </div>\n" +
     "\n" +
-    "    <div class=\"item item-text-wrap\" ng-if=\"(activity.title && !activity.perma_url)\">\n" +
-    "        <p ng-bind-html=\"::activity.title | linky\" class=\"wrap\"></p>\n" +
+    "    <!-- editing of message -->\n" +
+    "    <div class=\"item item-text-wrap\" ng-show=\"activity.editing && activity.message\">\n" +
+    "        <textarea ng-model=\"activity.messageEdit\" class=\"activity-edit-mode\"></textarea>\n" +
+    "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" style=\"color:#4690C3\" ng-click=\"save()\">Save</button>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"item item-text-wrap\" ng-if=\"(activity.title && !activity.perma_url) && !activity.editing\">\n" +
+    "        <p ng-bind-html=\"activity.title | linky\" class=\"wrap\"></p>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <!-- Editing of title -->\n" +
+    "    <div class=\"item item-text-wrap\" ng-show=\"activity.editing && activity.title\">\n" +
+    "        <textarea ng-model=\"activity.titleEdit\" class=\"activity-edit-mode\"></textarea>\n" +
+    "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" style=\"color:#4690C3\" ng-click=\"save()\">Save</button>\n" +
     "    </div>\n" +
     "\n" +
     "    <!--Rich content -->\n" +
@@ -1679,12 +1703,27 @@ define(['angular'], function(angular){
     "						<img ng-src=\"{{$root.node_url}}icon/{{::comment.ownerObj.guid}}/small\"/>\n" +
     "					</a>\n" +
     "\n" +
-    "					<div class=\"content item-text-wrap\" ng-bind-html=\"::comment.description | linky\" ng-click=\"removeComment(comment)\">\n" +
+    "					<div class=\"content item-text-wrap\" ng-show=\"!comment.editing\" ng-bind-html=\"comment.description | linky\" ng-click=\"openCommentActions(comment)\">\n" +
     "					</div>\n" +
+    "					<div class=\"content item-text-wrap\" ng-show=\"comment.editing\">\n" +
+    "						<div class=\"item item-input-inset comment-item-edit\">\n" +
+    "						 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
+    "								<textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\">\n" +
+    "								</textarea>\n" +
+    "							</label>\n" +
+    "							<button class=\"button button-clear\" ng-click=\"edit(comment)\">\n" +
+    "								Save\n" +
+    "							</button>\n" +
+    "						</div>\n" +
+    "					</div>\n" +
+    "					<!--\n" +
+    "					<div class=\"content item-text-wrap\" ng-show=\"comment.editing\" ng-bind-html=\"comment.description | linky\">\n" +
+    "					</div>\n" +
+    "				-->\n" +
     "				</div>\n" +
     "			</ion-list>\n" +
     "\n" +
-    "			<div class=\"list card\" style=\"clear:both;\" >\n" +
+    "			<div class=\"list card\" style=\"clear:both;\" ng-show=\"!editing\">\n" +
     "				<div class=\"item item-input-inset\">\n" +
     "				 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
     "						<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\">\n" +
@@ -1738,8 +1777,21 @@ define(['angular'], function(angular){
     "					<img ng-src=\"{{$root.node_url}}icon/{{comment.ownerObj.guid}}/small\"/>\n" +
     "				</a>\n" +
     "\n" +
-    "				<div class=\"content item-text-wrap\" ng-bind-html=\"comment.description | linky\" ng-click=\"removeComment(comment)\">\n" +
-    "				</div>\n" +
+    "				<div class=\"content item-text-wrap\" ng-bind-html=\"comment.description | linky\" ng-click=\"openCommentActions(comment)\" ng-show=\"!comment.editing\"></div>\n" +
+    "\n" +
+    "        <!-- editing of comment -->\n" +
+    "        <div class=\"content item-text-wrap\" ng-show=\"comment.editing\">\n" +
+    "            <div class=\"item item-input-inset comment-item-edit\">\n" +
+    "                <label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
+    "                    <textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\">\n" +
+    "                    </textarea>\n" +
+    "                </label>\n" +
+    "                <button class=\"button button-clear\" ng-click=\"edit(comment)\">\n" +
+    "                  Save\n" +
+    "                </button>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
     "			</div>\n" +
     "		</ion-list>\n" +
     "		<div class=\"list card\" style=\"clear:both;\">\n" +

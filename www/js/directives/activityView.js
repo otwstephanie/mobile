@@ -10,7 +10,6 @@ define(['angular'], function(angular) {
 				return 'templates/directives/activity.html';
 			},
 			link: function(scope, element, attrs) {
-
 				var visible = false;
 
 				function isVisible() {
@@ -57,6 +56,16 @@ define(['angular'], function(angular) {
 					}
 				});
 
+				scope.cancel = function() {
+					scope.activity.editing = false;
+				};
+
+				scope.save = function() {
+					scope.activity.message = scope.activity.messageEdit;
+          scope.activity.title = scope.activity.titleEdit;
+					scope.activity.editing = false;
+					Client.post('api/v1/newsfeed/' + scope.activity.guid, scope.activity, function() { }, function() { });
+				};
 			}
 		};
 	};

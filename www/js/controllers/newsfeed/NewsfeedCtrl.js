@@ -406,12 +406,17 @@ define(function() {
 
 		$scope.openActions = function(activity) {
 			var guid = activity.guid;
+			$scope.editing = null;
+			$scope.messageEdit = null;
 			var buttons = [
 				{
 					text: '<b>Share</b>'
 				},
 				{
 					text: 'Report this'
+				},
+				{
+					text: 'Edit'
 				}
 			];
 
@@ -471,6 +476,24 @@ define(function() {
 						window.location.href = "mailto:report@minds.com?subject=Report " + guid + "&body=This content violates the terms and conditions";
 						break;
 					case 2:
+						if (activity.owner_guid != $rootScope.user_guid) {
+
+							$ionicLoading.show({
+								template: 'Sorry, you can not edit posts that are not yours.'
+							});
+							$timeout(function() {
+								$ionicLoading.hide();
+							}, 1000);
+
+							return false;
+
+						} else {
+							activity.messageEdit = activity.message;
+              activity.titleEdit = activity.title;
+							activity.editing = true;
+						}
+						break;
+					case 3:
 						window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
 							var ft = new FileTransfer();
 							console.log(fs.root.toURL());

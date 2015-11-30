@@ -8,7 +8,7 @@
 define(function() {
 	'use strict';
 
-	function ctrl($rootScope, $scope, $state, $stateParams, Client, $ionicSlideBoxDelegate, $ionicScrollDelegate, $interval, $timeout, storage) {
+	function ctrl($rootScope, $scope, $state, $stateParams, Client, $ionicSlideBoxDelegate, $ionicScrollDelegate, $interval, $timeout, storage, $ionicActionSheet, $ionicLoading) {
 
 		if ($stateParams.username === undefined) {
 			$state.go('tab.newsfeed');
@@ -54,8 +54,9 @@ define(function() {
 				}
 
 				$scope.channel = success.channel;
-				//$scope.$apply();
 
+				//$scope.$apply();
+				console.log($scope.channel);
 				if ($rootScope.guid == $scope.channel.guid) {
 					storage.set('city', $scope.channel.city);
 					storage.set('coordinates', $scope.channel.coordinates);
@@ -157,10 +158,70 @@ define(function() {
 
 		};
 
+		$scope.block = function(channel) {
+			$scope.channel.blocked = true;
+			Client.put('api/v1/block/' + $scope.channel.guid, {},
+				function(response){}, function(error) {
+				console.log(error);
+				$scope.channel.blocked = false;
+			});
+
+		};
+
+		$scope.unBlock = function(channel) {
+			$scope.channel.blocked = false;
+			Client.delete('api/v1/block/' + $scope.channel.guid, {}, function() {
+			}, function() {
+				$scope.channel.blocked = true;
+			});
+
+		};
+
+		$scope.openMenu = function(channel) {
+			var buttons = [
+				{
+					text: 'Message'
+				},
+				{
+					text: channel.blocked ? 'Un-Block' : 'Block'
+				}
+			];
+
+			$ionicActionSheet.show({
+				buttons: buttons,
+				cancelText: 'Cancel',
+				cancel: function() {
+					// add cancel code..
+				},
+				buttonClicked: function(index) {
+					switch (index) {
+					case 0:
+						if ($scope.channel.blocked){
+							$ionicLoading.show({
+								template: 'Sorry, you can not send message to a blocked user.'
+							});
+							$timeout(function() {
+								$ionicLoading.hide();
+							}, 2000);
+						}
+						else $state.go("tab.chat-conversation", {username: $scope.channel.guid, name: $scope.channel.name});
+						break;
+					case 1:
+						if (channel.blocked) {
+							$scope.unBlock(channel);
+						}
+						else $scope.block(channel);
+						break;
+					}
+					return true;
+				}
+			});
+		};
+
 	}
 
 
-	ctrl.$inject = ['$rootScope', '$scope', '$state', '$stateParams', 'Client', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$interval', '$timeout', 'storage'];
+	ctrl.$inject = ['$rootScope', '$scope', '$state', '$stateParams', 'Client', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$interval', '$timeout', 'storage', '$ionicActionSheet', '$ionicLoading'];
 	return ctrl;
 
 });

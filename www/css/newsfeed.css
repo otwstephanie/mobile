@@ -47,3 +47,14 @@
 	padding: 24px 0 12px;
   text-align: center;
 }
+
+.activity-edit-mode{
+	width:100%;
+	padding:8px;
+  -webkit-appearance: none;
+	border: 1px solid #EEE;
+}
+
+.activity-edit-buttons{
+	float: right;
+}

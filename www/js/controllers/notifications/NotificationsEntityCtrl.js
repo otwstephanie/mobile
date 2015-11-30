@@ -107,37 +107,6 @@ define(function() {
 			$scope.comment.body = '';
 		};
 
-		$scope.removeComment = function(comment) {
-			var guid = comment.guid;
-			if (comment.owner_guid != $rootScope.user_guid)
-				return false;
-
-			$ionicActionSheet.show({
-				buttons: [],
-				destructiveText: 'Delete',
-				destructiveButtonClicked: function() {
-					if (confirm("are you sure?")) {
-
-						Client.delete('api/v1/comments/' + guid, function(success) {
-
-						});
-						$scope.comments.forEach(function(item, index, array) {
-							if (item.guid == guid) {
-								console.log('removed');
-								array.splice(index, 1);
-							}
-						});
-					}
-					return true;
-				},
-				cancelText: 'Cancel',
-				cancel: function() {
-					// add cancel code..
-				}
-			});
-
-		};
-
 		$scope.openUrl = function(url) {
 			var timeout;
 			$timeout.cancel(timeout);
@@ -146,7 +115,6 @@ define(function() {
 				window.open(url, "_blank", "location=yes");
 			}, 300);
 		};
-
 
 		$scope.pass = function() {
 			Client.post('api/v1/entities/suggested/pass/' + $scope.entity.guid, {}, function() {
@@ -199,6 +167,72 @@ define(function() {
 				$scope.entity['thumbs:up:count'] = 1;
 
 			$scope.entity['thumbs:up:user_guids'][1] = storage.get('user_guid');
+		};
+
+		$scope.edit = function(comment) {
+			if (!comment.description) {
+				return;
+			}
+			comment.editing = false;
+			$scope.editing = false;
+			Client.post('api/v1/comments/update/' + comment.guid, comment, function() {
+
+			}, function(error) {
+			});
+		};
+
+		$scope.openCommentActions = function(comment) {
+			var guid = comment.guid;
+			if (comment.owner_guid != $rootScope.user_guid)
+				return false;
+
+			$ionicActionSheet.show({
+				buttons: [{
+					text: 'Edit'
+				}],
+				destructiveText: 'Delete',
+				destructiveButtonClicked: function() {
+					if (confirm("are you sure?")) {
+
+						Client.delete('api/v1/comments/' + guid, function(success) {
+
+						});
+						$scope.comments.forEach(function(item, index, array) {
+							if (item.guid == guid) {
+								console.log('removed');
+								array.splice(index, 1);
+							}
+						});
+					}
+					return true;
+				},
+				cancelText: 'Cancel',
+				cancel: function() {
+					// add cancel code..
+				},
+				buttonClicked: function(index) {
+					switch (index) {
+						case 0:
+						if (comment.owner_guid != $rootScope.user_guid) {
+
+							$ionicLoading.show({
+								template: 'Sorry, you can not edit comments that are not yours.'
+							});
+							$timeout(function() {
+								$ionicLoading.hide();
+							}, 1000);
+
+							return false;
+
+						} else {
+							//to make comment editable
+							comment.editing = true;
+						}
+						break;
+					}
+					return true;
+				}
+			});
 		};
 
 	}
