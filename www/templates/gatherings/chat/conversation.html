@@ -48,9 +48,11 @@
 
     </ion-content>
 
-    <ion-footer-bar >
+    <ion-footer-bar class="messenger-footer-bar">
         <form ng-submit="send()" class="message-input-form">
-         <input type="text" class="message-input" placeholder="Send a message..." ng-model="message" ng-min-length="1" ng-max-length="140" required/> <input type="submit" class="button button-clear submit-button minds-yellow" value="send"/>
+         <textarea placeholder="Send a message..." ng-model="message" rows="1" auto-grow>
+         </textarea>
+         <input type="submit" class="button button-clear submit-button minds-yellow" value="send"/>
         </form>
     </ion-footer-bar>
 

@@ -85,6 +85,29 @@
 	float:left;
 }
 
+
+/**
+ * Message input bar
+ */
+.messenger-footer-bar{
+  min-height: 44px;
+  height: auto;
+}
+.messenger-footer-bar > form{
+  display:flex;
+  display:-webkit-flex;
+  flex-wrap:wrap;
+  -webkit-flex-wrap:wrap;
+  flex-direction:row;
+  -webkit-flex-direction:row;
+  align-items:center;
+}
+.messenger-footer-bar > form > textarea{
+  padding:8px;
+  flex:1;
+  -webkit-flex:1;
+}
+
 .submit-button{
 	float:right;
 }
@@ -98,7 +121,7 @@
 	padding:2px 8px 0 8px;
 }
 .conversation p{
-	padding-top:0; 
+	padding-top:0;
 	padding-left:10px;
 	font-size:10px;
 }
@@ -194,7 +217,7 @@
 .call-display-wrapper p{
 	color:#FFF;
 }
-	
+
 .incoming button{
 	padding:0;
 	border:0;

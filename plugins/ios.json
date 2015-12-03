@@ -322,6 +322,24 @@
                             "xml": false,
                             "count": 1
                         }
+                    ],
+                    "libCardIO.a": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libopencv_core.a": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libopencv_imgproc.a": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
                     ]
                 }
             },

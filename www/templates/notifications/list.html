@@ -221,6 +221,59 @@
                         		  have been met.</p>
                         	</a>
                         </div>
+
+                        <!-- Boost (Peer) Request -->
+                        <div ng-switch-when="boost_peer_request">
+                          <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+                            <p>
+                              <b>@{{notification.from.username}}</b> is offering
+                              <b>
+                                {{notification.params.bid}}
+                                <span ng-if="notification.params.type == 'pro'">USD</span>
+                                <span ng-if="notification.params.type == 'points'">points</span>
+                              </b>
+                              for
+                              <span class="pseudo-link mdl-color-text--blue-grey-400"  ng-if="notification.entity.title">{{notification.entity.title}}</span>
+                              <span class="pseudo-link mdl-color-text--blue-grey-400" ng-if="!notification.entity.title">their post</span>
+                            </p>
+                          </a>
+                        </div>
+
+                        <!-- Boost (Peer) Request -->
+                        <div ng-switch-when="boost_peer_accepted">
+                          <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+                            <p>
+                              <b>@{{notification.from.username}}</b> accepted your bid of
+                              <b>
+                                {{notification.params.bid}}
+                                <span ng-if="notification.params.type == 'pro'">USD</span>
+                                <span ng-if="notification.params.type == 'points'">points</span>
+                              </b>
+                              for
+                              <span class="pseudo-link mdl-color-text--blue-grey-400"  ng-if="notification.entity.title">{{notification.entity.title}}</span>
+                              <span class="pseudo-link mdl-color-text--blue-grey-400" ng-if="!notification.entity.title">your post</span>
+                            </p>
+                          </a>
+                        </div>
+
+                        <!-- Boost (Peer) Rejeced -->
+                        <div ng-switch-when="boost_peer_rejected">
+                          <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+                            <p>
+                              <b>@{{notification.from.username}}</b> declined your bid of
+                              <b>
+                                {{notification.params.bid}}
+                                <span ng-if="notification.params.type == 'pro'">USD</span>
+                                <span ng-if="notification.params.type == 'points'">points</span>
+                              </b>
+                              for
+                              <span class="pseudo-link mdl-color-text--blue-grey-400"  ng-if="notification.entity.title">{{notification.entity.title}}</span>
+                              <span class="pseudo-link mdl-color-text--blue-grey-400" ng-if="!notification.entity.title">your post</span>.
+                              You have not been charged.
+                            </p>
+                          </a>
+                        </div>
+
                         <!-- Points prompt -->
                         <div ng-switch-when="custom_message">
                             <a>

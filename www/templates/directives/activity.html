@@ -6,8 +6,8 @@
     </div>
 
     <!-- editing of message -->
-    <div class="item item-text-wrap" ng-show="activity.editing && activity.message">
-        <textarea ng-model="activity.messageEdit" class="activity-edit-mode"></textarea>
+    <div class="item item-text-wrap" ng-if="activity.editing && activity.message">
+        <textarea ng-model="activity.messageEdit" class="activity-edit-mode" auto-grow></textarea>
         <button class="button button-clear minds-blue" class="activity-edit-buttons" ng-click="cancel()">Cancel</button>
         <button class="button button-clear minds-blue" class="activity-edit-buttons" style="color:#4690C3" ng-click="save()">Save</button>
     </div>
@@ -17,8 +17,8 @@
     </div>
 
     <!-- Editing of title -->
-    <div class="item item-text-wrap" ng-show="activity.editing && activity.title">
-        <textarea ng-model="activity.titleEdit" class="activity-edit-mode"></textarea>
+    <div class="item item-text-wrap" ng-if="activity.editing && activity.title">
+        <textarea ng-model="activity.titleEdit" class="activity-edit-mode" auto-grow></textarea>
         <button class="button button-clear minds-blue" class="activity-edit-buttons" ng-click="cancel()">Cancel</button>
         <button class="button button-clear minds-blue" class="activity-edit-buttons" style="color:#4690C3" ng-click="save()">Save</button>
     </div>

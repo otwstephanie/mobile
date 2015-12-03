@@ -789,8 +789,8 @@ define(['angular'], function(angular){
     "    </div>\n" +
     "\n" +
     "    <!-- editing of message -->\n" +
-    "    <div class=\"item item-text-wrap\" ng-show=\"activity.editing && activity.message\">\n" +
-    "        <textarea ng-model=\"activity.messageEdit\" class=\"activity-edit-mode\"></textarea>\n" +
+    "    <div class=\"item item-text-wrap\" ng-if=\"activity.editing && activity.message\">\n" +
+    "        <textarea ng-model=\"activity.messageEdit\" class=\"activity-edit-mode\" auto-grow></textarea>\n" +
     "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" ng-click=\"cancel()\">Cancel</button>\n" +
     "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" style=\"color:#4690C3\" ng-click=\"save()\">Save</button>\n" +
     "    </div>\n" +
@@ -800,8 +800,8 @@ define(['angular'], function(angular){
     "    </div>\n" +
     "\n" +
     "    <!-- Editing of title -->\n" +
-    "    <div class=\"item item-text-wrap\" ng-show=\"activity.editing && activity.title\">\n" +
-    "        <textarea ng-model=\"activity.titleEdit\" class=\"activity-edit-mode\"></textarea>\n" +
+    "    <div class=\"item item-text-wrap\" ng-if=\"activity.editing && activity.title\">\n" +
+    "        <textarea ng-model=\"activity.titleEdit\" class=\"activity-edit-mode\" auto-grow></textarea>\n" +
     "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" ng-click=\"cancel()\">Cancel</button>\n" +
     "        <button class=\"button button-clear minds-blue\" class=\"activity-edit-buttons\" style=\"color:#4690C3\" ng-click=\"save()\">Save</button>\n" +
     "    </div>\n" +
@@ -1315,9 +1315,11 @@ define(['angular'], function(angular){
     "\n" +
     "    </ion-content>\n" +
     "\n" +
-    "    <ion-footer-bar >\n" +
+    "    <ion-footer-bar class=\"messenger-footer-bar\">\n" +
     "        <form ng-submit=\"send()\" class=\"message-input-form\">\n" +
-    "         <input type=\"text\" class=\"message-input\" placeholder=\"Send a message...\" ng-model=\"message\" ng-min-length=\"1\" ng-max-length=\"140\" required/> <input type=\"submit\" class=\"button button-clear submit-button minds-yellow\" value=\"send\"/>\n" +
+    "         <textarea placeholder=\"Send a message...\" ng-model=\"message\" rows=\"1\" auto-grow>\n" +
+    "         </textarea>\n" +
+    "         <input type=\"submit\" class=\"button button-clear submit-button minds-yellow\" value=\"send\"/>\n" +
     "        </form>\n" +
     "    </ion-footer-bar>\n" +
     "\n" +
@@ -1708,7 +1710,7 @@ define(['angular'], function(angular){
     "					<div class=\"content item-text-wrap\" ng-show=\"comment.editing\">\n" +
     "						<div class=\"item item-input-inset comment-item-edit\">\n" +
     "						 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "								<textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\">\n" +
+    "								<textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\" auto-grow>\n" +
     "								</textarea>\n" +
     "							</label>\n" +
     "							<button class=\"button button-clear\" ng-click=\"edit(comment)\">\n" +
@@ -1726,7 +1728,7 @@ define(['angular'], function(angular){
     "			<div class=\"list card\" style=\"clear:both;\" ng-show=\"!editing\">\n" +
     "				<div class=\"item item-input-inset\">\n" +
     "				 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "						<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\">\n" +
+    "						<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\" auto-grow>\n" +
     "						</textarea>\n" +
     "					</label>\n" +
     "					<button class=\"button button-clear\" ng-click=\"submit()\">\n" +
@@ -1783,7 +1785,7 @@ define(['angular'], function(angular){
     "        <div class=\"content item-text-wrap\" ng-show=\"comment.editing\">\n" +
     "            <div class=\"item item-input-inset comment-item-edit\">\n" +
     "                <label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "                    <textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\">\n" +
+    "                    <textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\" auto-grow>\n" +
     "                    </textarea>\n" +
     "                </label>\n" +
     "                <button class=\"button button-clear\" ng-click=\"edit(comment)\">\n" +
@@ -1798,7 +1800,7 @@ define(['angular'], function(angular){
     "			<div class=\"item item-input-inset\">\n" +
     "\n" +
     "			 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "					<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\" style=\"position: relative!important; left: 0; top: 0;\">\n" +
+    "					<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\" style=\"position: relative!important; left: 0; top: 0;\" auto-grow>\n" +
     "					</textarea>\n" +
     "				</label>\n" +
     "				<button class=\"button button-clear\" ng-click=\"submit()\">\n" +
@@ -2034,6 +2036,59 @@ define(['angular'], function(angular){
     "                        		  have been met.</p>\n" +
     "                        	</a>\n" +
     "                        </div>\n" +
+    "\n" +
+    "                        <!-- Boost (Peer) Request -->\n" +
+    "                        <div ng-switch-when=\"boost_peer_request\">\n" +
+    "                          <a href=\"#/tab/notifications/entity/{{notification.entityObj.guid}}\">\n" +
+    "                            <p>\n" +
+    "                              <b>@{{notification.from.username}}</b> is offering\n" +
+    "                              <b>\n" +
+    "                                {{notification.params.bid}}\n" +
+    "                                <span ng-if=\"notification.params.type == 'pro'\">USD</span>\n" +
+    "                                <span ng-if=\"notification.params.type == 'points'\">points</span>\n" +
+    "                              </b>\n" +
+    "                              for\n" +
+    "                              <span class=\"pseudo-link mdl-color-text--blue-grey-400\"  ng-if=\"notification.entity.title\">{{notification.entity.title}}</span>\n" +
+    "                              <span class=\"pseudo-link mdl-color-text--blue-grey-400\" ng-if=\"!notification.entity.title\">their post</span>\n" +
+    "                            </p>\n" +
+    "                          </a>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <!-- Boost (Peer) Request -->\n" +
+    "                        <div ng-switch-when=\"boost_peer_accepted\">\n" +
+    "                          <a href=\"#/tab/notifications/entity/{{notification.entityObj.guid}}\">\n" +
+    "                            <p>\n" +
+    "                              <b>@{{notification.from.username}}</b> accepted your bid of\n" +
+    "                              <b>\n" +
+    "                                {{notification.params.bid}}\n" +
+    "                                <span ng-if=\"notification.params.type == 'pro'\">USD</span>\n" +
+    "                                <span ng-if=\"notification.params.type == 'points'\">points</span>\n" +
+    "                              </b>\n" +
+    "                              for\n" +
+    "                              <span class=\"pseudo-link mdl-color-text--blue-grey-400\"  ng-if=\"notification.entity.title\">{{notification.entity.title}}</span>\n" +
+    "                              <span class=\"pseudo-link mdl-color-text--blue-grey-400\" ng-if=\"!notification.entity.title\">your post</span>\n" +
+    "                            </p>\n" +
+    "                          </a>\n" +
+    "                        </div>\n" +
+    "\n" +
+    "                        <!-- Boost (Peer) Rejeced -->\n" +
+    "                        <div ng-switch-when=\"boost_peer_rejected\">\n" +
+    "                          <a href=\"#/tab/notifications/entity/{{notification.entityObj.guid}}\">\n" +
+    "                            <p>\n" +
+    "                              <b>@{{notification.from.username}}</b> declined your bid of\n" +
+    "                              <b>\n" +
+    "                                {{notification.params.bid}}\n" +
+    "                                <span ng-if=\"notification.params.type == 'pro'\">USD</span>\n" +
+    "                                <span ng-if=\"notification.params.type == 'points'\">points</span>\n" +
+    "                              </b>\n" +
+    "                              for\n" +
+    "                              <span class=\"pseudo-link mdl-color-text--blue-grey-400\"  ng-if=\"notification.entity.title\">{{notification.entity.title}}</span>\n" +
+    "                              <span class=\"pseudo-link mdl-color-text--blue-grey-400\" ng-if=\"!notification.entity.title\">your post</span>.\n" +
+    "                              You have not been charged.\n" +
+    "                            </p>\n" +
+    "                          </a>\n" +
+    "                        </div>\n" +
+    "\n" +
     "                        <!-- Points prompt -->\n" +
     "                        <div ng-switch-when=\"custom_message\">\n" +
     "                            <a>\n" +
