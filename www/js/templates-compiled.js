@@ -1727,10 +1727,8 @@ define(['angular'], function(angular){
     "\n" +
     "			<div class=\"list card\" style=\"clear:both;\" ng-show=\"!editing\">\n" +
     "				<div class=\"item item-input-inset\">\n" +
-    "				 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "						<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\" auto-grow>\n" +
-    "						</textarea>\n" +
-    "					</label>\n" +
+    "					<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\" style=\"flex:1; -webkit-flex:1\" auto-grow>\n" +
+    "					</textarea>\n" +
     "					<button class=\"button button-clear\" ng-click=\"submit()\">\n" +
     "						Comment\n" +
     "					</button>\n" +
@@ -1798,11 +1796,8 @@ define(['angular'], function(angular){
     "		</ion-list>\n" +
     "		<div class=\"list card\" style=\"clear:both;\">\n" +
     "			<div class=\"item item-input-inset\">\n" +
-    "\n" +
-    "			 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "					<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\" style=\"position: relative!important; left: 0; top: 0;\" auto-grow>\n" +
-    "					</textarea>\n" +
-    "				</label>\n" +
+    "				<textarea placeholder=\"Type your comment here...\" ng-model=\"comment.body\" style=\"flex:1; -webkit-flex:1;\" auto-grow>\n" +
+    "				</textarea>\n" +
     "				<button class=\"button button-clear\" ng-click=\"submit()\">\n" +
     "					Comment\n" +
     "				</button>\n" +

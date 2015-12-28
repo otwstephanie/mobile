@@ -47,10 +47,8 @@
 
 			<div class="list card" style="clear:both;" ng-show="!editing">
 				<div class="item item-input-inset">
-				 	<label class="item-input-wrapper" style="background:transparent">
-						<textarea placeholder="Type your comment here..." ng-model="comment.body" auto-grow>
-						</textarea>
-					</label>
+					<textarea placeholder="Type your comment here..." ng-model="comment.body" style="flex:1; -webkit-flex:1" auto-grow>
+					</textarea>
 					<button class="button button-clear" ng-click="submit()">
 						Comment
 					</button>
