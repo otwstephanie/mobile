@@ -16,7 +16,7 @@ define(function() {
 			if (storage.get('access_token') && storage.get('loggedin')) {
 				$state.go('tab.newsfeed');
 			} else {
-				$state.go('login');
+				$state.go('register');
 			}
 		}, 100);
 

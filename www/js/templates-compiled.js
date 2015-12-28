@@ -1,7 +1,4 @@
-/*global define*/
-
-define(['angular'], function(angular){
-  angular.module('app.templates', []).run(['$templateCache', function($templateCache) {
+angular.module('app.templates', []).run(['$templateCache', function($templateCache) {
   "use strict";
   $templateCache.put("templates/loading.html",
     "<ion-view title=\"<img src='img/full_logo.png' class='topbar-logo'/>\">\n" +
@@ -77,13 +74,12 @@ define(['angular'], function(angular){
   $templateCache.put("templates/register.html",
     "<ion-view title=\"<img src='img/full_logo.png' class='topbar-logo'/>\"  ng-controller=\"RegisterCtrl\" hide-nav-bar=\"true\" class=\"login-bg\">\n" +
     "	<ion-content >\n" +
-    "	\n" +
+    "\n" +
     "        <div class=\"login-header\">\n" +
     "           <div class=\"background-image\"></div>\n" +
     "           <img src=\"img/full_logo_white.png\" class=\"login-logo\"/>\n" +
     "        </div>\n" +
     "\n" +
-    "	\n" +
     "        <form ng-submit=\"register()\" class=\"list\">\n" +
     "            <label class=\"item item-input\">\n" +
     "                <span class=\"input-label\">Username</span>\n" +
@@ -97,37 +93,39 @@ define(['angular'], function(angular){
     "                <span class=\"input-label\">Email</span>\n" +
     "                <input type=\"email\" ng-model=\"data.email\">\n" +
     "            </label>\n" +
-    "            \n" +
+    "\n" +
     "            <label class=\"item item-input\" style=\"padding-bottom:15px\">\n" +
     "                <span class=\"input-label\">Referrer</span>\n" +
     "                <input type=\"text\" ng-model=\"data.referrer\" ng-change=\"searchUsers($event)\" placeholder=\"@channel\">\n" +
     "                <span style=\"font-size: 10px; position: absolute; left: 16px; top: 38px; color: #888;\">We will reward the channel which referred you with 100 points</span>\n" +
     "            </label>\n" +
-    "            \n" +
+    "\n" +
     "            <!-- @todo set our own css class -->\n" +
     "             <div class=\"wallet-users-list\" ng-show=\"searching\" style=\"margin-top:0px\">\n" +
     "               <div ng-repeat=\"user in results\" ng-click=\"selectReferrer(user);\">\n" +
-    "                   \n" +
+    "\n" +
     "                    <img src=\"{{$root.node_url}}icon/{{user.guid}}/small\" />\n" +
     "                     @{{user.username}}\n" +
     "               </div>\n" +
     "           </div>\n" +
-    " \n" +
+    "\n" +
     "            <div class=\"padding\">\n" +
     "            	<div>\n" +
-    "					<input id=\"terms\" type=\"checkbox\" checked=\"checked\">\n" +
-    "				    <label for=\"terms\">I accept the</label> <a style=\"color:#4690C3; font-weight:bold;text-decoration:none;\" href=\"{{node_url}}p/terms\">Terms and Conditions</a>\n" +
-    "				</div>\n" +
-    "           	 <input type=\"submit\" class=\"button button-block button-positive\" value=\"Register\" ng-click=\"Register()\"/>\n" +
-    "            </div>\n" +
+    "								<input id=\"terms\" type=\"checkbox\" checked=\"checked\">\n" +
+    "				    		<label for=\"terms\">I accept the</label> <a style=\"color:#4690C3; font-weight:bold;text-decoration:none;\" href=\"{{node_url}}p/terms\">Terms and Conditions</a>\n" +
+    "							</div>\n" +
+    "           		<input type=\"submit\" class=\"button button-block button-positive\" value=\"Register & Launch Channel\" ng-click=\"Register()\"/>\n" +
+    "\n" +
+    "						</div>\n" +
     "        </form>\n" +
-    "        \n" +
+    "\n" +
     "        <div class=\"padding\" style=\"text-align:center;\">\n" +
-    "            <a href=\"#/login\" class=\"minds-blue\">Return to login</a>\n" +
+    "            <a href=\"#/login\" class=\"minds-blue\">Already have a channel? Login.</a>\n" +
     "        </div>\n" +
     "\n" +
     "    </ion-content>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/tabs.html",
     "<ion-tabs class=\"tabs-striped tabs-bottom tabs-icon-only\" ng-controller=\"TabsCtrl\">\n" +
     "\n" +
@@ -2393,5 +2391,3 @@ define(['angular'], function(angular){
     "	</ion-content>\n" +
     "</ion-modal-view>");
 }]);
-
-});
