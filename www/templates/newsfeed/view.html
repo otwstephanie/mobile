@@ -25,7 +25,7 @@
 						<img ng-src="{{$root.node_url}}icon/{{::comment.ownerObj.guid}}/small"/>
 					</a>
 
-					<div class="content item-text-wrap" ng-show="!comment.editing" ng-bind-html="comment.description | linky" ng-click="openCommentActions(comment)">
+					<div class="content item-text-wrap" ng-show="!comment.editing" ng-bind-html="'@' + comment.ownerObj.username + ': ' + comment.description | linky" ng-click="openCommentActions(comment)">
 					</div>
 					<div class="content item-text-wrap" ng-show="comment.editing">
 						<div class="item item-input-inset comment-item-edit">

@@ -1,4 +1,7 @@
-angular.module('app.templates', []).run(['$templateCache', function($templateCache) {
+/*global define*/
+
+define(['angular'], function(angular){
+  angular.module('app.templates', []).run(['$templateCache', function($templateCache) {
   "use strict";
   $templateCache.put("templates/loading.html",
     "<ion-view title=\"<img src='img/full_logo.png' class='topbar-logo'/>\">\n" +
@@ -1725,7 +1728,7 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "						<img ng-src=\"{{$root.node_url}}icon/{{::comment.ownerObj.guid}}/small\"/>\n" +
     "					</a>\n" +
     "\n" +
-    "					<div class=\"content item-text-wrap\" ng-show=\"!comment.editing\" ng-bind-html=\"comment.description | linky\" ng-click=\"openCommentActions(comment)\">\n" +
+    "					<div class=\"content item-text-wrap\" ng-show=\"!comment.editing\" ng-bind-html=\"'@' + comment.ownerObj.username + ' ' + comment.description | linky\" ng-click=\"openCommentActions(comment)\">\n" +
     "					</div>\n" +
     "					<div class=\"content item-text-wrap\" ng-show=\"comment.editing\">\n" +
     "						<div class=\"item item-input-inset comment-item-edit\">\n" +
@@ -2413,3 +2416,5 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "	</ion-content>\n" +
     "</ion-modal-view>");
 }]);
+
+});
