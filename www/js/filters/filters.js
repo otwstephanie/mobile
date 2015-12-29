@@ -79,7 +79,7 @@ define(['angular'],
 
 				var matches,
 					output = input,
-				urls = /\w+:\/\/([\w|\.]+)/;
+				urls = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n]+)/im;
 
 				matches = urls.exec( input );
 
