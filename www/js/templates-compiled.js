@@ -1671,14 +1671,14 @@ define(['angular'], function(angular){
     "</ion-popover-view>");
   $templateCache.put("templates/newsfeed/list.html",
     "<ion-view title=\"<img src='img/full_logo.png' class='topbar-logo'/>\" ng-controller=\"NewsfeedCtrl\" class=\"view-bg\">\n" +
-    "	\n" +
+    "\n" +
     "	<ion-nav-buttons side=\"left\">\n" +
     "		<!--<a class=\"button button-clear icon ion-compose\" ng-click=\"composer.show($event)\"></a>-->\n" +
     "		<a class=\"button button-clear icon icon-bank\" href=\"#/tab/newsfeed/wallet\">\n" +
     "			<wallet-counter></wallet-counter>\n" +
     "		</a>\n" +
     "	</ion-nav-buttons>\n" +
-    "	\n" +
+    "\n" +
     "	<ion-nav-buttons side=\"right\">\n" +
     "		<!--<a class=\"button button-clear icon ion-compose\" ng-click=\"composer.show($event)\"></a>-->\n" +
     "		<a class=\"button button-clear\" href=\"#/tab/newsfeed/channel/me\">\n" +
@@ -1694,16 +1694,21 @@ define(['angular'], function(angular){
     "\n" +
     "		<ion-list>\n" +
     "\n" +
+    "      <div class=\"list card item-text-wrap m-tip m-tip-boosting\" ng-show=\"!getTip('boosting')\" ng-click=\"closeTip('boosting')\">\n" +
+    "        <p>Tip: use your points to boost to more people's newsfeeds. <a >OK!</a></p>\n" +
+    "      </div>\n" +
+    "\n" +
     "			<activity-view ng-repeat=\"activity in newsfeedItems track by $id(activity.guid + $index)\" id=\"{{::activity.guid}}\" class=\"activity-item list card\">\n" +
     "			</activity-view>\n" +
     "\n" +
     "		</ion-list>\n" +
-    "		\n" +
+    "\n" +
     "		<ion-infinite-scroll ng-if=\"hasMore()\" distance=\"1%\" on-infinite=\"loadMore()\" >\n" +
     "		</ion-infinite-scroll>\n" +
     "\n" +
     "	</ion-content>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/newsfeed/view.html",
     "<ion-view ng-controller=\"NewsfeedViewCtrl\" class=\"view-bg\">\n" +
     "\n" +

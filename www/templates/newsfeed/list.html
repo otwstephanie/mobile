@@ -1,12 +1,12 @@
 <ion-view title="<img src='img/full_logo.png' class='topbar-logo'/>" ng-controller="NewsfeedCtrl" class="view-bg">
-	
+
 	<ion-nav-buttons side="left">
 		<!--<a class="button button-clear icon ion-compose" ng-click="composer.show($event)"></a>-->
 		<a class="button button-clear icon icon-bank" href="#/tab/newsfeed/wallet">
 			<wallet-counter></wallet-counter>
 		</a>
 	</ion-nav-buttons>
-	
+
 	<ion-nav-buttons side="right">
 		<!--<a class="button button-clear icon ion-compose" ng-click="composer.show($event)"></a>-->
 		<a class="button button-clear" href="#/tab/newsfeed/channel/me">
@@ -22,11 +22,15 @@
 
 		<ion-list>
 
+      <div class="list card item-text-wrap m-tip m-tip-boosting" ng-show="!getTip('boosting')" ng-click="closeTip('boosting')">
+        <p>Tip: use your points to boost to more people's newsfeeds. <a >OK!</a></p>
+      </div>
+
 			<activity-view ng-repeat="activity in newsfeedItems track by $id(activity.guid + $index)" id="{{::activity.guid}}" class="activity-item list card">
 			</activity-view>
 
 		</ion-list>
-		
+
 		<ion-infinite-scroll ng-if="hasMore()" distance="1%" on-infinite="loadMore()" >
 		</ion-infinite-scroll>
 

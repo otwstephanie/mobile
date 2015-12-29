@@ -303,7 +303,7 @@ define(function() {
 			}
 
 			//increment count
-			$rootScope.points = $rootScope.points + 1;
+			//$rootScope.points = $rootScope.points + 1;
 
 			$ionicLoading.show({
 				template: '<i class="icon icon-remind" style="line-height:100px; vertical-align:middle; font-size:90px"></i>'
@@ -403,6 +403,15 @@ define(function() {
 				$scope.modal.show();
 			});
 		};
+
+
+    $scope.getTip = function(tip) {
+      return storage.get('tip.' + tip);
+    }
+
+    $scope.closeTip = function(tip) {
+      storage.set('tip.' + tip, true);
+    }
 
 		$scope.openActions = function(activity) {
 			var guid = activity.guid;

@@ -262,6 +262,22 @@ progress[value] {
 }
 
 /**
+ * Tips
+ */
+.m-tip{
+  background:#455a64;
+  color:#FFF;
+  padding:12px;
+}
+.m-tip a{
+  color:#FFF;
+  font-weight:bold;
+}
+.m-tip.m-tip-boosting{
+
+}
+
+/**
  * Tutorial
  */
 .tutorial .slider-slide{
