@@ -529,16 +529,13 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "		</div>\n" +
     "\n" +
     "        <div class=\"inner\">\n" +
-    "\n" +
-    "			<div class=\"cell\">\n" +
+    "			      <div class=\"cell\">\n" +
     "           		<img image-cache ng-src=\"{{channel.avatar_url.large}}/{{$root.globalCB}}\"/>\n" +
     "            </div>\n" +
     "            <div class=\"cell\">\n" +
     "	            <h1 ng-bind-html=\"channel.name\"></h1>\n" +
     "              <p style=\"width:85%; color:#FFF; font-size:11px; margin:0;\">@{{channel.username}}</p>\n" +
-    "	            <p ng-show=\"channel.briefdescription\" class=\"wrap\" style=\"width:85%; color:#FFF; font-size:11px;\" ng-bind-html=\"channel.briefdescription\"></p>\n" +
     "            </div>\n" +
-    "\n" +
     "        </div>\n" +
     "\n" +
     "        <div class=\"view-bg\" ng-controller=\"NewsfeedCtrl\">\n" +
@@ -583,6 +580,27 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "        </div>\n" +
     "\n" +
     "	        <ion-list style=\"min-height:600px;\" ng-if=\"channel && !channel.blocked\">\n" +
+    "\n" +
+    "              <div class=\"list card item-text-wrap\" style=\"padding:16px\" ng-show=\"channel.briefdescription\">\n" +
+    "                <h3>Bio</h3>\n" +
+    "                <p style=\"white-space: pre-line;\">{{channel.briefdescription}}</p>\n" +
+    "\n" +
+    "                <div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"justify-content: left; margin-bottom: -16px;padding:0;background-color:transparent !important;\">\n" +
+    "                  <a class=\"tab-item small-font\" style=\"flex:1; text-align:left;\" ng-if=\"channel.gender\">\n" +
+    "                    <i class=\"icon ion-transgender\"></i>\n" +
+    "                    <b>{{channel.gender}}</b>\n" +
+    "                  </a>\n" +
+    "                  <a class=\"tab-item small-font\" style=\"flex:1; text-align:left;\" ng-if=\"channel.dob\">\n" +
+    "                    <i class=\"icon ion-calendar\"></i>\n" +
+    "                    <b>{{channel.dob}}</b>\n" +
+    "                  </a>\n" +
+    "                  <a class=\"tab-item small-font\" style=\"flex:1; text-align:left;\" ng-if=\"channel.city\">\n" +
+    "                    <i class=\"icon ion-ios-location\"></i>\n" +
+    "                    <b>{{channel.city}}</b>\n" +
+    "                  </a>\n" +
+    "                </div>\n" +
+    "              </div>\n" +
+    "\n" +
     "\n" +
     "	           <a style=\"text-align:center; font-weight:200; padding-top:50px; display:block; color:#333; text-decoration: none;\" ng-if=\"channel.guid == $root.user_guid && ChannelItems.length == 0 && loaded == true\" href=\"#/tab/capture\">\n" +
     "                <img src=\"img/logo-transparent.png\" class=\"loading-bulb-glow\"/> <br/>\n" +

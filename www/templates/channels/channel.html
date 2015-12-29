@@ -20,16 +20,13 @@
 		</div>
 
         <div class="inner">
-
-			<div class="cell">
+			      <div class="cell">
            		<img image-cache ng-src="{{channel.avatar_url.large}}/{{$root.globalCB}}"/>
             </div>
             <div class="cell">
 	            <h1 ng-bind-html="channel.name"></h1>
               <p style="width:85%; color:#FFF; font-size:11px; margin:0;">@{{channel.username}}</p>
-	            <p ng-show="channel.briefdescription" class="wrap" style="width:85%; color:#FFF; font-size:11px;" ng-bind-html="channel.briefdescription"></p>
             </div>
-
         </div>
 
         <div class="view-bg" ng-controller="NewsfeedCtrl">
@@ -74,6 +71,27 @@
         </div>
 
 	        <ion-list style="min-height:600px;" ng-if="channel && !channel.blocked">
+
+              <div class="list card item-text-wrap" style="padding:16px" ng-show="channel.briefdescription">
+                <h3>Bio</h3>
+                <p style="white-space: pre-line;">{{channel.briefdescription}}</p>
+
+                <div class="item tabs tabs-secondary tabs-icon-left" style="justify-content: left; margin-bottom: -16px;padding:0;background-color:transparent !important;">
+                  <a class="tab-item small-font" style="flex:1; text-align:left;" ng-if="channel.gender">
+                    <i class="icon ion-transgender"></i>
+                    <b>{{channel.gender}}</b>
+                  </a>
+                  <a class="tab-item small-font" style="flex:1; text-align:left;" ng-if="channel.dob">
+                    <i class="icon ion-calendar"></i>
+                    <b>{{channel.dob}}</b>
+                  </a>
+                  <a class="tab-item small-font" style="flex:1; text-align:left;" ng-if="channel.city">
+                    <i class="icon ion-ios-location"></i>
+                    <b>{{channel.city}}</b>
+                  </a>
+                </div>
+              </div>
+
 
 	           <a style="text-align:center; font-weight:200; padding-top:50px; display:block; color:#333; text-decoration: none;" ng-if="channel.guid == $root.user_guid && ChannelItems.length == 0 && loaded == true" href="#/tab/capture">
                 <img src="img/logo-transparent.png" class="loading-bulb-glow"/> <br/>
