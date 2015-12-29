@@ -22,7 +22,7 @@
 	background: #FFF;
 }
 .login-bg{
-	
+
 }
 .login-header .background-image{
 	position: absolute;
@@ -44,7 +44,7 @@
 
 .small-font {
 	font-size: 13px !important;
-	color: #6A6A74 !important; 
+	color: #6A6A74 !important;
 }
 
 .topbar-logo{
@@ -60,7 +60,7 @@
 	position:relative;
 	text-align:center;
 	padding:50px 0;
-	
+
 	/*background:url('../img/splash.jpg') no-repeat center center fixed;*/
 	-webkit-background-size: cover;
   	-moz-background-size: cover;
@@ -108,7 +108,7 @@
 	height:50px;
 	background: #000 !important;
 	color:#EEE;
-	
+
 }*/
 
 .item-input-wrapper > textarea.cloned-text-input{
@@ -122,9 +122,18 @@
 	padding:0 16px;
 }
 
+/**
+ * SMALL SCREEN HACKS
+ */
+@media screen and (max-height: 480px){
+  .login-header{
+    padding: 16px 0;
+  }
+}
+
 html:-webkit-full-screen {
  background: red;
-} 
+}
 
 a.tag{
 	color:#4690C3;
@@ -138,7 +147,7 @@ a.tag{
         -moz-user-select: auto !important;
         -ms-user-select: auto !important;
         -o-user-select: auto !important;
-        user-select: auto !important;  
+        user-select: auto !important;
 }
 
 .gender-input  a{
