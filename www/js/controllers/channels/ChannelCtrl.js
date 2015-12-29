@@ -8,7 +8,8 @@
 define(function() {
 	'use strict';
 
-	function ctrl($rootScope, $scope, $state, $stateParams, Client, $ionicSlideBoxDelegate, $ionicScrollDelegate, $interval, $timeout, storage, $ionicActionSheet, $ionicLoading) {
+	function ctrl($rootScope, $scope, $state, $stateParams, Client, $ionicSlideBoxDelegate, $ionicScrollDelegate,
+		$interval, $timeout, storage, $ionicActionSheet, $ionicLoading, $ionicHistory) {
 
 		if ($stateParams.username === undefined) {
 			$state.go('tab.newsfeed');
@@ -126,6 +127,10 @@ define(function() {
 			});
 		};
 
+		$scope.back = function() {
+			$ionicHistory.goBack();
+		}
+
 		$scope.channelRefresh = function() {
 			if (!$scope.channel) {
 				return false;
@@ -221,7 +226,8 @@ define(function() {
 	}
 
 
-	ctrl.$inject = ['$rootScope', '$scope', '$state', '$stateParams', 'Client', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$interval', '$timeout', 'storage', '$ionicActionSheet', '$ionicLoading'];
+	ctrl.$inject = ['$rootScope', '$scope', '$state', '$stateParams', 'Client', '$ionicSlideBoxDelegate', '$ionicScrollDelegate',
+	'$interval', '$timeout', 'storage', '$ionicActionSheet', '$ionicLoading', '$ionicHistory'];
 	return ctrl;
 
 });

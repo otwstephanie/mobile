@@ -11,13 +11,15 @@
         </ion-slide-box>
     </div>
 
+    <i class="icon ion-ios-arrow-back m-channel-back-button" ng-click="back()"></i>
+
     <ion-content class="channel-content">
 
         <a ng-if="channel.guid == $root.user_guid && !channel.carousels"style="position: absolute;width: 100%;top: -65px; padding:12px; left: 0;font-weight: bold; color:#333; text-align:center; text-decoration:none; z-index:9999;" href="#/tab/newsfeed/channel/{{channel.guid}}/edit">Add banner in settings</a>
 
-    	<div class="loading">
-			<i class="icon ion-loading-d" ng-if="!channel.name"></i>
-		</div>
+        <div class="loading">
+          <i class="icon ion-loading-d" ng-if="!channel.name"></i>
+        </div>
 
         <div class="inner">
 			      <div class="cell">

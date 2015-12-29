@@ -520,13 +520,15 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "        </ion-slide-box>\n" +
     "    </div>\n" +
     "\n" +
+    "    <i class=\"icon ion-ios-arrow-back m-channel-back-button\" ng-click=\"back()\"></i>\n" +
+    "\n" +
     "    <ion-content class=\"channel-content\">\n" +
     "\n" +
     "        <a ng-if=\"channel.guid == $root.user_guid && !channel.carousels\"style=\"position: absolute;width: 100%;top: -65px; padding:12px; left: 0;font-weight: bold; color:#333; text-align:center; text-decoration:none; z-index:9999;\" href=\"#/tab/newsfeed/channel/{{channel.guid}}/edit\">Add banner in settings</a>\n" +
     "\n" +
-    "    	<div class=\"loading\">\n" +
-    "			<i class=\"icon ion-loading-d\" ng-if=\"!channel.name\"></i>\n" +
-    "		</div>\n" +
+    "        <div class=\"loading\">\n" +
+    "          <i class=\"icon ion-loading-d\" ng-if=\"!channel.name\"></i>\n" +
+    "        </div>\n" +
     "\n" +
     "        <div class=\"inner\">\n" +
     "			      <div class=\"cell\">\n" +
