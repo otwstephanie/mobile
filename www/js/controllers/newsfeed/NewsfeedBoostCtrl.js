@@ -207,6 +207,7 @@ define(function() {
 
 		$scope.searching = false;
 		$scope.results = [];
+		var timeout, request;
 		$scope.changeDestination = function(e) {
 			$scope.searching = true;
 			if ($scope.data.destination.charAt(0) != '@' && $scope.data.destination.length !== 0) {
@@ -221,20 +222,28 @@ define(function() {
 				query = query.substr(1);
 			}
 
-			Client.get('search', {
-				q: query,
-				type: 'user',
-				view: 'json',
-				limit: 5
-			}, function(success) {
-				$scope.results = success.user[0];
-			});
+			if(timeout)
+				$timeout.cancel(timeout);
+			if(request)
+				request.cancel;
 
-			console.log('changing');
+			timeout = $timeout(function() {
 
-			if (!$scope.data.destination) {
-				$scope.searching = false;
-			}
+				request = Client.get('search', {
+					q: query,
+					type: 'user',
+					view: 'json',
+					limit: 5
+				}, function(success) {
+					$scope.results = success.user[0];
+				});
+
+				console.log('changing');
+
+				if (!$scope.data.destination) {
+					$scope.searching = false;
+				}
+			}, 400);
 		};
 
 		$scope.selectDestination = function(user) {

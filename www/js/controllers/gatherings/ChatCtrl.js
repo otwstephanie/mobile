@@ -8,7 +8,7 @@
 define(function() {
 	'use strict';
 
-	function ctrl($rootScope, $scope, $state, Client, storage, push, $ionicModal, $ionicPopup, $ionicScrollDelegate) {
+	function ctrl($rootScope, $scope, $state, Client, storage, push, $ionicModal, $ionicPopup, $ionicScrollDelegate, $timeout) {
 
 		$scope.conversations = [];
 		$scope.next = "";
@@ -77,19 +77,28 @@ define(function() {
 		};
 
 		$scope.search = {};
+		var timeout, request;
 		$scope.doSearch = function() {
-			if (!$scope.search.query) {
-				$scope.refresh();
-				return true;
-			}
-			console.log('doing search for ' + $scope.search.query);
-			Client.get('search', {
-				q: $scope.search.query,
-				type: 'user',
-				view: 'json'
-			}, function(success) {
-				$scope.conversations = success.user[0];
-			});
+			if(timeout)
+				$timeout.cancel(timeout);
+			if(request)
+				request.cancel();
+
+			timeout = $timeout(function(){
+
+				if (!$scope.search.query) {
+					$scope.refresh();
+					return true;
+				}
+
+				request = Client.get('search', {
+					q: $scope.search.query,
+					type: 'user',
+					view: 'json'
+				}, function(success) {
+					$scope.conversations = success.user[0];
+				});
+			}, 400)
 		};
 
 		$scope.$on('$stateChangeSuccess', function() {
@@ -145,7 +154,8 @@ define(function() {
 	}
 
 
-	ctrl.$inject = ['$rootScope', '$scope', '$state', 'Client', 'storage', 'push', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate'];
+	ctrl.$inject = ['$rootScope', '$scope', '$state', 'Client', 'storage', 'push', '$ionicModal', '$ionicPopup',
+		'$ionicScrollDelegate', '$timeout'];
 	return ctrl;
 
 });
