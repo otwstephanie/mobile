@@ -83,7 +83,7 @@ wallet-counter{
 	overflow:hidden;
 	position:relative;
 }
-	
+
 .wallet-purchase-button{
 	width: auto;
 	margin: 8px auto;
@@ -136,8 +136,11 @@ wallet-counter{
 .transaction .point.negative{
 	color:red;
 }
+.transaction .point.buy{
+  color:#4690D6;
+}
 .transaction p {
-} 
+}
 .transaction .ts {
 	color:#888;
 	font-size:11px;

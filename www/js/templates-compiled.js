@@ -1529,7 +1529,11 @@ define(['angular'], function(angular){
     "\n" +
     "	     <div class=\"list\">\n" +
     "\n" +
-    "	       <div class=\"item item-input gender-input\">\n" +
+    "          <div class=\"item item-input banner-input\" ng-click=\"addBanner()\">\n" +
+    "              <span class=\"input-label\">Banner</span>\n" +
+    "              <span class=\"minds-blue\"> Tap to add a banner </span>\n" +
+    "          </div>\n" +
+    "	         <div class=\"item item-input gender-input\">\n" +
     "                <span class=\"input-label\">Gender</span>\n" +
     "\n" +
     "                <a ng-class=\"{'minds-blue': channel.gender == 'male'}\"  ng-click=\"channel.gender = 'male'\">Male</a> /\n" +
@@ -1728,14 +1732,12 @@ define(['angular'], function(angular){
     "						<img ng-src=\"{{$root.node_url}}icon/{{::comment.ownerObj.guid}}/small\"/>\n" +
     "					</a>\n" +
     "\n" +
-    "					<div class=\"content item-text-wrap\" ng-show=\"!comment.editing\" ng-bind-html=\"'@' + comment.ownerObj.username + ' ' + comment.description | linky\" ng-click=\"openCommentActions(comment)\">\n" +
+    "					<div class=\"content item-text-wrap\" ng-show=\"!comment.editing\" ng-bind-html=\"'@' + comment.ownerObj.username + ': ' + comment.description | linky\" ng-click=\"openCommentActions(comment)\">\n" +
     "					</div>\n" +
     "					<div class=\"content item-text-wrap\" ng-show=\"comment.editing\">\n" +
     "						<div class=\"item item-input-inset comment-item-edit\">\n" +
-    "						 	<label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "								<textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\" auto-grow>\n" +
-    "								</textarea>\n" +
-    "							</label>\n" +
+    "							<textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\" auto-grow>\n" +
+    "							</textarea>\n" +
     "							<button class=\"button button-clear\" ng-click=\"edit(comment)\">\n" +
     "								Save\n" +
     "							</button>\n" +
@@ -1800,15 +1802,13 @@ define(['angular'], function(angular){
     "					<img ng-src=\"{{$root.node_url}}icon/{{comment.ownerObj.guid}}/small\"/>\n" +
     "				</a>\n" +
     "\n" +
-    "				<div class=\"content item-text-wrap\" ng-bind-html=\"comment.description | linky\" ng-click=\"openCommentActions(comment)\" ng-show=\"!comment.editing\"></div>\n" +
+    "				<div class=\"content item-text-wrap\" ng-bind-html=\"'@' + comment.ownerObj.username + ': ' + comment.description | linky\" ng-click=\"openCommentActions(comment)\" ng-show=\"!comment.editing\"></div>\n" +
     "\n" +
     "        <!-- editing of comment -->\n" +
     "        <div class=\"content item-text-wrap\" ng-show=\"comment.editing\">\n" +
     "            <div class=\"item item-input-inset comment-item-edit\">\n" +
-    "                <label class=\"item-input-wrapper\" style=\"background:transparent\">\n" +
-    "                    <textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\" auto-grow>\n" +
-    "                    </textarea>\n" +
-    "                </label>\n" +
+    "                <textarea placeholder=\"Type your comment here...\" class=\"comment-edit-text-area\" ng-model=\"comment.description\" auto-grow>\n" +
+    "                </textarea>\n" +
     "                <button class=\"button button-clear\" ng-click=\"edit(comment)\">\n" +
     "                  Save\n" +
     "                </button>\n" +
@@ -2213,7 +2213,7 @@ define(['angular'], function(angular){
     "			Withdraw\n" +
     "		</a>\n" +
     "	</ion-nav-buttons>-->\n" +
-    "	\n" +
+    "\n" +
     "	<ion-nav-buttons side=\"right\">\n" +
     "		<a class=\"button button-clear\" style=\"color:green;\" href=\"#/tab/newsfeed/wallet/deposit\">\n" +
     "			Purchase\n" +
@@ -2223,19 +2223,24 @@ define(['angular'], function(angular){
     "	<ion-content>\n" +
     "\n" +
     "		<i class=\"icon icon-bank\" style=\"text-align:center; font-size:200px; line-height:220px; width:100%; display:block;\"></i>\n" +
-    "		\n" +
+    "\n" +
     "		<h3 style=\"text-align:center; color:green\">{{points}} points</h3>\n" +
     "		<!--<p style=\"text-align:center\"><i class=\"icon ion-social-bitcoin\"></i> {{btc}}</p>\n" +
     "		<p style=\"text-align:center\"><i class=\"icon ion-social-usd\"></i> {{usd}}</p>-->\n" +
-    "		<p style=\"text-align:center\">1 point = {{boost_rate}} view<span ng-if=\"boost_rate != 1\">s</span></p>		\n" +
-    "		\n" +
+    "		<p style=\"text-align:center\">1 point = {{boost_rate}} view<span ng-if=\"boost_rate != 1\">s</span></p>\n" +
+    "\n" +
     "		<!--<div class=\"wallet-buttons\">\n" +
     "			<a href=\"#/tab/newsfeed/wallet/\" class=\"wallet-button\" style=\"background:red;color:#FFF;\">Withdraw</a>\n" +
     "			<a href=\"#/tab/newsfeed/wallet/deposit\" class=\"wallet-button\" style=\"background:green;color:#FFF;\">Deposit</a>\n" +
     "		</div>-->\n" +
-    "		\n" +
-    "		\n" +
+    "\n" +
+    "\n" +
     "		<ion-list>\n" +
+    "      <a class=\"item card transaction\"href=\"#/tab/newsfeed/wallet/deposit\">\n" +
+    "				<span class=\"point buy\">$</span>\n" +
+    "				<p>Tap here to buy more points</p>\n" +
+    "				<p class=\"ts\">You can spend points on boosts to get more reach</p>\n" +
+    "			</a>\n" +
     "			<a class=\"item card transaction\" ng-repeat=\"transaction in transactions\">\n" +
     "				<span class=\"point\" ng-show=\"transaction.points > 0\">+{{transaction.points | abbr }}</span>\n" +
     "				<span class=\"point negative\" ng-show=\"transaction.points < 0\">{{transaction.points | abbr}}</span>\n" +
@@ -2246,7 +2251,8 @@ define(['angular'], function(angular){
     "		<ion-infinite-scroll on-infinite=\"loadMore()\" distance=\"1%\" ng-if=\"hasMoreData\"></ion-infinite-scroll>\n" +
     "\n" +
     "	</ion-content>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/wallet/boost.html",
     "<ion-modal-view ng-controller=\"BoostCtrl\" class=\"view-bg\">\n" +
     "	\n" +
