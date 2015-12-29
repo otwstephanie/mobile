@@ -6,7 +6,7 @@ define(['angular'], function(angular) {
     var directive = function($rootScope, $timeout, Client, wallet) {
 		return {
 			restrict: 'E',
-			template: "{{$root.points}}",
+			template: "{{$root.points | abbr:0}}",
 			scope: {},
 			link: function(scope, element, attrs) {
 				//scope.count = $rootScope.points;

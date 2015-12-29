@@ -11,8 +11,9 @@ define(['angular'],
 
 		var filters = angular.module('app.filters', ['app.services']);
 		filters.filter('abbr', function() {
-			return function(number) {
-				var decPlaces = 2;
+			return function(number, decPlaces) {
+				if(!decPlaces && decPlaces !== 0)
+				 	decPlaces = 2;
 				// 2 decimal places => 100, 3 => 1000, etc
 				decPlaces = Math.pow(10,decPlaces);
 
