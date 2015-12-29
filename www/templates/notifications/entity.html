@@ -41,10 +41,8 @@
         <!-- editing of comment -->
         <div class="content item-text-wrap" ng-show="comment.editing">
             <div class="item item-input-inset comment-item-edit">
-                <label class="item-input-wrapper" style="background:transparent">
-                    <textarea placeholder="Type your comment here..." class="comment-edit-text-area" ng-model="comment.description" auto-grow>
-                    </textarea>
-                </label>
+                <textarea placeholder="Type your comment here..." class="comment-edit-text-area" ng-model="comment.description" auto-grow>
+                </textarea>
                 <button class="button button-clear" ng-click="edit(comment)">
                   Save
                 </button>
