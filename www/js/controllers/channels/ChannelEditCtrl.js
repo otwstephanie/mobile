@@ -167,10 +167,21 @@ define(function() {
 				options.headers = {
 					"Authorization": "Bearer " + storage.get('access_token')
 				};
+        $ionicLoading.show({
+          template: '<i style="line-height:100px; vertical-align:middle; font-size:16px">Please wait...</i>'
+        });
 				console.log(imageData);
 				ft.upload(imageData, encodeURI($rootScope.node_url + 'api/v1/channel/banner'), function(success) {
 					$rootScope.globalCB = Date.now();
+          $ionicLoading.hide();
+          $ionicLoading.show({
+  					template: '<i class="icon ion-checkmark-round" style="line-height:100px; vertical-align:middle; font-size:90px"></i>'
+  				});
+  				$timeout(function() {
+  					$ionicLoading.hide();
+  				}, 1000);
 				}, function(error) {
+          $ionicLoading.hide();
 					console.log('error');
 					console.log(error);
 				}, options);
