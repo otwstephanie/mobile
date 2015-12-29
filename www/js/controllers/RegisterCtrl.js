@@ -20,6 +20,10 @@ define(function() {
 			$state.go('tutorial');
 		};
 
+		$scope.toNewsfeed = function() {
+			$state.go('tab.newsfeed');
+		}
+
 		$scope.register = function() {
 			if ($scope.inprogress)
 				return false;

@@ -43,7 +43,7 @@ define(function() {
 					}, function(fail) {
 					});
 
-					$state.go('tutorial');
+					$state.go('tab.newsfeed');
 				} else {
 
 					var alertPopup = $ionicPopup.alert({

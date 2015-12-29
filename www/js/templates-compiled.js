@@ -12,12 +12,12 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
   $templateCache.put("templates/login.html",
     "<ion-view title=\"<img src='img/full_logo.png' class='topbar-logo'/>\" hide-nav-bar=\"true\" class=\"login-bg\">\n" +
     "	<ion-pane ng-controller=\"LoginCtrl\" croll=\"false\" >\n" +
-    "	\n" +
+    "\n" +
     "	   <div class=\"login-header\">\n" +
     "	       <div class=\"background-image background-image-2\"></div>\n" +
     "	       <img src=\"img/full_logo_white.png\" class=\"login-logo\"/>\n" +
     "	   </div>\n" +
-    "	\n" +
+    "\n" +
     "        <form ng-submit=\"login()\" class=\"list\">\n" +
     "            <label class=\"item item-input\">\n" +
     "                <span class=\"input-label\">Username</span>\n" +
@@ -27,7 +27,7 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "                <span class=\"input-label\">Password</span>\n" +
     "                <input type=\"password\" ng-model=\"password\">\n" +
     "            </label>\n" +
-    "            \n" +
+    "\n" +
     "            <div class=\"padding\">\n" +
     "            <input type=\"submit\" class=\"button button-block button-positive\" value=\"Login\" ng-click=\"login()\"/>\n" +
     "            </div>\n" +
@@ -40,16 +40,17 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "                    Login\n" +
     "                </button>\n" +
     "            </div> -->\n" +
-    "            \n" +
+    "\n" +
     "            <div class=\"login-options\">\n" +
-    "                <a href=\"#/register\">Create an account</a> \n" +
+    "                <a href=\"#/register\">Don't have a channel? Signup.</a> \n" +
     "                <a href=\"{{$root.node_url}}forgotpassword\">Forgot password</a>\n" +
     "            </div>\n" +
     "\n" +
     "        </div>\n" +
     "\n" +
     "    </ion-pane>\n" +
-    "</ion-view>");
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/more.html",
     "<ion-view title=\"\" >\n" +
     "	<ion-content ng-controller=\"TabsCtrl\">\n" +
@@ -1488,28 +1489,28 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "</ion-modal-view>");
   $templateCache.put("templates/modals/optional.html",
     "<ion-modal-view ng-controller=\"ChannelEditCtrl\" class=\"view-bg\">\n" +
-    "	\n" +
+    "\n" +
     "\n" +
     "	<ion-header-bar>\n" +
     "		<div class=\"buttons\">\n" +
-    "	    	<button class=\"button button-clear\" ng-click=\"toTutorial(); modal2.remove(); \">Skip</button>\n" +
+    "	    	<button class=\"button button-clear\" ng-click=\"toNewsfeed(); modal2.remove(); \">Skip</button>\n" +
     "	 	 </div>\n" +
     "	  	<h1 class=\"title\">Optional</h1>\n" +
     "	  	<div class=\"buttons\">\n" +
-    "            <button class=\"button button-clear minds-blue\" style=\"color:#4690C3\" ng-if=\"!channel.city || (channel.city && channel.coordinates)\" ng-click=\"update(false); toTutorial(); modal2.remove(); \">Save</button>\n" +
+    "            <button class=\"button button-clear minds-blue\" style=\"color:#4690C3\" ng-if=\"!channel.city || (channel.city && channel.coordinates)\" ng-click=\"update(false); toNewsfeed(); modal2.remove(); \">Save</button>\n" +
     "            <button class=\"button button-clear\" ng-if=\"channel.city && !channel.coordinates\" ng-click=\"\">Save</button>\n" +
     "        </div>\n" +
     "	</ion-header-bar>\n" +
-    "	\n" +
+    "\n" +
     "	<ion-content>\n" +
-    "	\n" +
+    "\n" +
     "	     <div class=\"list\">\n" +
-    "	     \n" +
+    "\n" +
     "	       <div class=\"item item-input gender-input\">\n" +
     "                <span class=\"input-label\">Gender</span>\n" +
-    "               \n" +
-    "                <a ng-class=\"{'minds-blue': channel.gender == 'male'}\"  ng-click=\"channel.gender = 'male'\">Male</a> / \n" +
-    "                <a ng-class=\"{'minds-blue': channel.gender == 'female'}\" ng-click=\"channel.gender = 'female'\">Female</a> / \n" +
+    "\n" +
+    "                <a ng-class=\"{'minds-blue': channel.gender == 'male'}\"  ng-click=\"channel.gender = 'male'\">Male</a> /\n" +
+    "                <a ng-class=\"{'minds-blue': channel.gender == 'female'}\" ng-click=\"channel.gender = 'female'\">Female</a> /\n" +
     "                <a ng-class=\"{'minds-blue': channel.gender == null}\" ng-click=\"channel.gender = null\">Private</a>\n" +
     "            </div>\n" +
     "            <label class=\"item item-input\">\n" +
@@ -1520,20 +1521,21 @@ angular.module('app.templates', []).run(['$templateCache', function($templateCac
     "              <span class=\"input-label\">City</span>\n" +
     "              <input type=\"text\" ng-model=\"channel.city\" placeholder=\"Optional. This will be public.\" ng-change=\"autoSearchLocation()\">\n" +
     "            </label>\n" +
-    "                           \n" +
+    "\n" +
     "           <div class=\"suggested-location-list\">\n" +
     "               <div ng-repeat=\"location in cities\" ng-click=\"selectSuggestedLocation(location)\" ng-if=\"location.address.city || location.address.town\">\n" +
-    "                   \n" +
+    "\n" +
     "                   {{location.address.town}}{{location.address.city}}, {{location.address.state}}\n" +
-    "                    \n" +
+    "\n" +
     "               </div>\n" +
     "           </div>\n" +
-    "            \n" +
+    "\n" +
     "            <img ng-if=\"channel.coordinates\" ng-src=\"http://staticmap.openstreetmap.de/staticmap.php?center={{channel.coordinates}}&zoom=9&size=400x150&maptype=mapnik\" style=\"width:100%\"/>\n" +
     "        </div>\n" +
     "\n" +
     "	</ion-content>\n" +
-    "</ion-modal-view>");
+    "</ion-modal-view>\n" +
+    "");
   $templateCache.put("templates/newsfeed/boost.html",
     "<ion-modal-view ng-controller=\"NewsfeedBoostCtrl\" class=\"view-bg\">\n" +
     "\n" +
