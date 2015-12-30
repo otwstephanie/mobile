@@ -148,7 +148,10 @@ define(function() {
 
 		};
 
+    $scope.bannerStatus = 0;
 		$scope.selectBanner = function() {
+
+      $scope.bannerStatus = 0;
 
 			navigator.camera.getPicture(onSuccess, onFail, {
 				quality: 50,
@@ -177,6 +180,7 @@ define(function() {
           $ionicLoading.show({
   					template: '<i class="icon ion-checkmark-round" style="line-height:100px; vertical-align:middle; font-size:90px"></i>'
   				});
+          $scope.bannerStatus = 1;
   				$timeout(function() {
   					$ionicLoading.hide();
   				}, 1000);

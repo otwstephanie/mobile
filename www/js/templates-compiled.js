@@ -590,7 +590,7 @@ define(['angular'], function(angular){
     "                <h3>Bio</h3>\n" +
     "                <p style=\"white-space: pre-line;\">{{channel.briefdescription}}</p>\n" +
     "\n" +
-    "                <div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"justify-content: left; margin-bottom: -16px;padding:0;background-color:transparent !important;\">\n" +
+    "                <div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"justify-content: left; margin-bottom: -16px;padding:0;height:auto;min-height:0;background-color:transparent !important;\">\n" +
     "                  <a class=\"tab-item small-font\" style=\"flex:1; text-align:left;\" ng-if=\"channel.gender\">\n" +
     "                    <i class=\"icon ion-transgender\"></i>\n" +
     "                    <b>{{channel.gender}}</b>\n" +
@@ -1482,7 +1482,7 @@ define(['angular'], function(angular){
     "</ion-modal-view>");
   $templateCache.put("templates/modals/avatar.html",
     "<ion-modal-view ng-controller=\"ChannelEditCtrl\" class=\"view-bg\">\n" +
-    "	\n" +
+    "\n" +
     "\n" +
     "	<ion-header-bar>\n" +
     "		<div class=\"buttons\">\n" +
@@ -1490,26 +1490,27 @@ define(['angular'], function(angular){
     "	 	 </div>\n" +
     "	  	<h1 class=\"title\">Setup</h1>\n" +
     "	  	<div class=\"buttons\">\n" +
-    "            <button class=\"button button-clear minds-blue\" style=\"color:#4690C3\"  ng-click=\"update(false); modal.remove(); modal2.show();\">Save</button>\n" +
-    "         </div>\n" +
+    "        <button class=\"button button-clear minds-blue\" style=\"color:#4690C3\" ng-click=\"modal.remove(); modal2.show();\">Done</button>\n" +
+    "      </div>\n" +
     "	</ion-header-bar>\n" +
-    "	\n" +
+    "\n" +
     "	<ion-content>\n" +
-    "	\n" +
+    "\n" +
     "	     <div class=\"list\">\n" +
-    "           <label class=\"item item-input\" style=\"padding:16px\">\n" +
-    "                <span class=\"input-label\">Bio</span>\n" +
-    "                <input type=\"text\" ng-model=\"channel.briefdescription\" placeholder=\"Enter a brief description here\">\n" +
-    "            </label>\n" +
+    "           <label class=\"item item-input banner-input\" ng-click=\"addBanner()\">\n" +
+    "               <span class=\"input-label\">Banner</span>\n" +
+    "               <span class=\"minds-blue\" ng-show=\"bannerStatus == 0\"> Tap to add a banner </span>\n" +
+    "               <span class=\"\" ng-show=\"bannerStatus == 1\"> Tap to change banner </span>\n" +
+    "           </label>\n" +
     "        </div>\n" +
-    "	\n" +
-    "		 <img id=\"avatar\" ng-src=\"{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}\" style=\"width: calc(75% - 32px); margin:16px auto; display:block; height: auto; box-shadow:0 0 3px #888;\" onerror=\"this.src='img/avatar.png'\" ng-click=\"changeAvatar();\"/>\n" +
-    "	     <p style=\"padding:0 20px; text-align:center;\">Select the image above to select an avatar</p>\n" +
-    "	     \n" +
-    "        \n" +
-    "	\n" +
+    "\n" +
+    "		    <img id=\"avatar\" ng-src=\"{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}\" style=\"width: calc(75% - 32px); margin:16px auto; display:block; height: auto; box-shadow:0 0 3px #888;\" onerror=\"this.src='img/avatar.png'\" ng-click=\"changeAvatar();\"/>\n" +
+    "	       <p style=\"padding:0 20px; text-align:center;\">Select the image above to select an avatar</p>\n" +
+    "\n" +
+    "\n" +
     "	</ion-content>\n" +
-    "</ion-modal-view>");
+    "</ion-modal-view>\n" +
+    "");
   $templateCache.put("templates/modals/optional.html",
     "<ion-modal-view ng-controller=\"ChannelEditCtrl\" class=\"view-bg\">\n" +
     "\n" +
@@ -1529,10 +1530,10 @@ define(['angular'], function(angular){
     "\n" +
     "	     <div class=\"list\">\n" +
     "\n" +
-    "          <div class=\"item item-input banner-input\" ng-click=\"addBanner()\">\n" +
-    "              <span class=\"input-label\">Banner</span>\n" +
-    "              <span class=\"minds-blue\"> Tap to add a banner </span>\n" +
-    "          </div>\n" +
+    "           <div class=\"item item-input bio-input\">\n" +
+    "              <span class=\"input-label\">Bio</span>\n" +
+    "              <input type=\"text\" ng-model=\"channel.briefdescription\" placeholder=\"Enter a brief description here\">\n" +
+    "           </div>\n" +
     "	         <div class=\"item item-input gender-input\">\n" +
     "                <span class=\"input-label\">Gender</span>\n" +
     "\n" +
