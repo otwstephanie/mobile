@@ -151,7 +151,7 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
 
 				var result = { "status": "success" };
 
-				httpBackend.when('POST', /.*\/block\.*/).respond(result);
+				httpBackend.when('PUT', /.*\/block\.*/).respond(result);
 			});
 
 			scope.block(scope.channel);

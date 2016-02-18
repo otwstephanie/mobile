@@ -94,7 +94,7 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
 
 		it('should have defaults', function() {
 			expect(scope.captured).toEqual(false);
-			expect(scope.progress).toEqual(5);
+			expect(scope.progress).toEqual(0);
 		});
 
 		it('should capture and return video', function() {
