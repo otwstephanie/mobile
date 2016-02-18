@@ -27,3 +27,8 @@
 	padding:5px 0 5px 16px;
 	border-left:1px solid #EEE;
 }
+
+.push-notification-toggles .item-toggle .icon {
+  font-size: 22px;
+  color: #777;
+}

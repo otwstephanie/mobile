@@ -1,0 +1,26 @@
+<ion-view title="Push Settings" ng-controller="NotificationsSettingsCtrl" class="view-bg">
+
+  <ion-nav-buttons side="left">
+    <a class="button button-clear icon ion-arrow-left-b" href="#/tab/notifications"></a>
+  </ion-nav-buttons>
+
+
+	<ion-content>
+
+		<ul class="list push-notification-toggles">
+
+      <ion-toggle class="item-icon-left"
+        toggle-class="toggle-balanced"
+        ng-checked="t.toggle"
+        ng-repeat="(id, t) in toggles"
+        ng-model="t.toggle"
+        ng-click="setToggle(id, t.toggle)"
+        ng-disabled="inProgress"
+        >
+        <i class="icon {{t.icon}}"></i> {{t.name}}
+      </ion-toggle>
+
+		</ul>
+
+	</ion-content>
+</ion-view>

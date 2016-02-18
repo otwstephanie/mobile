@@ -590,7 +590,7 @@ define(['angular'], function(angular){
     "                <h3>Bio</h3>\n" +
     "                <p style=\"white-space: pre-line;\">{{channel.briefdescription}}</p>\n" +
     "\n" +
-    "                <div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"justify-content: left; margin-bottom: -16px;padding:0;height:auto;min-height:0;background-color:transparent !important;\">\n" +
+    "                <div class=\"item tabs tabs-secondary tabs-icon-left\" style=\"justify-content: left; margin-bottom: -16px;padding:0;height:auto;min-height:16px;background-color:transparent !important;\">\n" +
     "                  <a class=\"tab-item small-font\" style=\"flex:1; text-align:left;\" ng-if=\"channel.gender\">\n" +
     "                    <i class=\"icon ion-transgender\"></i>\n" +
     "                    <b>{{channel.gender}}</b>\n" +
@@ -1839,10 +1839,16 @@ define(['angular'], function(angular){
   $templateCache.put("templates/notifications/list.html",
     "<ion-view title=\"Notifications\" ng-controller=\"NotificationsCtrl\" class=\"view-bg\">\n" +
     "\n" +
-    "    <ion-nav-buttons side=\"left\">\n" +
-    "        <!--<a class=\"button button-clear icon ion-compose\" ng-click=\"composer.show($event)\"></a>-->\n" +
-    "        <a class=\"button button-clear icon ion-arrow-graph-up-right minds-blue\" style=\"color:#4690C3\" href=\"#/tab/notifications/p2p-review\"></a>\n" +
-    "    </ion-nav-buttons>\n" +
+    "  <ion-nav-buttons side=\"left\">\n" +
+    "      <!--<a class=\"button button-clear icon ion-compose\" ng-click=\"composer.show($event)\"></a>-->\n" +
+    "      <a class=\"button button-clear icon ion-arrow-graph-up-right minds-blue\" style=\"color:#4690C3\" href=\"#/tab/notifications/p2p-review\"></a>\n" +
+    "  </ion-nav-buttons>\n" +
+    "\n" +
+    "  <ion-nav-buttons side=\"right\">\n" +
+    "      <!--<a class=\"button button-clear icon ion-compose\" ng-click=\"composer.show($event)\"></a>-->\n" +
+    "      <a class=\"button button-clear icon ion-ios-settings-strong\" href=\"#/tab/notifications/settings\"></a>\n" +
+    "  </ion-nav-buttons>\n" +
+    "\n" +
     "\n" +
     "	<ion-content>\n" +
     "\n" +
@@ -2211,6 +2217,34 @@ define(['angular'], function(angular){
     "\n" +
     "	</ion-content>\n" +
     "</ion-view>");
+  $templateCache.put("templates/notifications/settings.html",
+    "<ion-view title=\"Push Settings\" ng-controller=\"NotificationsSettingsCtrl\" class=\"view-bg\">\n" +
+    "\n" +
+    "  <ion-nav-buttons side=\"left\">\n" +
+    "    <a class=\"button button-clear icon ion-arrow-left-b\" href=\"#/tab/notifications\"></a>\n" +
+    "  </ion-nav-buttons>\n" +
+    "\n" +
+    "\n" +
+    "	<ion-content>\n" +
+    "\n" +
+    "		<ul class=\"list push-notification-toggles\">\n" +
+    "\n" +
+    "      <ion-toggle class=\"item-icon-left\"\n" +
+    "        toggle-class=\"toggle-balanced\"\n" +
+    "        ng-checked=\"t.toggle\"\n" +
+    "        ng-repeat=\"(id, t) in toggles\"\n" +
+    "        ng-model=\"t.toggle\"\n" +
+    "        ng-click=\"setToggle(id, t.toggle)\"\n" +
+    "        ng-disabled=\"inProgress\"\n" +
+    "        >\n" +
+    "        <i class=\"icon {{t.icon}}\"></i> {{t.name}}\n" +
+    "      </ion-toggle>\n" +
+    "\n" +
+    "		</ul>\n" +
+    "\n" +
+    "	</ion-content>\n" +
+    "</ion-view>\n" +
+    "");
   $templateCache.put("templates/wallet/balance.html",
     "<ion-view title=\"Wallet\" ng-controller=\"WalletCtrl\" class=\"view-bg\">\n" +
     "\n" +

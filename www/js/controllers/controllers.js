@@ -61,6 +61,7 @@ define(function(require) {
 	controllers.controller('NotificationsCtrl', require('controllers/notifications/NotificationsCtrl'));
 	controllers.controller('NotificationsEntityCtrl', require('controllers/notifications/NotificationsEntityCtrl'));
 	controllers.controller('NotificationsP2PReviewCtrl', require('controllers/notifications/NotificationsP2PReviewCtrl'));
+  controllers.controller('NotificationsSettingsCtrl', require('controllers/notifications/NotificationsSettingsCtrl'));
 
 	/**
 	 * Discover
