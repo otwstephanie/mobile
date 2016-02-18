@@ -700,6 +700,10 @@ define(['angular'], function(angular){
     "            	<span class=\"input-label\"><i class=\"icon ion-ios-paper\"></i></span>\n" +
     "                Code\n" +
     "			</a>\n" +
+    "      <a class=\"item item-input\" href=\"#/tab/notifications/settings\">\n" +
+    "          <span class=\"input-label\"><i class=\"icon ion-ios-settings-strong\"></i></span>\n" +
+    "          Push Notifications\n" +
+    "      </a>\n" +
     "\n" +
     "			<a class=\"item item-input\" ng-click=\"disable()\">\n" +
     "                <span class=\"input-label\"><i class=\"icon ion-alert-circled\"></i></span>\n" +
