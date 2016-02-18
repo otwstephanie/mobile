@@ -129,7 +129,7 @@ define(function() {
 
 		$scope.back = function() {
 			$ionicHistory.goBack();
-		}
+		};
 
 		$scope.channelRefresh = function() {
 			if (!$scope.channel) {
@@ -166,7 +166,7 @@ define(function() {
 		$scope.block = function(channel) {
 			$scope.channel.blocked = true;
 			Client.put('api/v1/block/' + $scope.channel.guid, {},
-				function(response){}, function(error) {
+				function(response) {}, function(error) {
 				console.log(error);
 				$scope.channel.blocked = false;
 			});
@@ -201,7 +201,7 @@ define(function() {
 				buttonClicked: function(index) {
 					switch (index) {
 					case 0:
-						if ($scope.channel.blocked){
+						if ($scope.channel.blocked) {
 							$ionicLoading.show({
 								template: 'Sorry, you can not send message to a blocked user.'
 							});

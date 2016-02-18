@@ -11,7 +11,7 @@ define(['angular'], function(angular) {
 
         var el = element[0];
 
-        function adjust(){
+        function adjust() {
           el.style.overflow = 'hidden';
           el.style.height = 'auto';
           el.style.height = el.scrollHeight + "px";
@@ -24,7 +24,7 @@ define(['angular'], function(angular) {
         scope.$watch(function() {
           return ngModel.$modelValue;
         }, function(newValue) {
-          if(newValue){
+          if (newValue) {
             //console.log('[auto-grow][ng-model]:: adjusting', newValue)
             adjust();
           }

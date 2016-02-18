@@ -222,9 +222,9 @@ define(function() {
 				query = query.substr(1);
 			}
 
-			if(timeout)
+			if (timeout)
 				$timeout.cancel(timeout);
-			if(request)
+			if (request)
 				request.cancel;
 
 			timeout = $timeout(function() {

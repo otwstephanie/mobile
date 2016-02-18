@@ -407,11 +407,11 @@ define(function() {
 
     $scope.getTip = function(tip) {
       return storage.get('tip.' + tip);
-    }
+    };
 
     $scope.closeTip = function(tip) {
       storage.set('tip.' + tip, true);
-    }
+    };
 
 		$scope.openActions = function(activity) {
 			var guid = activity.guid;

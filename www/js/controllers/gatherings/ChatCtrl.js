@@ -79,12 +79,12 @@ define(function() {
 		$scope.search = {};
 		var timeout, request;
 		$scope.doSearch = function() {
-			if(timeout)
+			if (timeout)
 				$timeout.cancel(timeout);
-			if(request)
+			if (request)
 				request.cancel();
 
-			timeout = $timeout(function(){
+			timeout = $timeout(function() {
 
 				if (!$scope.search.query) {
 					$scope.refresh();
@@ -98,7 +98,7 @@ define(function() {
 				}, function(success) {
 					$scope.conversations = success.user[0];
 				});
-			}, 400)
+			}, 400);
 		};
 
 		$scope.$on('$stateChangeSuccess', function() {

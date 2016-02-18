@@ -14,7 +14,7 @@ define(['angular', 'socketio'], function(angular) {
         var $scope = $rootScope.$new();
 
         socket.on('messageReceived', function(guid, message) {
-            if(!guid){
+            if (!guid) {
               return console.log('bad ' + message + 'socket sent');
             }
             switch (message.type){
@@ -77,7 +77,7 @@ define(['angular', 'socketio'], function(angular) {
 
         $scope.$on('modal.removed', function() {
           $scope.modal = null;
-          $timeout(function(){
+          $timeout(function() {
             $rootScope.inCall = false;
           }, 1000);
           document.getElementById('ringing').pause();

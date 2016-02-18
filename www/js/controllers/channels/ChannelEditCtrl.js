@@ -178,12 +178,12 @@ define(function() {
 					$rootScope.globalCB = Date.now();
           $ionicLoading.hide();
           $ionicLoading.show({
-  					template: '<i class="icon ion-checkmark-round" style="line-height:100px; vertical-align:middle; font-size:90px"></i>'
-  				});
+            template: '<i class="icon ion-checkmark-round" style="line-height:100px; vertical-align:middle; font-size:90px"></i>'
+          });
           $scope.bannerStatus = 1;
-  				$timeout(function() {
-  					$ionicLoading.hide();
-  				}, 1000);
+          $timeout(function() {
+            $ionicLoading.hide();
+          }, 1000);
 				}, function(error) {
           $ionicLoading.hide();
 					console.log('error');

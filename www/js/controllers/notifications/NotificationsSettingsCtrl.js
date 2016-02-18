@@ -26,27 +26,27 @@ define(function() {
     };
 
 
-    $scope.load = function(){
+    $scope.load = function() {
         $scope.inProgress = true;
         Client.get('api/v1/notifications/settings', {
           cb: $scope.cb
-        }, function(data){
-          for(var toggle in $scope.toggles){
+        }, function(data) {
+          for (var toggle in $scope.toggles) {
             $scope.toggles[toggle].toggle = data.toggles[toggle];
           }
           $scope.inProgress = false;
         });
-    }
+    };
     $scope.load();
 
 
-    $scope.setToggle = function(id, toggle){
+    $scope.setToggle = function(id, toggle) {
       console.log(id, toggle);
       Client.post('api/v1/notifications/settings', {
         id: id,
         toggle: toggle
       });
-    }
+    };
 
 
 	}

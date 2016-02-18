@@ -22,7 +22,7 @@ define(function() {
 
 		$scope.toNewsfeed = function() {
 			$state.go('tab.newsfeed');
-		}
+		};
 
 		$scope.register = function() {
 			if ($scope.inprogress)
