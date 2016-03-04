@@ -14,15 +14,23 @@
 	<ion-content>
 
 	     <div class="list">
-           <label class="item item-input banner-input" ng-click="addBanner()">
-               <span class="input-label">Banner</span>
-               <span class="minds-blue" ng-show="bannerStatus == 0"> Tap to add a banner </span>
-               <span class="" ng-show="bannerStatus == 1"> Tap to change banner </span>
+          <div class="minds-banner-modals-wrapper" style="height: 160px; overflow: hidden;" ng-if="bannerUri">
+            <img id="avatar" ng-src="{{bannerUri}}" style="width: 100%; margin:0; display:block; height: auto" ng-click="addBanner()" />
+          </div>
+          <label class="item item-input banner-input" ng-click="addBanner()">
+             <span class="input-label">Banner</span>
+             <span class="minds-blue" ng-show="bannerStatus == 0"> Tap to add a banner </span>
+             <span class="" ng-show="bannerStatus == 1"> Tap to change banner </span>
+          </label>
+
+           <img id="avatar" ng-src="{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}" style="width: calc(75% - 32px); margin:16px auto; display:block; height: auto; box-shadow:0 0 3px #888;" onerror="this.src='img/avatar.png'" ng-click="changeAvatar();"/>
+           <label class="item item-input banner-input" ng-click="changeAvatar()">
+              <span class="input-label">Avatar</span>
+              <span class="minds-blue"> Tap to add a avatar</span>
            </label>
+
         </div>
 
-		    <img id="avatar" ng-src="{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}" style="width: calc(75% - 32px); margin:16px auto; display:block; height: auto; box-shadow:0 0 3px #888;" onerror="this.src='img/avatar.png'" ng-click="changeAvatar();"/>
-	       <p style="padding:0 20px; text-align:center;">Select the image above to select an avatar</p>
 
 
 	</ion-content>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.minds.mobile" version="1.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.minds.mobile" version="1.3.02" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Minds</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -17,9 +17,9 @@
     <preference name="auto-hide-splash-screen" value="false" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <access launch-external="yes" origin="mailto:*" />
-    <preference name="deployment-target" value="7.0"/>
+    <preference name="deployment-target" value="7.0" />
     <platform name="ios">
-       <hook type="after_platform_add" src="hooks/iosrtc-swift-support.js" />
+        <hook src="hooks/iosrtc-swift-support.js" type="after_platform_add" />
         <icon height="180" src="res/ios/appicon-60@3x.png" width="180" />
         <icon height="60" src="res/ios/appicon-60.png" width="60" />
         <icon height="120" src="res/ios/appicon-60@2x.png" width="120" />
@@ -88,7 +88,9 @@
     <preference name="StatusBarOverlaysWebView" value="true" />
     <preference name="iosPersistentFileLocation" value="Library" />
     <preference name="BackupWebStorage" value="none" />
-    <preference name="xwalkVersion" value="14" />
     <access origin="*" />
-
+    <preference name="xwalkVersion" value="16+" />
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+    <preference name="xwalkMode" value="embedded" />
+    <preference name="xwalkMultipleApk" value="true" />
 </widget>

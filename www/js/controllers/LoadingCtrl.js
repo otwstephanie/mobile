@@ -8,7 +8,7 @@
 define(function() {
 	'use strict';
 
-	function ctrl($scope, $state, OAuth, Client, $ionicPopup, storage, $timeout, push, $ionicPlatform) {
+	function ctrl($scope, $state, OAuth, Client, $ionicPopup, storage, $timeout, push, $ionicPlatform, $ionicModal) {
 
 		navigator.splashscreen.hide();
 
@@ -37,7 +37,7 @@ define(function() {
 	}
 
 
-	ctrl.$inject = ['$scope', '$state', 'OAuth', 'Client', '$ionicPopup', 'storage', '$timeout', 'push', '$ionicPlatform'];
+	ctrl.$inject = ['$scope', '$state', 'OAuth', 'Client', '$ionicPopup', 'storage', '$timeout', 'push', '$ionicPlatform', '$ionicModal'];
 	return ctrl;
 
 });

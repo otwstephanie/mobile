@@ -7,7 +7,7 @@ The Facebook plugin for [Apache Cordova](http://incubator.apache.org/cordova/) a
 * Supported on PhoneGap (Cordova) v3.5.0 and above.
 * This plugin is built for
 	* iOS FacebookSDK 3.21.1
-	* Android FacebookSDK 3.21.1
+	* Android FacebookSDK 3.23.1
 * GitHub URL : [https://github.com/Wizcorp/phonegap-facebook-plugin/](https://github.com/Wizcorp/phonegap-facebook-plugin/)
 
 ## << --- Cordova Registry Warning [iOS]
@@ -45,7 +45,7 @@ To use this plugin you will need to make sure you've registered your Facebook ap
 
 `facebookConnectPlugin.login(Array strings of permissions, Function success, Function failure)`
 
-**NOTE** : Developers should call `facebookConnectPlugin.browserInit(<appId>)` before login - **Web App ONLY** (see [Web App Guide](platforms/web/README.md))
+**NOTE** : Developers should call `facebookConnectPlugin.browserInit(<appId>)` before login - **Web App ONLY** (see [Web App Guide](platforms/browser/README.md))
 
 Success function returns an Object like:
 

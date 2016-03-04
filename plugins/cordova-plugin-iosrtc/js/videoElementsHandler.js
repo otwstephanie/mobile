@@ -114,6 +114,7 @@ var debug = require('debug')('iosrtc:videoElementsHandler'),
 
 				// If this video element was previously handling a MediaStreamRenderer, release it.
 				releaseMediaStreamRenderer(node);
+				delete node._iosrtcVideoHandled;
 			} else {
 				for (j = 0; j < node.childNodes.length; j++) {
 					childNode = node.childNodes.item(j);
@@ -227,7 +228,16 @@ function handleVideo(video) {
 
 		var reader = new FileReader();
 
-		reader.onloadend = function () {
+		// Some versions of Safari fail to set onloadend property, some others do not react
+		// on 'loadend' event. Try everything here.
+		try {
+			reader.onloadend = onloadend;
+		} catch (error) {
+			reader.addEventListener('loadend', onloadend);
+		}
+		reader.readAsText(xhr.response);
+
+		function onloadend() {
 			var mediaStreamBlobId = reader.result;
 
 			// The retrieved URL does not point to a MediaStream.
@@ -239,8 +249,7 @@ function handleVideo(video) {
 			}
 
 			provideMediaStreamRenderer(video, mediaStreamBlobId);
-		};
-		reader.readAsText(xhr.response);
+		}
 	};
 	xhr.send();
 }

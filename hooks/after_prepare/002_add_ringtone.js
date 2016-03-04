@@ -20,10 +20,10 @@ var platforms = process.env.CORDOVA_PLATFORMS.split(',');
 
 for(var i=0; i < platforms.length; i++) {
     console.log("Adding ringtone for " + platforms[i] + " \n");
-  
+
     if(platforms[i] == 'ios')
         continue;
-  
+
     var destfile = path.join(rootdir, ringtonePaths[platforms[i]]);
 
     if (!fs.existsSync(srcfile)) {

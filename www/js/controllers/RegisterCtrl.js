@@ -24,6 +24,10 @@ define(function() {
 			$state.go('tab.newsfeed');
 		};
 
+    $scope.toDiscover = function() {
+			$state.go('tab.discover');
+		};
+
 		$scope.register = function() {
 			if ($scope.inprogress)
 				return false;
@@ -103,6 +107,14 @@ define(function() {
 						}).then(function(modal) {
 							$scope.modal2 = modal;
 						});
+
+            //tutorial slide
+            $ionicModal.fromTemplateUrl('templates/modals/tutorial.html', {
+              scope: $scope,
+              animation: 'slide-in-up'
+            }).then(function(modal) {
+              $scope.modal3 = modal;
+            });
 
 					} else {
 

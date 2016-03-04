@@ -1501,15 +1501,23 @@ define(['angular'], function(angular){
     "	<ion-content>\n" +
     "\n" +
     "	     <div class=\"list\">\n" +
-    "           <label class=\"item item-input banner-input\" ng-click=\"addBanner()\">\n" +
-    "               <span class=\"input-label\">Banner</span>\n" +
-    "               <span class=\"minds-blue\" ng-show=\"bannerStatus == 0\"> Tap to add a banner </span>\n" +
-    "               <span class=\"\" ng-show=\"bannerStatus == 1\"> Tap to change banner </span>\n" +
+    "          <div class=\"minds-banner-modals-wrapper\" style=\"height: 160px; overflow: hidden;\" ng-if=\"bannerUri\">\n" +
+    "            <img id=\"avatar\" ng-src=\"{{bannerUri}}\" style=\"width: 100%; margin:0; display:block; height: auto\" ng-click=\"addBanner()\" />\n" +
+    "          </div>\n" +
+    "          <label class=\"item item-input banner-input\" ng-click=\"addBanner()\">\n" +
+    "             <span class=\"input-label\">Banner</span>\n" +
+    "             <span class=\"minds-blue\" ng-show=\"bannerStatus == 0\"> Tap to add a banner </span>\n" +
+    "             <span class=\"\" ng-show=\"bannerStatus == 1\"> Tap to change banner </span>\n" +
+    "          </label>\n" +
+    "\n" +
+    "           <img id=\"avatar\" ng-src=\"{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}\" style=\"width: calc(75% - 32px); margin:16px auto; display:block; height: auto; box-shadow:0 0 3px #888;\" onerror=\"this.src='img/avatar.png'\" ng-click=\"changeAvatar();\"/>\n" +
+    "           <label class=\"item item-input banner-input\" ng-click=\"changeAvatar()\">\n" +
+    "              <span class=\"input-label\">Avatar</span>\n" +
+    "              <span class=\"minds-blue\"> Tap to add a avatar</span>\n" +
     "           </label>\n" +
+    "\n" +
     "        </div>\n" +
     "\n" +
-    "		    <img id=\"avatar\" ng-src=\"{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}\" style=\"width: calc(75% - 32px); margin:16px auto; display:block; height: auto; box-shadow:0 0 3px #888;\" onerror=\"this.src='img/avatar.png'\" ng-click=\"changeAvatar();\"/>\n" +
-    "	       <p style=\"padding:0 20px; text-align:center;\">Select the image above to select an avatar</p>\n" +
     "\n" +
     "\n" +
     "	</ion-content>\n" +
@@ -1521,11 +1529,11 @@ define(['angular'], function(angular){
     "\n" +
     "	<ion-header-bar>\n" +
     "		<div class=\"buttons\">\n" +
-    "	    	<button class=\"button button-clear\" ng-click=\"toNewsfeed(); modal2.remove(); \">Skip</button>\n" +
+    "	    	<button class=\"button button-clear\" ng-click=\"modal3.show(); modal2.remove(); \">Skip</button>\n" +
     "	 	 </div>\n" +
     "	  	<h1 class=\"title\">Optional</h1>\n" +
     "	  	<div class=\"buttons\">\n" +
-    "            <button class=\"button button-clear minds-blue\" style=\"color:#4690C3\" ng-if=\"!channel.city || (channel.city && channel.coordinates)\" ng-click=\"update(false); toNewsfeed(); modal2.remove(); \">Save</button>\n" +
+    "            <button class=\"button button-clear minds-blue\" style=\"color:#4690C3\" ng-if=\"!channel.city || (channel.city && channel.coordinates)\" ng-click=\"update(false); modal3.show(); modal2.remove(); \">Save</button>\n" +
     "            <button class=\"button button-clear\" ng-if=\"channel.city && !channel.coordinates\" ng-click=\"\">Save</button>\n" +
     "        </div>\n" +
     "	</ion-header-bar>\n" +
@@ -1564,6 +1572,111 @@ define(['angular'], function(angular){
     "\n" +
     "            <img ng-if=\"channel.coordinates\" ng-src=\"http://staticmap.openstreetmap.de/staticmap.php?center={{channel.coordinates}}&zoom=9&size=400x150&maptype=mapnik\" style=\"width:100%\"/>\n" +
     "        </div>\n" +
+    "\n" +
+    "	</ion-content>\n" +
+    "</ion-modal-view>\n" +
+    "");
+  $templateCache.put("templates/modals/tutorial.html",
+    "<ion-modal-view  class=\"view-bg\">\n" +
+    "\n" +
+    "	<ion-header-bar>\n" +
+    "		<div class=\"buttons\">\n" +
+    "	 	</div>\n" +
+    "    <h1 class=\"title\">\n" +
+    "  	  <img src='img/full_logo.png' class=\"topbar-logo\"/>\n" +
+    "    </h1>\n" +
+    "  	<div class=\"buttons\">\n" +
+    "      <button class=\"button button-clear minds-blue\" style=\"color:#4690C3\" ng-click=\"toDiscover(); modal3.remove();\">Got it!</button>\n" +
+    "    </div>\n" +
+    "	</ion-header-bar>\n" +
+    "\n" +
+    "	<ion-content>\n" +
+    "\n" +
+    "    <div class=\"list tutorial-items\">\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-text-wrap\">\n" +
+    "        <i class=\"icon ion-compass\"></i>\n" +
+    "        <p>Find people in cities around the world with geo-discovery.</p>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-text-wrap\">\n" +
+    "        <i class=\"icon ion-person-add\"></i>\n" +
+    "        <p>Swipe right to subscribe, swipe left to pass.</p>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-text-wrap\">\n" +
+    "       <i class=\"icon ion-chatboxes\"></i>\n" +
+    "       <p>If you subscribe to each other, you can chat.</p>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-text-wrap\">\n" +
+    "       <i class=\"icon ion-compose\"></i>\n" +
+    "       <p>Share photos, videos and news.</p>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-text-wrap\">\n" +
+    "       <i class=\"icon ion-search\"></i>\n" +
+    "       <p>Discover great videos, images, blogs and statuses.</p>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-text-wrap\">\n" +
+    "       <i class=\"icon icon-bank\"></i>\n" +
+    "       <p>Earn points for using the app.</p>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-text-wrap\">\n" +
+    "       <i class=\"icon ion-arrow-graph-up-right\"></i>\n" +
+    "       <p>Exchange your points to boost your subscribers and content.</p>\n" +
+    "      </div>\n" +
+    "\n" +
+    "\n" +
+    "      <div class=\"item item-divider\">\n" +
+    "        Rewards\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
+    "        <i class=\"icon ion-thumbsup\"></i>\n" +
+    "        <p>Vote</p>\n" +
+    "        <i class=\"icon icon-green\">+1</i>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
+    "        <i class=\"icon ion-thumbsup\"></i>\n" +
+    "        <p>Receive a vote</p>\n" +
+    "        <i class=\"icon icon-green\">+1</i>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
+    "        <i class=\"icon ion-chatbox\"></i>\n" +
+    "        <p>Comment</p>\n" +
+    "        <i class=\"icon icon-green\">+1</i>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
+    "        <i class=\"icon ion-person-add\"></i>\n" +
+    "        <p>Subscribe</p>\n" +
+    "        <i class=\"icon icon-green\">+1</i>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
+    "        <i class=\"icon ion-reply\"></i>\n" +
+    "        <p>Pass</p>\n" +
+    "        <i class=\"icon icon-green\">+1</i>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
+    "        <i class=\"icon ion-compose\"></i>\n" +
+    "        <p>Status update</p>\n" +
+    "        <i class=\"icon icon-green\">+10</i>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
+    "        <i class=\"icon ion-key\"></i>\n" +
+    "        <p>Daily login</p>\n" +
+    "        <i class=\"icon icon-green\">+10</i>\n" +
+    "      </div>\n" +
+    "\n" +
+    "    </div>\n" +
     "\n" +
     "	</ion-content>\n" +
     "</ion-modal-view>\n" +

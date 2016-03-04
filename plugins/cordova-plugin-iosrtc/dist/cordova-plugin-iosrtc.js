@@ -1,7 +1,7 @@
 /*
- * cordova-plugin-iosrtc v1.4.5
+ * cordova-plugin-iosrtc v2.2.3
  * Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs
- * Copyright 2015 Iñaki Baz Castillo at eFace2Face, inc. (https://eface2face.com)
+ * Copyright 2015-2016 Iñaki Baz Castillo at eFace2Face, inc. (https://eface2face.com)
  * License MIT
  */
 
@@ -579,17 +579,38 @@ MediaStreamRenderer.prototype.refresh = function () {
 		elementTop = elementPositionAndSize.top,
 		elementWidth = elementPositionAndSize.width,
 		elementHeight = elementPositionAndSize.height,
-		videoViewWidth = elementWidth,
-		videoViewHeight = elementHeight,
+		videoViewWidth,
+		videoViewHeight,
 		visible,
 		opacity,
 		zIndex,
 		mirrored,
 		objectFit,
 		clip,
-		borderRadius;
+		borderRadius,
+		paddingTop,
+		paddingBottom,
+		paddingLeft,
+		paddingRight;
 
 	computedStyle = window.getComputedStyle(this.element);
+
+	// get padding values
+	paddingTop = parseInt(computedStyle.paddingTop) | 0;
+	paddingBottom = parseInt(computedStyle.paddingBottom) | 0;
+	paddingLeft = parseInt(computedStyle.paddingLeft) | 0;
+	paddingRight = parseInt(computedStyle.paddingRight) | 0;
+
+	// fix position according to padding
+	elementLeft += paddingLeft;
+	elementTop += paddingTop;
+
+	// fix width and height according to padding
+	elementWidth -= (paddingLeft + paddingRight);
+	elementHeight -= (paddingTop + paddingBottom);
+
+	videoViewWidth = elementWidth;
+	videoViewHeight = elementHeight;
 
 	// visible
 	if (computedStyle.visibility === 'hidden') {
@@ -809,7 +830,7 @@ module.exports = MediaStreamTrack;
 var
 	debug = require('debug')('iosrtc:MediaStreamTrack'),
 	exec = require('cordova/exec'),
-	getMediaDevices = require('./getMediaDevices'),
+	enumerateDevices = require('./enumerateDevices'),
 	EventTarget = require('yaeti').EventTarget;
 
 
@@ -876,7 +897,7 @@ MediaStreamTrack.prototype.stop = function () {
 MediaStreamTrack.getSources = function () {
 	debug('getSources()');
 
-	return getMediaDevices.apply(this, arguments);
+	return enumerateDevices.apply(this, arguments);
 };
 
 
@@ -911,7 +932,7 @@ function onEvent(data) {
 	}
 }
 
-},{"./getMediaDevices":10,"cordova/exec":undefined,"debug":15,"yaeti":20}],6:[function(require,module,exports){
+},{"./enumerateDevices":10,"cordova/exec":undefined,"debug":15,"yaeti":20}],6:[function(require,module,exports){
 /**
  * Expose the RTCDataChannel class.
  */
@@ -942,8 +963,8 @@ function RTCDataChannel(peerConnection, label, options, dataFromEvent) {
 	if (!dataFromEvent) {
 		debug('new() | [label:%o, options:%o]', label, options);
 
-		if (!label || typeof label !== 'string') {
-			throw new Error('label argument required');
+		if (typeof label !== 'string') {
+			label = '';
 		}
 
 		options = options || {};
@@ -1890,21 +1911,21 @@ function RTCSessionDescription(data) {
 
 },{}],10:[function(require,module,exports){
 /**
- * Expose the getMediaDevices function.
+ * Expose the enumerateDevices function.
  */
-module.exports = getMediaDevices;
+module.exports = enumerateDevices;
 
 
 /**
  * Dependencies.
  */
 var
-	debug = require('debug')('iosrtc:getMediaDevices'),
+	debug = require('debug')('iosrtc:enumerateDevices'),
 	exec = require('cordova/exec'),
 	MediaDeviceInfo = require('./MediaDeviceInfo');
 
 
-function getMediaDevices() {
+function enumerateDevices() {
 	debug('');
 
 	var isPromise,
@@ -1920,20 +1941,20 @@ function getMediaDevices() {
 	if (isPromise) {
 		return new Promise(function (resolve) {
 			function onResultOK(data) {
-				debug('getMediaDevices() | success');
+				debug('enumerateDevices() | success');
 				resolve(getMediaDeviceInfos(data.devices));
 			}
 
-			exec(onResultOK, null, 'iosrtcPlugin', 'getMediaDevices', []);
+			exec(onResultOK, null, 'iosrtcPlugin', 'enumerateDevices', []);
 		});
 	}
 
 	function onResultOK(data) {
-		debug('getMediaDevices() | success');
+		debug('enumerateDevices() | success');
 		callback(getMediaDeviceInfos(data.devices));
 	}
 
-	exec(onResultOK, null, 'iosrtcPlugin', 'getMediaDevices', []);
+	exec(onResultOK, null, 'iosrtcPlugin', 'enumerateDevices', []);
 }
 
 
@@ -1974,20 +1995,26 @@ var
 	MediaStream = require('./MediaStream'),
 	Errors = require('./Errors');
 
-
 debugerror.log = console.warn.bind(console);
 
 
-function getUserMedia(constraints) {
-	debug('[constraints:%o]', constraints);
+function isPositiveInteger(number) {
+	return typeof number === 'number' && number >= 0 && number % 1 === 0;
+}
 
-	var isPromise,
+function isPositiveFloat(number) {
+	return typeof number === 'number' && number >= 0;
+}
+
+
+function getUserMedia(constraints) {
+	debug('[original constraints:%o]', constraints);
+
+	var
+		isPromise,
 		callback, errback,
 		audioRequested = false,
 		videoRequested = false,
-		videoOptionalConstraints,
-		videoMandatoryConstraints,
-		videoDeviceId,
 		newConstraints = {
 			audio: false,
 			video: false
@@ -2007,11 +2034,11 @@ function getUserMedia(constraints) {
 	) {
 		if (isPromise) {
 			return new Promise(function (resolve, reject) {
-				reject(new Errors.MediaStreamError('constraints must be an object with at least "audio" or "video" boolean fields'));
+				reject(new Errors.MediaStreamError('constraints must be an object with at least "audio" or "video" keys'));
 			});
 		} else {
 			if (typeof errback === 'function') {
-				errback(new Errors.MediaStreamError('constraints must be an object with at least "audio" or "video" boolean fields'));
+				errback(new Errors.MediaStreamError('constraints must be an object with at least "audio" or "video" keys'));
 			}
 			return;
 		}
@@ -2031,35 +2058,58 @@ function getUserMedia(constraints) {
 	// getUserMedia({
 	//  audio: true,
 	//  video: {
-	//  	optional: [
-	//  		{ sourceId: 'qwe-asd-zxc-123' }
-	//  	]
+	//  	deviceId: 'qwer-asdf-zxcv',
+	//  	width: {
+	//  		min: 400,
+	//  		max: 600
+	//  	},
+	//  	frameRate: {
+	//  		min: 1.0,
+	//  		max: 60.0
+	//  	}
 	//  }
 	// });
 
-	if (videoRequested && Array.isArray(constraints.video.optional)) {
-		videoOptionalConstraints = constraints.video.optional;
+	// Get video constraints
+	if (videoRequested) {
+		// Get requested video deviceId.
+		if (typeof constraints.video.deviceId === 'string') {
+			newConstraints.videoDeviceId = constraints.video.deviceId;
+		}
 
-		if (videoOptionalConstraints[0]) {
-			videoDeviceId = videoOptionalConstraints[0].sourceId;
-
-			if (typeof videoDeviceId === 'string') {
-				newConstraints.videoDeviceId = videoDeviceId;
+		// Get requested min/max width.
+		if (typeof constraints.video.width === 'object') {
+			if (isPositiveInteger(constraints.video.width.min)) {
+				newConstraints.videoMinWidth = constraints.video.width.min;
 			}
+			if (isPositiveInteger(constraints.video.width.max)) {
+				newConstraints.videoMaxWidth = constraints.video.width.max;
+			}
+		}
+		// Get requested min/max height.
+		if (typeof constraints.video.height === 'object') {
+			if (isPositiveInteger(constraints.video.height.min)) {
+				newConstraints.videoMinHeight = constraints.video.height.min;
+			}
+			if (isPositiveInteger(constraints.video.height.max)) {
+				newConstraints.videoMaxHeight = constraints.video.height.max;
+			}
+		}
+		// Get requested min/max frame rate.
+		if (typeof constraints.video.frameRate === 'object') {
+			if (isPositiveFloat(constraints.video.frameRate.min)) {
+				newConstraints.videoMinFrameRate = constraints.video.frameRate.min;
+			}
+			if (isPositiveFloat(constraints.video.frameRate.max)) {
+				newConstraints.videoMaxFrameRate = constraints.video.frameRate.max;
+			}
+		} else if (isPositiveFloat(constraints.video.frameRate)) {
+			newConstraints.videoMinFrameRate = constraints.video.frameRate;
+			newConstraints.videoMaxFrameRate = constraints.video.frameRate;
 		}
 	}
 
-	if (videoRequested && Array.isArray(constraints.video.mandatory)) {
-		videoMandatoryConstraints = constraints.video.mandatory;
-
-		if (videoMandatoryConstraints[0]) {
-			videoDeviceId = videoMandatoryConstraints[0].sourceId;
-
-			if (typeof videoDeviceId === 'string') {
-				newConstraints.videoDeviceId = videoDeviceId;
-			}
-		}
-	}
+	debug('[computed constraints:%o]', newConstraints);
 
 	if (isPromise) {
 		return new Promise(function (resolve, reject) {
@@ -2125,7 +2175,7 @@ var
 	domready               = require('domready'),
 
 	getUserMedia           = require('./getUserMedia'),
-	getMediaDevices        = require('./getMediaDevices'),
+	enumerateDevices       = require('./enumerateDevices'),
 	RTCPeerConnection      = require('./RTCPeerConnection'),
 	RTCSessionDescription  = require('./RTCSessionDescription'),
 	RTCIceCandidate        = require('./RTCIceCandidate'),
@@ -2141,7 +2191,8 @@ var
 module.exports = {
 	// Expose WebRTC classes and functions.
 	getUserMedia:          getUserMedia,
-	getMediaDevices:       getMediaDevices,
+	enumerateDevices:      enumerateDevices,
+	getMediaDevices:       enumerateDevices,  // TMP
 	RTCPeerConnection:     RTCPeerConnection,
 	RTCSessionDescription: RTCSessionDescription,
 	RTCIceCandidate:       RTCIceCandidate,
@@ -2219,7 +2270,7 @@ function registerGlobals() {
 	navigator.getUserMedia                  = getUserMedia;
 	navigator.webkitGetUserMedia            = getUserMedia;
 	navigator.mediaDevices.getUserMedia     = getUserMedia;
-	navigator.mediaDevices.enumerateDevices = getMediaDevices;
+	navigator.mediaDevices.enumerateDevices = enumerateDevices;
 	window.RTCPeerConnection                = RTCPeerConnection;
 	window.webkitRTCPeerConnection          = RTCPeerConnection;
 	window.RTCSessionDescription            = RTCSessionDescription;
@@ -2235,7 +2286,7 @@ function dump() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./MediaStream":3,"./MediaStreamTrack":5,"./RTCIceCandidate":7,"./RTCPeerConnection":8,"./RTCSessionDescription":9,"./getMediaDevices":10,"./getUserMedia":11,"./rtcninjaPlugin":13,"./videoElementsHandler":14,"cordova/exec":undefined,"debug":15,"domready":18}],13:[function(require,module,exports){
+},{"./MediaStream":3,"./MediaStreamTrack":5,"./RTCIceCandidate":7,"./RTCPeerConnection":8,"./RTCSessionDescription":9,"./enumerateDevices":10,"./getUserMedia":11,"./rtcninjaPlugin":13,"./videoElementsHandler":14,"cordova/exec":undefined,"debug":15,"domready":18}],13:[function(require,module,exports){
 /**
  * Expose the rtcninjaPlugin object.
  */
@@ -2250,11 +2301,12 @@ module.exports = {
 
 	interface: {
 		getUserMedia:          require('./getUserMedia'),
+		enumerateDevices:      require('./enumerateDevices'),
+		getMediaDevices:       require('./enumerateDevices'),  // TMP
 		RTCPeerConnection:     require('./RTCPeerConnection'),
 		RTCSessionDescription: require('./RTCSessionDescription'),
 		RTCIceCandidate:       require('./RTCIceCandidate'),
 		MediaStreamTrack:      require('./MediaStreamTrack'),
-		getMediaDevices:       require('./getMediaDevices'),
 		attachMediaStream:     attachMediaStream,
 		canRenegotiate:        true
 	}
@@ -2266,7 +2318,7 @@ function attachMediaStream(element, stream) {
 	return element;
 }
 
-},{"./MediaStreamTrack":5,"./RTCIceCandidate":7,"./RTCPeerConnection":8,"./RTCSessionDescription":9,"./getMediaDevices":10,"./getUserMedia":11}],14:[function(require,module,exports){
+},{"./MediaStreamTrack":5,"./RTCIceCandidate":7,"./RTCPeerConnection":8,"./RTCSessionDescription":9,"./enumerateDevices":10,"./getUserMedia":11}],14:[function(require,module,exports){
 (function (global){
 /**
  * Expose a function that must be called when the library is loaded.
@@ -2384,6 +2436,7 @@ var debug = require('debug')('iosrtc:videoElementsHandler'),
 
 				// If this video element was previously handling a MediaStreamRenderer, release it.
 				releaseMediaStreamRenderer(node);
+				delete node._iosrtcVideoHandled;
 			} else {
 				for (j = 0; j < node.childNodes.length; j++) {
 					childNode = node.childNodes.item(j);
@@ -2497,7 +2550,16 @@ function handleVideo(video) {
 
 		var reader = new FileReader();
 
-		reader.onloadend = function () {
+		// Some versions of Safari fail to set onloadend property, some others do not react
+		// on 'loadend' event. Try everything here.
+		try {
+			reader.onloadend = onloadend;
+		} catch (error) {
+			reader.addEventListener('loadend', onloadend);
+		}
+		reader.readAsText(xhr.response);
+
+		function onloadend() {
 			var mediaStreamBlobId = reader.result;
 
 			// The retrieved URL does not point to a MediaStream.
@@ -2509,8 +2571,7 @@ function handleVideo(video) {
 			}
 
 			provideMediaStreamRenderer(video, mediaStreamBlobId);
-		};
-		reader.readAsText(xhr.response);
+		}
 	};
 	xhr.send();
 }
@@ -3157,8 +3218,8 @@ void function(root){
   function generator(options){
     options = defaults(options)
     return function(min, max, integer){
-      options.min     = min     || options.min
-      options.max     = max     || options.max
+      options.min     = min != null ? min : options.min
+      options.max     = max != null ? max : options.max
       options.integer = integer != null ? integer : options.integer
       return random(options)
     }
@@ -3171,8 +3232,8 @@ void function(root){
 
 },{}],20:[function(require,module,exports){
 module.exports = {
-	EventTarget:  require('./lib/EventTarget'),
-	Event:        require('./lib/Event')
+	EventTarget : require('./lib/EventTarget'),
+	Event       : require('./lib/Event')
 };
 
 },{"./lib/Event":21,"./lib/EventTarget":22}],21:[function(require,module,exports){
@@ -3190,14 +3251,6 @@ module.exports = global.Event;
  */
 module.exports = _EventTarget;
 
-
-var
-	/**
-	 * Dependencies.
-	 */
-	_Event = require('./Event');
-
-
 function _EventTarget() {
 	// Do nothing if called for a native EventTarget object..
 	if (typeof this.addEventListener === 'function') {
@@ -3211,9 +3264,17 @@ function _EventTarget() {
 	this.dispatchEvent = _dispatchEvent;
 }
 
+Object.defineProperties(_EventTarget.prototype, {
+	listeners: {
+		get: function () {
+			return this._listeners;
+		}
+	}
+});
 
 function _addEventListener(type, newListener) {
-	var listenersType,
+	var
+		listenersType,
 		i, listener;
 
 	if (!type || !newListener) {
@@ -3234,9 +3295,9 @@ function _addEventListener(type, newListener) {
 	listenersType.push(newListener);
 }
 
-
 function _removeEventListener(type, oldListener) {
-	var listenersType,
+	var
+		listenersType,
 		i, listener;
 
 	if (!type || !oldListener) {
@@ -3260,31 +3321,31 @@ function _removeEventListener(type, oldListener) {
 	}
 }
 
-
 function _dispatchEvent(event) {
-	var type,
+	var
+		type,
 		listenersType,
 		dummyListener,
 		stopImmediatePropagation = false,
 		i, listener;
 
-	if (!(event instanceof _Event)) {
-		throw new Error('first argument must be an instance of Event');
+	if (!event || typeof event.type !== 'string') {
+		throw new Error('`event` must have a valid `type` property');
 	}
 
-	if (event._dispatched) {
-		throw new Error('Event already dispatched');
+	// Do some stuff to emulate DOM Event behavior (just if this is not a
+	// DOM Event object)
+	if (event._yaeti) {
+		event.target = this;
+		event.cancelable = true;
 	}
-	event._dispatched = true;
 
-	// Force the event to be cancelable.
-	event.cancelable = true;
-	event.target = this;
-
-	// Override stopImmediatePropagation() function.
-	event.stopImmediatePropagation = function () {
-		stopImmediatePropagation = true;
-	};
+	// Attempt to override the stopImmediatePropagation() method
+	try {
+		event.stopImmediatePropagation = function () {
+			stopImmediatePropagation = true;
+		};
+	} catch (error) {}
 
 	type = event.type;
 	listenersType = (this._listeners[type] || []);
@@ -3305,5 +3366,5 @@ function _dispatchEvent(event) {
 	return !event.defaultPrevented;
 }
 
-},{"./Event":21}]},{},[12])(12)
+},{}]},{},[12])(12)
 });

@@ -3,11 +3,11 @@
 
 	<ion-header-bar>
 		<div class="buttons">
-	    	<button class="button button-clear" ng-click="toNewsfeed(); modal2.remove(); ">Skip</button>
+	    	<button class="button button-clear" ng-click="modal3.show(); modal2.remove(); ">Skip</button>
 	 	 </div>
 	  	<h1 class="title">Optional</h1>
 	  	<div class="buttons">
-            <button class="button button-clear minds-blue" style="color:#4690C3" ng-if="!channel.city || (channel.city && channel.coordinates)" ng-click="update(false); toNewsfeed(); modal2.remove(); ">Save</button>
+            <button class="button button-clear minds-blue" style="color:#4690C3" ng-if="!channel.city || (channel.city && channel.coordinates)" ng-click="update(false); modal3.show(); modal2.remove(); ">Save</button>
             <button class="button button-clear" ng-if="channel.city && !channel.coordinates" ng-click="">Save</button>
         </div>
 	</ion-header-bar>

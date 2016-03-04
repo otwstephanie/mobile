@@ -149,6 +149,7 @@ define(function() {
 		};
 
     $scope.bannerStatus = 0;
+    $scope.bannerUri;
 		$scope.selectBanner = function() {
 
       $scope.bannerStatus = 0;
@@ -174,6 +175,7 @@ define(function() {
           template: '<i style="line-height:100px; vertical-align:middle; font-size:16px">Please wait...</i>'
         });
 				console.log(imageData);
+        $scope.bannerUri = imageData;
 				ft.upload(imageData, encodeURI($rootScope.node_url + 'api/v1/channel/banner'), function(success) {
 					$rootScope.globalCB = Date.now();
           $ionicLoading.hide();

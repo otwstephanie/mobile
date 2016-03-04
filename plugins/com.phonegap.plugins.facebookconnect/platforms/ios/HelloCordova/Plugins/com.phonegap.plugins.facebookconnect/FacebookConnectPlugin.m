@@ -21,12 +21,9 @@
 
 @implementation FacebookConnectPlugin
 
-
-- (CDVPlugin *)initWithWebView:(UIWebView *)theWebView {
+- (void) pluginInitialize {
     NSLog(@"Init FacebookConnect Session");
-    self = (FacebookConnectPlugin *)[super initWithWebView:theWebView];
-    self.userid = @"";
-    
+
     [FBSession openActiveSessionWithReadPermissions:nil
                                        allowLoginUI:NO
                                   completionHandler:^(FBSession *session,
@@ -44,7 +41,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(openURL:)
                                                  name:CDVPluginHandleOpenURLNotification object:nil];
-    return self;
 }
 
 - (void)openURL:(NSNotification *)notification {
@@ -235,7 +231,7 @@
      there is a helper method that explicitly takes a currency indicator.
      */
     CDVPluginResult *res;
-    if (!command.arguments == 2) {
+    if ([command.arguments count] == 2) {
         res = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid arguments"];
         [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
         return;

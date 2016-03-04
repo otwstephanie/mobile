@@ -150,6 +150,22 @@ a.tag{
         user-select: auto !important;
 }
 
+.tutorial-items{
+
+}
+
+.tutorial-items .item-icon-left{
+  padding-left: 80px;
+}
+
+.tutorial-items .icon{
+  color:#888;
+  left:22px;
+}
+.tutorial-items .icon-green{
+  color:green;
+}
+
 .gender-input  a{
 	padding:0 4px;
 }
