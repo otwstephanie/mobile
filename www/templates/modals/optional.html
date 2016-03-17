@@ -44,7 +44,29 @@
                </div>
            </div>
 
-            <img ng-if="channel.coordinates" ng-src="http://staticmap.openstreetmap.de/staticmap.php?center={{channel.coordinates}}&zoom=9&size=400x150&maptype=mapnik" style="width:100%"/>
+            <!--<img ng-if="channel.coordinates" ng-src="http://staticmap.openstreetmap.de/staticmap.php?center={{channel.coordinates}}&zoom=9&size=400x150&maptype=mapnik" style="width:100%"/>-->
+        </div>
+
+        <div class="swipe-container">
+            <div class="list card tabs-background-white animation-mock-swipe">
+                <div class="item item-image">
+                    <img ng-src="{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}">
+                    <div class="overlay">
+                        <h1>{{channel.name}}</h1>
+                        <span class="city" ng-if="channel.city">{{channel.city}}</span>
+                      	<p ng-show="channel.briefdescription" ng-bind-html="channel.briefdescription" style="margin-top:-4px"></p>
+                    </div>
+                </div>
+
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a class="tab-item" href="#">
+                        <i class="icon ion-close"></i>
+                    </a>
+                    <a class="tab-item" href="#" >
+                      <i class="icon ion-person-add"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
 	</ion-content>

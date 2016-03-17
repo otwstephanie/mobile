@@ -1502,7 +1502,7 @@ define(['angular'], function(angular){
     "\n" +
     "	     <div class=\"list\">\n" +
     "          <div class=\"minds-banner-modals-wrapper\" style=\"height: 160px; overflow: hidden;\" ng-if=\"bannerUri\">\n" +
-    "            <img id=\"avatar\" ng-src=\"{{bannerUri}}\" style=\"width: 100%; margin:0; display:block; height: auto\" ng-click=\"addBanner()\" />\n" +
+    "            <img id=\"\" ng-src=\"{{bannerUri}}\" style=\"width: 100%; margin:0; display:block; height: auto\" ng-click=\"addBanner()\" />\n" +
     "          </div>\n" +
     "          <label class=\"item item-input banner-input\" ng-click=\"addBanner()\">\n" +
     "             <span class=\"input-label\">Banner</span>\n" +
@@ -1570,7 +1570,29 @@ define(['angular'], function(angular){
     "               </div>\n" +
     "           </div>\n" +
     "\n" +
-    "            <img ng-if=\"channel.coordinates\" ng-src=\"http://staticmap.openstreetmap.de/staticmap.php?center={{channel.coordinates}}&zoom=9&size=400x150&maptype=mapnik\" style=\"width:100%\"/>\n" +
+    "            <!--<img ng-if=\"channel.coordinates\" ng-src=\"http://staticmap.openstreetmap.de/staticmap.php?center={{channel.coordinates}}&zoom=9&size=400x150&maptype=mapnik\" style=\"width:100%\"/>-->\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"swipe-container\">\n" +
+    "            <div class=\"list card tabs-background-white animation-mock-swipe\">\n" +
+    "                <div class=\"item item-image\">\n" +
+    "                    <img ng-src=\"{{$root.node_url}}icon/{{$root.user_guid}}/large/{{$root.globalCB}}/{{cb}}\">\n" +
+    "                    <div class=\"overlay\">\n" +
+    "                        <h1>{{channel.name}}</h1>\n" +
+    "                        <span class=\"city\" ng-if=\"channel.city\">{{channel.city}}</span>\n" +
+    "                      	<p ng-show=\"channel.briefdescription\" ng-bind-html=\"channel.briefdescription\" style=\"margin-top:-4px\"></p>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div class=\"item tabs tabs-secondary tabs-icon-left\">\n" +
+    "                    <a class=\"tab-item\" href=\"#\">\n" +
+    "                        <i class=\"icon ion-close\"></i>\n" +
+    "                    </a>\n" +
+    "                    <a class=\"tab-item\" href=\"#\" >\n" +
+    "                      <i class=\"icon ion-person-add\"></i>\n" +
+    "                    </a>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
     "        </div>\n" +
     "\n" +
     "	</ion-content>\n" +
@@ -1673,7 +1695,7 @@ define(['angular'], function(angular){
     "      <div class=\"item item-icon-left item-icon-right item-text-wrap\">\n" +
     "        <i class=\"icon ion-key\"></i>\n" +
     "        <p>Daily login</p>\n" +
-    "        <i class=\"icon icon-green\">+10</i>\n" +
+    "        <i class=\"icon icon-green\">+50</i>\n" +
     "      </div>\n" +
     "\n" +
     "    </div>\n" +

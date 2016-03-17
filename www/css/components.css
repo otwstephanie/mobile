@@ -324,12 +324,20 @@ progress[value] {
 /**
  * Animations for tutorials
  */
-.tutorial .animation-mock-swipe{
-	-webkit-animation: swipeMock 8s linear 0 infinite;
-	-moz-animation: swipeMock 8s linear 0s infinite;
+.animation-mock-swipe{
+	-webkit-animation: swipeMock 8s linear infinite;
+	-moz-animation: swipeMock 8s linear infinite;
+  animation: swipeMock 8s linear infinite;
 }
 /**Rotate**/
 @-webkit-keyframes swipeMock {
+	0% { -webkit-transform: translate3d(0px, 0px, 0) rotate(0rad); }
+	45% { -webkit-transform: translate3d(50px, -6px, 0) rotate(-0.1rad); }
+	50% { -webkit-transform: translate3d(0px, 0px, 0) rotate(0rad); }
+	95% { -webkit-transform: translate3d(-50px, -6px, 0) rotate(0.1rad); }
+	100% { -webkit-transform: translate3d(0px, 0px, 0) rotate(0rad); }
+}
+@-moz-keyframes swipeMock {
 	0% { -webkit-transform: translate3d(0px, 0px, 0) rotate(0rad); }
 	45% { -webkit-transform: translate3d(50px, -6px, 0) rotate(-0.1rad); }
 	50% { -webkit-transform: translate3d(0px, 0px, 0) rotate(0rad); }
@@ -346,9 +354,9 @@ progress[value] {
 /**
  * Change colour of subscribe icon
  */
-.tutorial .animation-mock-swipe .ion-person-add{
-	-webkit-animation: swipeSubscribedMock 10s linear 0s infinite;
-	-moz-animation: swipeSubscribedMock 10s linear 0s infinite;
+.animation-mock-swipe .ion-person-add{
+	-webkit-animation: swipeSubscribedMock 10s linear infinite;
+	-moz-animation: swipeSubscribedMock 10s linear infinite;
 }
 @-webkit-keyframes swipeSubscribedMock {
 	0% { color:#333333; }
@@ -365,9 +373,9 @@ progress[value] {
 	100% {  color:#333; }
 }
 
-.tutorial .animation-mock-swipe .ion-close{
-	-webkit-animation: swipePassedMock 10s linear 0s infinite;
-	-moz-animation: swipePassedMock 10s linear 0s infinite;
+.animation-mock-swipe .ion-close{
+	-webkit-animation: swipePassedMock 10s linear infinite;
+	-moz-animation: swipePassedMock 10s linear infinite;
 }
 @-webkit-keyframes swipePassedMock {
 	0% { color:#333333; }
