@@ -1,0 +1,46 @@
+.answer-item{
+	border:0;
+	width:auto;
+	clear:both;
+	background:transparent;
+	margin:15px 5px !important;
+	padding:0 !important;
+}
+.answer-item > a{
+	float:left;
+}
+.answer-item > a img{
+	width:24px;
+	margin:8px 4px;
+	border-radius:3px;
+	box-shadow:0 0 3px #888;
+}
+.answer-item .content{
+	float:left;
+	border-radius:3px;
+	border:0;
+	margin:0 5px 12px;
+	width:auto;
+	max-width:calc(100% - 50px);
+	background:#EEE;
+	padding:10px;
+	box-shadow:0 0 3px #888;
+}
+.answer-item.odd .content{
+	float:right;
+	background:#DDD;
+}
+.answer-item.odd a{
+	float:right;
+}
+
+.comment-edit{
+	  padding: 0px !important;
+		width: 100% !important;
+}
+.comment-item-edit{
+	  /*padding: 0px;*/
+}
+.comment-edit-text-area{
+	  width: 100%;
+}

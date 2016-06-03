@@ -21,6 +21,17 @@
    <img ng-src="{{entity.thumbnail_src}}">
 </div>
 
+<!-- Question/Answer -->
+<div class="item item-image" ng-if="entity.subtype == 'question'" ng-click="openUrl(entity.perma_url)">
+    <img ng-src="{{entity.thumbnail_src}}">
+</div>
+
+<div class="item item-wrap-content" ng-show="entity.subtype == 'question'" ng-click="openUrl(entity.perma_url)">
+    <h3 ng-bind-html="entity.title"></h3>
+    <p>{{entity.perma_url}}</p>
+</div>
+
+
 <!-- Article/blog -->
 <div class="item item-image" ng-if="entity.subtype == 'blog'" ng-click="openUrl(entity.perma_url)">
    <img ng-src="{{entity.thumbnail_src}}">

@@ -10,15 +10,9 @@
         "com.paypal.cordova.mobilesdk": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "com.phonegap.plugins.PushPlugin": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
         "com.phonegap.plugins.facebookconnect": {
             "APP_ID": "184865748231073",
             "APP_NAME": "Minds",
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
-        "com.verso.cordova.clipboard": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "cordova-plugin-camera": {
@@ -33,6 +27,9 @@
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
@@ -45,6 +42,9 @@
         "cordova-plugin-intents": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
+        "cordova-plugin-iosrtc": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
         "cordova-plugin-legacy-whitelist": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
@@ -54,7 +54,7 @@
         "cordova-plugin-media-capture": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "cordova-plugin-splashscreen": {
+        "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
         "cordova-plugin-vibration": {
@@ -66,21 +66,22 @@
         "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "org.apache.cordova.crypt": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "com.minds.mobile"
-        },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.minds.mobile"
         },
-        "cordova-plugin-iosrtc": {
+        "org.apache.cordova.crypt": {
             "PACKAGE_NAME": "com.minds.mobile"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "com.phonegap.plugins.PushPlugin": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
+        "com.verso.cordova.clipboard": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.minds.mobile"
+        }
+    }
 }
